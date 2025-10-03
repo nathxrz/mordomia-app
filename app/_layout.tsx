@@ -8,9 +8,10 @@ import { SplashScreen, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 
+import AuthProvider from "@/context/AuthProvider";
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import { Roboto_400Regular, Roboto_700Bold } from "@expo-google-fonts/roboto";
 import { useEffect } from "react";
-import { Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/roboto';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -30,15 +31,17 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === "light" ? DarkTheme : DefaultTheme}>
-      <StatusBar style="dark" />
-      <Stack
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        <Stack.Screen name="Entrar" />
-      </Stack>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider value={colorScheme === "light" ? DarkTheme : DefaultTheme}>
+        <StatusBar style="dark" />
+        <Stack
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <Stack.Screen name="signin" />
+        </Stack>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }

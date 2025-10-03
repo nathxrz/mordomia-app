@@ -1,0 +1,95 @@
+import { AuthContext } from "@/context/AuthProvider";
+import { useContext, useState } from "react";
+import { StyleSheet, View } from "react-native";
+import { Button, TextInput } from "react-native-paper";
+
+export default function SignUp() {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [birthDate, setBirthDate] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setpassword] = useState("");
+  const [confirmPassword, setconfirmPassword] = useState("");
+
+  const { signUpWithEmail, loading } = useContext(AuthContext);
+
+  return (
+    <View style={styles.container}>
+      <View style={[styles.verticallySpaced, styles.mt20]}>
+        <TextInput
+          label="Nome completo"
+          onChangeText={setName}
+          value={name}
+          placeholder="Digite seu nome completo"
+        />
+        <TextInput
+          label="Telefone"
+          onChangeText={setPhone}
+          value={phone}
+          placeholder="Digite seu telefone"
+        />
+        <TextInput
+          label="Data de nascimento"
+          onChangeText={setBirthDate}
+          value={birthDate}
+          placeholder="Digite sua data de nascimento"
+        />
+        <TextInput
+          label={"Email"}
+          onChangeText={setEmail}
+          value={email}
+          activeUnderlineColor="#6200ee"
+          placeholder="Digite seu email"
+        />
+        <TextInput
+          label="Senhaa"
+          onChangeText={setpassword}
+          value={password}
+          secureTextEntry
+          placeholder="Digite sua senha"
+        />
+        <TextInput
+          label="Confirmar senha"
+          onChangeText={setconfirmPassword}
+          value={confirmPassword}
+          secureTextEntry
+          placeholder="Confirme sua senha"
+        />
+      </View>
+      <View style={[styles.verticallySpaced, styles.mt20]}>
+        <Button
+          mode="contained"
+          disabled={loading}
+          onPress={() => {
+            signUpWithEmail(
+              email,
+              password,
+              confirmPassword,
+              name,
+              phone,
+              birthDate
+            );
+          }}
+          style={styles.mt20}
+        >
+          Cadastrar
+        </Button>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 40,
+    padding: 12,
+  },
+  verticallySpaced: {
+    paddingTop: 4,
+    paddingBottom: 4,
+    alignSelf: "stretch",
+  },
+  mt20: {
+    marginTop: 20,
+  },
+});

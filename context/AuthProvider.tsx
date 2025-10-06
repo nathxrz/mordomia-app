@@ -62,8 +62,6 @@ export default function AuthProvider({
     try {
       setLoading(true);
 
-      Alert.alert(password, confirmPassword);
-
       if (password !== confirmPassword) {
         throw new Error("As senhas não coincidem.");
       }
@@ -87,32 +85,72 @@ export default function AuthProvider({
 
       if (insertError) throw insertError;
 
+      const { data: role, error: roleError } = await supabase
+        .from("roles")
+        .select("id")
+        .eq("name", type)
+        .single();
+
+      if (roleError) throw roleError;
+
+      const { data: existingRole } = await supabase
+        .from("user_roles")
+        .select("id")
+        .eq("id_user", data.user.id)
+        .eq("id_role", role.id)
+        .maybeSingle();
+
+      if (!existingRole) {
+        const { error: insertUserRolesError } = await supabase
+          .from("user_roles")
+          .insert([{ id_user: data.user.id, id_role: role.id }]);
+
+        if (insertUserRolesError) throw insertUserRolesError;
+      }
+
       if (type === "tutor") {
-        const { error: insertTutorError } = await supabase
+        const { data: existingTutor } = await supabase
           .from("tutors")
-          .insert([
-            {
-              id_user: data.user.id,
-            },
-          ]);
+          .select("id")
+          .eq("id_user", data.user.id)
+          .maybeSingle();
 
-        if (insertTutorError) throw insertTutorError;
+        if (!existingTutor) {
+          const { error: insertTutorError } = await supabase
+            .from("tutors")
+            .insert([
+              {
+                id_user: data.user.id,
+              },
+            ]);
+
+          if (insertTutorError) throw insertTutorError;
+        }
       } else if (type === "catsitter") {
-        const { error: insertCatsitterError } = await supabase
+        const { data: existingCatSitter } = await supabase
           .from("cat_sitters")
-          .insert([
-            {
-              id_user: data.user.id,
-            },
-          ]);
+          .select("id")
+          .eq("id_user", data.user.id)
+          .maybeSingle();
 
-        if (insertCatsitterError) throw insertCatsitterError;
+        if (!existingCatSitter) {
+          const { error: insertCatSitterError } = await supabase
+            .from("cat_sitters")
+            .insert([
+              {
+                id_user: data.user.id,
+              },
+            ]);
+
+          if (insertCatSitterError) throw insertCatSitterError;
+        }
       }
 
       Alert.alert(
         "Conta criada!",
         "Verifique seu email para confirmar o cadastro."
       );
+      router.navigate("/");
     } catch (err: any) {
       Alert.alert("Erro", err.message);
     } finally {

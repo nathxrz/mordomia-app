@@ -1,5 +1,7 @@
 import { AuthContext } from "@/context/AuthProvider";
 import { useContext, useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { StyleSheet, View } from "react-native";
 import { Button, RadioButton, Text, TextInput } from "react-native-paper";
 
@@ -11,6 +13,7 @@ export default function SignUp() {
   const [password, setpassword] = useState("");
   const [confirmPassword, setconfirmPassword] = useState("");
   const [type, setType] = useState("tutor");
+  const [date, setDate] = useState(new Date());
 
   const { signUpWithEmail, loading } = useContext(AuthContext);
 
@@ -41,12 +44,15 @@ export default function SignUp() {
           value={phone}
           placeholder="Digite seu telefone"
         />
-        <TextInput
+
+        <DatePicker selected={date} onChange={() => setDate(date)} />
+
+        {/* <TextInput
           label="Data de nascimento"
           onChangeText={setBirthDate}
           value={birthDate}
           placeholder="Digite sua data de nascimento"
-        />
+        /> */}
         <TextInput
           label={"Email"}
           onChangeText={setEmail}

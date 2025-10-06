@@ -20,7 +20,8 @@ export const AuthContext = createContext<{
     confirmPassword: string,
     name: string,
     phone: string,
-    dateBirth: string
+    dateBirth: string,
+    type: string
   ) => Promise<void>;
 }>({
   signInWithEmail: async () => {},
@@ -55,7 +56,8 @@ export default function AuthProvider({
     confirmPassword: string,
     name: string,
     phone: string,
-    dateBirth: string
+    dateBirth: string,
+    type: string
   ) {
     try {
       setLoading(true);
@@ -80,12 +82,32 @@ export default function AuthProvider({
           name: name,
           phone: phone,
           date_birth: dateBirth,
-          photo_url: null,
-          created_at: new Date(),
         },
       ]);
 
       if (insertError) throw insertError;
+
+      if (type === "tutor") {
+        const { error: insertTutorError } = await supabase
+          .from("tutors")
+          .insert([
+            {
+              id_user: data.user.id,
+            },
+          ]);
+
+        if (insertTutorError) throw insertTutorError;
+      } else if (type === "catsitter") {
+        const { error: insertCatsitterError } = await supabase
+          .from("cat_sitters")
+          .insert([
+            {
+              id_user: data.user.id,
+            },
+          ]);
+
+        if (insertCatsitterError) throw insertCatsitterError;
+      }
 
       Alert.alert(
         "Conta criada!",

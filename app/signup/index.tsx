@@ -1,7 +1,7 @@
 import { AuthContext } from "@/context/AuthProvider";
 import { useContext, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { Button, TextInput } from "react-native-paper";
+import { Button, RadioButton, Text, TextInput } from "react-native-paper";
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -10,12 +10,25 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setpassword] = useState("");
   const [confirmPassword, setconfirmPassword] = useState("");
+  const [type, setType] = useState("tutor");
 
   const { signUpWithEmail, loading } = useContext(AuthContext);
 
   return (
     <View style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt20]}>
+        <RadioButton
+          value="tutor"
+          status={type === "tutor" ? "checked" : "unchecked"}
+          onPress={() => setType("tutor")}
+        />
+        <Text>Sou um tutor</Text>
+        <RadioButton
+          value="catsitter"
+          status={type === "catsitter" ? "checked" : "unchecked"}
+          onPress={() => setType("catsitter")}
+        />
+        <Text>Sou um catsitter</Text>
         <TextInput
           label="Nome completo"
           onChangeText={setName}
@@ -67,7 +80,8 @@ export default function SignUp() {
               confirmPassword,
               name,
               phone,
-              birthDate
+              birthDate,
+              type
             );
           }}
           style={styles.mt20}

@@ -17,7 +17,6 @@ export const AuthContext = createContext<{
   signUpWithEmail: (
     email: string,
     password: string,
-    confirmPassword: string,
     name: string,
     phone: string,
     dateBirth: Date,
@@ -39,6 +38,7 @@ export default function AuthProvider({
 
   async function signInWithEmail(email: string, password: string) {
     setLoading(true);
+
     const { error } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
@@ -55,7 +55,6 @@ export default function AuthProvider({
   async function signUpWithEmail(
     email: string,
     password: string,
-    confirmPassword: string,
     name: string,
     phone: string,
     dateBirth: Date,
@@ -64,9 +63,7 @@ export default function AuthProvider({
     try {
       setLoading(true);
 
-      if (password !== confirmPassword) {
-        throw new Error("As senhas não coincidem.");
-      }
+      Alert.alert("Telefone: " + phone);
 
       const { data, error } = await supabase.auth.signUp({
         email: email,

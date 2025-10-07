@@ -13,14 +13,13 @@ const requiredMessage = "Campo obrigatório";
 
 const schema = yup
   .object({
-    email: yup.string().email("Email inválido").required(requiredMessage),
+    email: yup
+      .string()
+      .trim()
+      .email("E-mail inválido")
+      .required(requiredMessage),
 
-    password: yup.string().required(requiredMessage),
-    // .min(8, "Senha deve ter no mínimo 8 caracteres")
-    // .matches(
-    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-    //   "A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número, um caractere especial e ter no mínimo 8 caracteres"
-    // ),
+    password: yup.string().trim().required(requiredMessage),
   })
   .required();
 
@@ -41,7 +40,7 @@ export default function SignIn() {
   });
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
       <ScrollView
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
@@ -114,6 +113,7 @@ export default function SignIn() {
               Entrar
             </Button>
           </View>
+          {/* TODO: desenvolver a página de recuperar a senha */}
           <Link style={styles.link} href="./recover-password">
             Esqueceu a senha?
           </Link>

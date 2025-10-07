@@ -20,7 +20,7 @@ export const AuthContext = createContext<{
     confirmPassword: string,
     name: string,
     phone: string,
-    dateBirth: string,
+    dateBirth: Date,
     type: string
   ) => Promise<void>;
 }>({
@@ -44,10 +44,12 @@ export default function AuthProvider({
       password: password,
     });
 
-    if (error) Alert.alert(error.message);
+    if (error) {
+      Alert.alert(error.message);
+    } else {
+      router.navigate("/");
+    }
     setLoading(false);
-
-    router.navigate("/");
   }
 
   async function signUpWithEmail(
@@ -56,7 +58,7 @@ export default function AuthProvider({
     confirmPassword: string,
     name: string,
     phone: string,
-    dateBirth: string,
+    dateBirth: Date,
     type: string
   ) {
     try {

@@ -1,19 +1,20 @@
 import { AuthContext } from "@/context/AuthProvider";
+import DateTimePicker from "@react-native-community/datetimepicker";
+
 import { useContext, useState } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { StyleSheet, View } from "react-native";
+
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Button, RadioButton, Text, TextInput } from "react-native-paper";
 
 export default function SignUp() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [birthDate, setBirthDate] = useState("");
   const [email, setEmail] = useState("");
   const [password, setpassword] = useState("");
   const [confirmPassword, setconfirmPassword] = useState("");
   const [type, setType] = useState("tutor");
-  const [date, setDate] = useState(new Date());
+  const [open, setOpen] = useState(false);
+  const [date, setDate] = useState<Date | undefined>(undefined);
 
   const { signUpWithEmail, loading } = useContext(AuthContext);
 
@@ -45,14 +46,26 @@ export default function SignUp() {
           placeholder="Digite seu telefone"
         />
 
-        <DatePicker selected={date} onChange={() => setDate(date)} />
+        {open && (
+          <DateTimePicker
+            value={date || new Date()}
+            onChange={(event, selectedDate) => {
+              setDate(selectedDate || date);
+              setOpen(false);
+            }}
+            maximumDate={new Date()}
+          />
+        )}
 
-        {/* <TextInput
-          label="Data de nascimento"
-          onChangeText={setBirthDate}
-          value={birthDate}
-          placeholder="Digite sua data de nascimento"
-        /> */}
+        <TouchableOpacity onPress={() => setOpen(true)}>
+          <TextInput
+            editable={false}
+            label={"Data de nascimento"}
+            pointerEvents="none"
+            value={date ? date.toLocaleDateString() : "dd/mm/aaaa"}
+            placeholder="Selecione sua data de nascimento"
+          />
+        </TouchableOpacity>
         <TextInput
           label={"Email"}
           onChangeText={setEmail}
@@ -61,7 +74,7 @@ export default function SignUp() {
           placeholder="Digite seu email"
         />
         <TextInput
-          label="Senhaa"
+          label="Senha"
           onChangeText={setpassword}
           value={password}
           secureTextEntry
@@ -86,7 +99,7 @@ export default function SignUp() {
               confirmPassword,
               name,
               phone,
-              birthDate,
+              date as Date,
               type
             );
           }}

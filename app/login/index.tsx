@@ -1,12 +1,12 @@
 import { AuthContext } from "@/context/AuthProvider";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link } from "expo-router";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Icon from "react-native-vector-icons/FontAwesome";
+import Icon from "react-native-vector-icons/MaterialIcons";
 import * as yup from "yup";
 
 const requiredMessage = "Campo obrigatório";
@@ -25,6 +25,7 @@ const schema = yup
 
 export default function SignIn() {
   const { signInWithEmail, loading } = useContext(AuthContext);
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     control,
@@ -55,9 +56,7 @@ export default function SignIn() {
                   label="Email"
                   left={
                     <TextInput.Icon
-                      icon={() => (
-                        <Icon name="envelope" size={20} color="#888" />
-                      )}
+                      icon={() => <Icon name="person" size={20} color="#888" />}
                     />
                   }
                   onChangeText={onChange}
@@ -83,13 +82,20 @@ export default function SignIn() {
                   label="Password"
                   left={
                     <TextInput.Icon
-                      icon={() => <Icon name="lock" size={20} color="#888" />}
+                      icon={() =>
+                        showPassword ? (
+                          <Icon name="visibility" size={20} color="#888" />
+                        ) : (
+                          <Icon name="visibility-off" size={20} color="#888" />
+                        )
+                      }
+                      onPress={() => setShowPassword(!showPassword)}
                     />
                   }
                   onChangeText={onChange}
                   onBlur={onBlur}
                   value={value}
-                  secureTextEntry
+                  secureTextEntry={!showPassword}
                   placeholder="Password"
                   autoCapitalize="none"
                 />
@@ -113,11 +119,10 @@ export default function SignIn() {
               Entrar
             </Button>
           </View>
-          {/* TODO: desenvolver a página de recuperar a senha */}
-          <Link style={styles.link} href="./recover-password">
+          <Link style={styles.link} href="/login/recover-password">
             Esqueceu a senha?
           </Link>
-          <Link style={styles.link} href="./signup">
+          <Link style={styles.link} href="/login/signup">
             Criar uma conta
           </Link>
         </>

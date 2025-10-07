@@ -23,7 +23,7 @@ export default function App() {
       {session && session.user ? (
         <Profile session={session} />
       ) : (
-        <Redirect href="/signin" />
+        <Redirect href="/login" />
       )}
     </View>
   );

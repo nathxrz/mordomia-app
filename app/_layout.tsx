@@ -39,7 +39,7 @@ export default function RootLayout() {
             headerShown: false,
           }}
         >
-          <Stack.Screen name="signin" />
+          <Stack.Screen name="/login" />
         </Stack>
       </ThemeProvider>
     </AuthProvider>

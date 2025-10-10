@@ -2,6 +2,7 @@ import { useRouter } from "expo-router";
 import { createContext, useState } from "react";
 import { Alert, AppState } from "react-native";
 import { supabase } from "../lib/supabase";
+import translateError from "../scripts/translate-error";
 
 AppState.addEventListener("change", (state) => {
   if (state === "active") {
@@ -45,7 +46,7 @@ export default function AuthProvider({
     });
 
     if (error) {
-      Alert.alert(error.message);
+      Alert.alert(translateError(error.code));
     } else {
       router.navigate("/");
     }
@@ -62,8 +63,6 @@ export default function AuthProvider({
   ) {
     try {
       setLoading(true);
-
-      Alert.alert("Telefone: " + phone);
 
       const { data, error } = await supabase.auth.signUp({
         email: email,
@@ -82,7 +81,7 @@ export default function AuthProvider({
         },
       ]);
 
-      if (insertError) throw insertError;
+      if (insertError) throw translateError(insertError.code);
 
       const { data: role, error: roleError } = await supabase
         .from("roles")
@@ -90,7 +89,7 @@ export default function AuthProvider({
         .eq("name", type)
         .single();
 
-      if (roleError) throw roleError;
+      if (roleError) throw translateError(roleError.code);
 
       const { data: existingRole } = await supabase
         .from("user_roles")
@@ -104,7 +103,8 @@ export default function AuthProvider({
           .from("user_roles")
           .insert([{ id_user: data.user.id, id_role: role.id }]);
 
-        if (insertUserRolesError) throw insertUserRolesError;
+        if (insertUserRolesError)
+          throw translateError(insertUserRolesError.code);
       }
 
       if (type === "tutor") {
@@ -123,7 +123,7 @@ export default function AuthProvider({
               },
             ]);
 
-          if (insertTutorError) throw insertTutorError;
+          if (insertTutorError) throw translateError(insertTutorError.code);
         }
       } else if (type === "catsitter") {
         const { data: existingCatSitter } = await supabase
@@ -141,17 +141,15 @@ export default function AuthProvider({
               },
             ]);
 
-          if (insertCatSitterError) throw insertCatSitterError;
+          if (insertCatSitterError)
+            throw translateError(insertCatSitterError.code);
         }
       }
 
-      Alert.alert(
-        "Conta criada!",
-        "Verifique seu email para confirmar o cadastro."
-      );
+      Alert.alert("Verifique seu email para confirmar o cadastro.");
       router.navigate("/");
     } catch (err: any) {
-      Alert.alert("Erro", err.message);
+      Alert.alert("Atenção", translateError(err.code));
     } finally {
       setLoading(false);
     }

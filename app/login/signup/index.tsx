@@ -9,6 +9,7 @@ import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import MaskInput from "react-native-mask-input";
 import { Button, RadioButton, Text, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Icon from "react-native-vector-icons/MaterialIcons";
 import * as yup from "yup";
 
 const requiredMessage = "Campo obrigatório";
@@ -48,6 +49,8 @@ const schema = yup
 
 export default function SignUp() {
   const [open, setOpen] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const { signUpWithEmail, loading } = useContext(AuthContext);
 
@@ -226,6 +229,18 @@ export default function SignUp() {
               render={({ field: { onChange, value } }) => (
                 <TextInput
                   label="Senha"
+                  right={
+                    <TextInput.Icon
+                      icon={() =>
+                        showPassword ? (
+                          <Icon name="visibility" size={20} color="#888" />
+                        ) : (
+                          <Icon name="visibility-off" size={20} color="#888" />
+                        )
+                      }
+                      onPress={() => setShowPassword(!showPassword)}
+                    />
+                  }
                   onChangeText={onChange}
                   value={value}
                   secureTextEntry
@@ -248,9 +263,21 @@ export default function SignUp() {
             render={({ field: { onChange, value } }) => (
               <TextInput
                 label="Confirmar senha"
+                right={
+                  <TextInput.Icon
+                    icon={() =>
+                      showConfirmPassword ? (
+                        <Icon name="visibility" size={20} color="#888" />
+                      ) : (
+                        <Icon name="visibility-off" size={20} color="#888" />
+                      )
+                    }
+                    onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                  />
+                }
                 onChangeText={onChange}
                 value={value}
-                secureTextEntry
+                secureTextEntry={!showConfirmPassword}
                 placeholder="Confirme sua senha"
               />
             )}

@@ -48,7 +48,7 @@ export default function AuthProvider({
     if (error) {
       Alert.alert(translateError(error.code));
     } else {
-      router.navigate("/");
+      router.navigate("./home");
     }
     setLoading(false);
   }

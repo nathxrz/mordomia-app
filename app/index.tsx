@@ -1,9 +1,9 @@
-import Profile from "@/components/Profile";
 import { Session } from "@supabase/supabase-js";
 import { Redirect } from "expo-router";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
 import { supabase } from "../lib/supabase";
+import Home from "./home";
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -21,7 +21,7 @@ export default function App() {
   return (
     <View>
       {session && session.user ? (
-        <Profile session={session} />
+        <Home session={session} />
       ) : (
         <Redirect href="/login" />
       )}

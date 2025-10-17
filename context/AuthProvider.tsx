@@ -1,5 +1,6 @@
+import { Session } from "@supabase/supabase-js";
 import { useRouter } from "expo-router";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { Alert, AppState } from "react-native";
 import { supabase } from "../lib/supabase";
 import translateError from "../scripts/translate-error";
@@ -23,10 +24,18 @@ export const AuthContext = createContext<{
     dateBirth: Date,
     type: string
   ) => Promise<void>;
+  getUserById: (userId: string) => Promise<any>;
+  session: Session | null;
+  getCatSitterByUserId: (userId: string) => Promise<any>;
+  getTutorByUserId: (userId: string) => Promise<any>;
 }>({
   signInWithEmail: async () => {},
   loading: false,
   signUpWithEmail: async () => {},
+  session: null,
+  getUserById: async () => {},
+  getCatSitterByUserId: async () => {},
+  getTutorByUserId: async () => {},
 });
 
 export default function AuthProvider({
@@ -36,6 +45,17 @@ export default function AuthProvider({
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+  }, []);
 
   async function signInWithEmail(email: string, password: string) {
     setLoading(true);
@@ -48,7 +68,7 @@ export default function AuthProvider({
     if (error) {
       Alert.alert(translateError(error.code));
     } else {
-      router.navigate("./home");
+      router.navigate("./(tabs)/");
     }
     setLoading(false);
   }
@@ -155,8 +175,66 @@ export default function AuthProvider({
     }
   }
 
+  async function getUserById(userId: string) {
+    try {
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("id", userId)
+        .maybeSingle();
+
+      if (error) throw translateError(error.code);
+      return data;
+    } catch (error) {
+      console.error("Error fetching user by ID:", error);
+      throw error;
+    }
+  }
+
+  async function getCatSitterByUserId(userId: string) {
+    try {
+      const { data, error } = await supabase
+        .from("cat_sitters")
+        .select("*")
+        .eq("id_user", userId)
+        .single();
+
+      if (error) throw translateError(error.code);
+      return data;
+    } catch (error) {
+      console.error("Error fetching cat sitter by user ID:", error);
+      throw error;
+    }
+  }
+
+  async function getTutorByUserId(userId: string) {
+    try {
+      const { data, error } = await supabase
+        .from("tutors")
+        .select("*")
+        .eq("id_user", userId)
+        .single();
+
+      if (error) throw translateError(error.code);
+      return data;
+    } catch (error) {
+      console.error("Error fetching cat sitter by user ID:", error);
+      throw error;
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ signInWithEmail, loading, signUpWithEmail }}>
+    <AuthContext.Provider
+      value={{
+        signInWithEmail,
+        loading,
+        signUpWithEmail,
+        session,
+        getUserById,
+        getCatSitterByUserId,
+        getTutorByUserId,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

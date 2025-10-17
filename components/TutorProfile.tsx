@@ -1,27 +1,26 @@
 import { AuthContext } from "@/context/AuthProvider";
 import React, { useContext, useEffect, useState } from "react";
-import { Alert, Text } from "react-native";
+import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function TutorHome({ tutorId }: { tutorId: string }) {
+export default function TutorProfile({ tutorId }: { tutorId: string }) {
   const { getUserById } = useContext(AuthContext);
   const [userData, setUserData] = useState<any>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       const user = await getUserById(tutorId);
-      Alert.alert("user:", JSON.stringify(user));
       setUserData(user);
     };
-    fetchData();
+
+    if (tutorId) {
+      fetchData();
+    }
   }, [tutorId, getUserById]);
-
-  Alert.alert("tutorId:", tutorId);
-
 
   return (
     <SafeAreaView>
-      <Text>Tutor Home Screen</Text>
+      <Text>Tutor Profile Screen</Text>
       {userData ? (
         <Text>Welcome, {userData.name}!</Text>
       ) : (

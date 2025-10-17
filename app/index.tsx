@@ -1,27 +1,15 @@
-import { Session } from "@supabase/supabase-js";
+import { AuthContext } from "@/context/AuthProvider";
 import { Redirect } from "expo-router";
-import { useEffect, useState } from "react";
+import { useContext } from "react";
 import { View } from "react-native";
-import { supabase } from "../lib/supabase";
-import Home from "./home";
 
 export default function App() {
-  const [session, setSession] = useState<Session | null>(null);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-  }, []);
+  const { session } = useContext(AuthContext);
 
   return (
     <View>
       {session && session.user ? (
-        <Home session={session} />
+        <Redirect href="/home" />
       ) : (
         <Redirect href="/login" />
       )}

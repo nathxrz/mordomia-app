@@ -6,7 +6,7 @@ import React, { useContext } from "react";
 import { ActivityIndicator, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function Profile({ userId }: { userId: string }) {
+export default function Profile() {
   const { user } = useContext(AuthContext);
 
   if (!user) {
@@ -28,7 +28,7 @@ export default function Profile({ userId }: { userId: string }) {
     } else if (user.roles.includes("admin")) {
       return <AdminProfile userId={user.id} />;
     } else {
-      return <TutorProfile userId={user.id} />;
+      return <TutorProfile userAuth={{ id: user.id, email: user.email }} />;
     }
   };
 

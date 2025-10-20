@@ -1,20 +1,74 @@
 import { useTutor } from "@/hooks/useTutor";
 import { useUser } from "@/hooks/useUser";
 import React from "react";
-import { Text } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function TutorProfile({ userId }: { userId: string }) {
-  const userData = useUser({ userId: userId });
-  const tutorData = useTutor({ userId: userId });
+export default function TutorProfile({
+  userAuth,
+}: {
+  userAuth: { id: string; email: string };
+}) {
+  const userData = useUser({ userId: userAuth.id });
+  const tutorData = useTutor({ userId: userAuth.id });
   return (
-    <SafeAreaView>
-      <Text>Tutor Profile Screen</Text>
-      {tutorData ? (
-        <Text>Welcome, {userData.name}!</Text>
-      ) : (
-        <Text>Carregando informações...</Text>
-      )}
+    <SafeAreaView style={styles.container}>
+      <ScrollView
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+      >
+        {userData ? (
+          <>
+            <View>
+              <Image
+                style={{ borderRadius: 150, width: 144, height: 144 }}
+                source={require("../../assets/images/avatar.png")}
+              />
+              <Text>{userData.name}</Text>
+              <Text>{userAuth.email}</Text>
+            </View>
+
+            <View>
+              <Text>Informações básicas</Text>
+              <Text>{userData.phone}</Text>
+              <Text>
+                <Text>
+                  Cidade, <Text>Estado</Text>
+                </Text>
+                <Text>
+                  Rua, <Text>número</Text>, <Text>bairro</Text>,{" "}
+                  <Text>complemento</Text>
+                </Text>
+              </Text>
+              <Text>{new Date(userData.date_birth).toLocaleDateString()}</Text>
+            </View>
+
+            <View>
+              <Text>Pets</Text>
+              {/* <Link href="/pets">Gerenciar meus pets</Link> */}
+              <Text>Gerenciar meus pets</Text>
+            </View>
+
+            <View>
+              <Text>Configurações</Text>
+              {/* <Link href="/relatorios">Relatórios</Link> */}
+              <Text>Relatórios</Text>
+              {/* <Link href="/trocarusuario">Trocar usuário</Link> */}
+              <Text>Trocar usuário</Text>
+              <Text>Sair</Text>
+            </View>
+          </>
+        ) : (
+          <Text>Carregando informações...</Text>
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 40,
+    padding: 12,
+  },
+});

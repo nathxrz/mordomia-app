@@ -14,7 +14,7 @@ AppState.addEventListener("change", (state) => {
 });
 
 export const AuthContext = createContext<{
-  user: { id: string; roles: string[] } | null;
+  user: { id: string; roles: string[]; email: string } | null;
   signInWithEmail: (email: string, password: string) => Promise<void>;
   loading: boolean;
   signUpWithEmail: (
@@ -44,9 +44,11 @@ export default function AuthProvider({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
-  const [user, setUser] = useState<{ id: string; roles: string[] } | null>(
-    null
-  );
+  const [user, setUser] = useState<{
+    id: string;
+    roles: string[];
+    email: string;
+  } | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -59,6 +61,7 @@ export default function AuthProvider({
           const user = {
             id: data?.id,
             roles: [] as string[],
+            email: session?.user.email || "",
           };
 
           if (error) {
@@ -202,24 +205,6 @@ export default function AuthProvider({
     }
   }
 
-  // async function getUserById(userId: string) {
-  //   try {
-  //     if (!userId) throw new Error("ID necessário para buscar o usuário.");
-
-  //     const { data, error } = await supabase
-  //       .from("users")
-  //       .select("*")
-  //       .eq("id", userId)
-  //       .maybeSingle();
-
-  //     if (error) throw translateError(error.code);
-  //     return data;
-  //   } catch (error) {
-  //     console.error("Error fetching user by ID:", error);
-  //     throw error;
-  //   }
-  // }
-
   async function getCatSitterByUserId(userId: string) {
     try {
       const { data, error } = await supabase
@@ -235,22 +220,6 @@ export default function AuthProvider({
       throw error;
     }
   }
-
-  // async function getTutorByUserId(userId: string) {
-  //   try {
-  //     const { data, error } = await supabase
-  //       .from("tutors")
-  //       .select("*")
-  //       .eq("id_user", userId)
-  //       .maybeSingle();
-
-  //     if (error) throw translateError(error.code);
-  //     return data;
-  //   } catch (error) {
-  //     console.error("Error fetching tutor by user ID:", error);
-  //     throw error;
-  //   }
-  // }
 
   return (
     <AuthContext.Provider

@@ -1,88 +1,15 @@
-import TutorHome from "@/components/TutorHome";
+import AdminHome from "@/components/home/AdminHome";
+import CatSitterHome from "@/components/home/CatSitterHome";
+import TutorHome from "@/components/home/TutorHome";
 import { AuthContext } from "@/context/AuthProvider";
-import React, { useContext, useEffect, useState } from "react";
-import { ActivityIndicator, Alert, Text } from "react-native";
+import React, { useContext } from "react";
+import { ActivityIndicator, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
-  const { session, getUserById } = useContext(AuthContext);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [role, setRole] = useState("");
-  const [userId, setUserId] = useState<string>("");
+  const { user } = useContext(AuthContext);
 
-  useEffect(() => {
-    async function getProfile(): Promise<void> {
-      try {
-        setLoading(true);
-        if (!session?.user) throw new Error("Nenhum usuário na sessão!");
-
-        // const { data: userData, error } = await supabase
-        //   .from("users")
-        //   .select("*")
-        //   .eq("id", session.user.id)
-        //   .maybeSingle();
-
-        // if (error) throw translateError(error.code);
-
-        // const dataCatSitter = await getCatSitterByUserId(session.user.id);
-        const dataTutor = await getUserById(session.user.id);
-
-        if (dataTutor) {
-          setRole("tutor");
-          setUserId(dataTutor.id_user);
-        } else {
-          setRole("");
-        }
-
-        Alert.alert("tutorId1:", userId);
-
-        // if (dataCatSitter) {
-        //   setRole("catsitter");
-        //   setUserId(dataCatSitter.id_user);
-        // } else if (dataTutor) {
-        //   setRole("tutor");
-        //   setUserId(dataTutor.id_user);
-        // } else {
-        //   setRole("");
-        // }
-
-        // const { data: catsitterData, error: catsitterError } = await supabase
-        //   .from("cat_sitters")
-        //   .select("*")
-        //   .eq("id_user", userData.id)
-        //   .maybeSingle();
-
-        // if (catsitterError) throw catsitterError;
-
-        // const { data: tutorData, error: tutorError } = await supabase
-        //   .from("tutors")
-        //   .select("*")
-        //   .eq("id_user", userData.id)
-        //   .maybeSingle();
-
-        // if (tutorError) throw tutorError;
-
-        // if (catsitterData?.id) {
-        //   setRole("catsitter");
-        // } else if (tutorData?.id) {
-        //   setRole("tutor");
-        // } else {
-        //   setRole("");
-        // }
-      } catch (error) {
-        console.log("Erro getProfile:", error);
-        if (error instanceof Error)
-          Alert.alert("Erro ao carregar perfil", error.message);
-        setRole("");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    if (session) getProfile();
-  }, [session]);
-
-  if (loading) {
+  if (!user) {
     return (
       <SafeAreaView
         style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
@@ -95,15 +22,15 @@ export default function Index() {
     );
   }
 
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-      {/* {role === "catsitter" ? (
-        <CatSitterHome catsitterId={userId} />
-      ) : (
-        <TutorHome tutorId={userId} />
-      )} */}
-      { }
-      {role === "tutor" && <TutorHome tutorId={userId} />}
-    </SafeAreaView>
-  );
+  const getHomeScreen = () => {
+    if (user.roles.includes("admin")) {
+      return <AdminHome user={{ id: user.id }} />;
+    } else if (user.roles.includes("catsitter")) {
+      return <CatSitterHome user={{ id: user.id }} />;
+    } else {
+      return <TutorHome user={{ id: user.id }} />;
+    }
+  };
+
+  return <SafeAreaView style={{ flex: 1 }}>{getHomeScreen()}</SafeAreaView>;
 }

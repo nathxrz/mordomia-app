@@ -14,6 +14,7 @@ AppState.addEventListener("change", (state) => {
 });
 
 export const AuthContext = createContext<{
+  user: { id: string; roles: string[] } | null;
   signInWithEmail: (email: string, password: string) => Promise<void>;
   loading: boolean;
   signUpWithEmail: (
@@ -24,18 +25,15 @@ export const AuthContext = createContext<{
     dateBirth: Date,
     type: string
   ) => Promise<void>;
-  getUserById: (userId: string) => Promise<any>;
   session: Session | null;
   getCatSitterByUserId: (userId: string) => Promise<any>;
-  getTutorByUserId: (userId: string) => Promise<any>;
 }>({
+  user: null,
   signInWithEmail: async () => {},
   loading: false,
   signUpWithEmail: async () => {},
   session: null,
-  getUserById: async () => {},
   getCatSitterByUserId: async () => {},
-  getTutorByUserId: async () => {},
 });
 
 export default function AuthProvider({
@@ -46,9 +44,38 @@ export default function AuthProvider({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<{ id: string; roles: string[] } | null>(
+    null
+  );
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
+      supabase
+        .from("users")
+        .select("id, cat_sitters (id), tutors (id)")
+        .eq("id", session?.user.id)
+        .single()
+        .then(({ data, error }) => {
+          const user = {
+            id: data?.id,
+            roles: [] as string[],
+          };
+
+          if (error) {
+            console.log("Error fetching user roles:", error);
+            return;
+          }
+
+          if (data.cat_sitters?.length > 0) {
+            user.roles.push("catsitter");
+          }
+          if (data?.tutors?.length > 0) {
+            user.roles.push("tutor");
+          }
+
+          setUser(user);
+        });
+
       setSession(session);
     });
 
@@ -175,21 +202,23 @@ export default function AuthProvider({
     }
   }
 
-  async function getUserById(userId: string) {
-    try {
-      const { data, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq("id", userId)
-        .maybeSingle();
+  // async function getUserById(userId: string) {
+  //   try {
+  //     if (!userId) throw new Error("ID necessário para buscar o usuário.");
 
-      if (error) throw translateError(error.code);
-      return data;
-    } catch (error) {
-      console.error("Error fetching user by ID:", error);
-      throw error;
-    }
-  }
+  //     const { data, error } = await supabase
+  //       .from("users")
+  //       .select("*")
+  //       .eq("id", userId)
+  //       .maybeSingle();
+
+  //     if (error) throw translateError(error.code);
+  //     return data;
+  //   } catch (error) {
+  //     console.error("Error fetching user by ID:", error);
+  //     throw error;
+  //   }
+  // }
 
   async function getCatSitterByUserId(userId: string) {
     try {
@@ -197,7 +226,7 @@ export default function AuthProvider({
         .from("cat_sitters")
         .select("*")
         .eq("id_user", userId)
-        .single();
+        .maybeSingle();
 
       if (error) throw translateError(error.code);
       return data;
@@ -207,32 +236,31 @@ export default function AuthProvider({
     }
   }
 
-  async function getTutorByUserId(userId: string) {
-    try {
-      const { data, error } = await supabase
-        .from("tutors")
-        .select("*")
-        .eq("id_user", userId)
-        .single();
+  // async function getTutorByUserId(userId: string) {
+  //   try {
+  //     const { data, error } = await supabase
+  //       .from("tutors")
+  //       .select("*")
+  //       .eq("id_user", userId)
+  //       .maybeSingle();
 
-      if (error) throw translateError(error.code);
-      return data;
-    } catch (error) {
-      console.error("Error fetching cat sitter by user ID:", error);
-      throw error;
-    }
-  }
+  //     if (error) throw translateError(error.code);
+  //     return data;
+  //   } catch (error) {
+  //     console.error("Error fetching tutor by user ID:", error);
+  //     throw error;
+  //   }
+  // }
 
   return (
     <AuthContext.Provider
       value={{
+        user,
         signInWithEmail,
         loading,
         signUpWithEmail,
         session,
-        getUserById,
         getCatSitterByUserId,
-        getTutorByUserId,
       }}
     >
       {children}

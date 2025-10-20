@@ -9,7 +9,7 @@ export default function App() {
   return (
     <View>
       {session && session.user ? (
-        <Redirect href="/home" />
+        <Redirect href="/(tabs)" />
       ) : (
         <Redirect href="/login" />
       )}

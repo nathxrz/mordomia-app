@@ -1,13 +1,13 @@
 import AdminProfile from "@/components/profile/AdminProfile";
 import CatSitterProfile from "@/components/profile/CatSitterProfile";
 import TutorProfile from "@/components/profile/TutorProfile";
-import { AuthContext } from "@/context/AuthProvider";
-import React, { useContext } from "react";
+import { useUser } from "@/hooks/useUser";
+import React from "react";
 import { ActivityIndicator, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Profile() {
-  const { user } = useContext(AuthContext);
+  const { user } = useUser();
 
   if (!user) {
     return (
@@ -28,7 +28,7 @@ export default function Profile() {
     } else if (user.roles.includes("admin")) {
       return <AdminProfile userId={user.id} />;
     } else {
-      return <TutorProfile userAuth={{ id: user.id, email: user.email }} />;
+      return <TutorProfile />;
     }
   };
 

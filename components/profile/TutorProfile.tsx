@@ -1,16 +1,19 @@
-import { useTutor } from "@/hooks/useTutor";
+import { AuthContext } from "@/context/AuthProvider";
 import { useUser } from "@/hooks/useUser";
-import React from "react";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useContext } from "react";
+import {
+  Button,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function TutorProfile({
-  userAuth,
-}: {
-  userAuth: { id: string; email: string };
-}) {
-  const userData = useUser({ userId: userAuth.id });
-  const tutorData = useTutor({ userId: userAuth.id });
+export default function TutorProfile() {
+  const { user: userData } = useUser();
+  const { signOut } = useContext(AuthContext);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -25,7 +28,7 @@ export default function TutorProfile({
                 source={require("../../assets/images/avatar.png")}
               />
               <Text>{userData.name}</Text>
-              <Text>{userAuth.email}</Text>
+              <Text>{userData.email}</Text>
             </View>
 
             <View>
@@ -55,7 +58,7 @@ export default function TutorProfile({
               <Text>Relatórios</Text>
               {/* <Link href="/trocarusuario">Trocar usuário</Link> */}
               <Text>Trocar usuário</Text>
-              <Text>Sair</Text>
+              <Button title="Sair" onPress={signOut} />
             </View>
           </>
         ) : (

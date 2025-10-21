@@ -1,13 +1,13 @@
 import AdminHome from "@/components/home/AdminHome";
 import CatSitterHome from "@/components/home/CatSitterHome";
 import TutorHome from "@/components/home/TutorHome";
-import { AuthContext } from "@/context/AuthProvider";
-import React, { useContext } from "react";
+import { useUser } from "@/hooks/useUser";
+import React from "react";
 import { ActivityIndicator, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
-  const { user } = useContext(AuthContext);
+  const { user } = useUser();
 
   if (!user) {
     return (

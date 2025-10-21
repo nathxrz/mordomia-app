@@ -24,7 +24,7 @@ const schema = yup
   .required();
 
 export default function SignIn() {
-  const { signInWithEmail, loading } = useContext(AuthContext);
+  const { signIn, loading } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -113,7 +113,7 @@ export default function SignIn() {
               mode="contained"
               disabled={loading}
               onPress={handleSubmit(async (data) => {
-                await signInWithEmail(data.email, data.password);
+                await signIn(data.email, data.password);
               })}
             >
               Entrar

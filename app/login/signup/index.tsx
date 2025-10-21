@@ -52,7 +52,7 @@ export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const { signUpWithEmail, loading } = useContext(AuthContext);
+  const { signUp, loading } = useContext(AuthContext);
 
   const {
     control,
@@ -295,7 +295,7 @@ export default function SignUp() {
             disabled={loading}
             style={styles.mt20}
             onPress={handleSubmit((data) => {
-              signUpWithEmail(
+              signUp(
                 data.email,
                 data.password,
                 data.name,

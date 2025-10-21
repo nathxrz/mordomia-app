@@ -14,10 +14,8 @@ AppState.addEventListener("change", (state) => {
 });
 
 export const AuthContext = createContext<{
-  user: { id: string; roles: string[]; email: string } | null;
-  signInWithEmail: (email: string, password: string) => Promise<void>;
-  loading: boolean;
-  signUpWithEmail: (
+  signIn: (email: string, password: string) => Promise<void>;
+  signUp: (
     email: string,
     password: string,
     name: string,
@@ -25,15 +23,15 @@ export const AuthContext = createContext<{
     dateBirth: Date,
     type: string
   ) => Promise<void>;
+  signOut: () => Promise<void>;
   session: Session | null;
-  getCatSitterByUserId: (userId: string) => Promise<any>;
+  loading: boolean;
 }>({
-  user: null,
-  signInWithEmail: async () => {},
-  loading: false,
-  signUpWithEmail: async () => {},
+  signIn: async () => {},
+  signUp: async () => {},
+  signOut: async () => {},
   session: null,
-  getCatSitterByUserId: async () => {},
+  loading: false,
 });
 
 export default function AuthProvider({
@@ -44,41 +42,9 @@ export default function AuthProvider({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
-  const [user, setUser] = useState<{
-    id: string;
-    roles: string[];
-    email: string;
-  } | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      supabase
-        .from("users")
-        .select("id, cat_sitters (id), tutors (id)")
-        .eq("id", session?.user.id)
-        .single()
-        .then(({ data, error }) => {
-          const user = {
-            id: data?.id,
-            roles: [] as string[],
-            email: session?.user.email || "",
-          };
-
-          if (error) {
-            console.log("Error fetching user roles:", error);
-            return;
-          }
-
-          if (data.cat_sitters?.length > 0) {
-            user.roles.push("catsitter");
-          }
-          if (data?.tutors?.length > 0) {
-            user.roles.push("tutor");
-          }
-
-          setUser(user);
-        });
-
       setSession(session);
     });
 
@@ -87,7 +53,7 @@ export default function AuthProvider({
     });
   }, []);
 
-  async function signInWithEmail(email: string, password: string) {
+  async function signIn(email: string, password: string) {
     setLoading(true);
 
     const { error } = await supabase.auth.signInWithPassword({
@@ -103,7 +69,7 @@ export default function AuthProvider({
     setLoading(false);
   }
 
-  async function signUpWithEmail(
+  async function signUp(
     email: string,
     password: string,
     name: string,
@@ -205,31 +171,74 @@ export default function AuthProvider({
     }
   }
 
-  async function getCatSitterByUserId(userId: string) {
-    try {
-      const { data, error } = await supabase
-        .from("cat_sitters")
-        .select("*")
-        .eq("id_user", userId)
-        .maybeSingle();
+  // async function getCatSitterByUserId(userId: string) {
+  //   try {
+  //     const { data, error } = await supabase
+  //       .from("cat_sitters")
+  //       .select("*")
+  //       .eq("id_user", userId)
+  //       .maybeSingle();
 
-      if (error) throw translateError(error.code);
-      return data;
-    } catch (error) {
-      console.error("Error fetching cat sitter by user ID:", error);
-      throw error;
+  //     if (error) throw translateError(error.code);
+  //     return data;
+  //   } catch (error) {
+  //     console.error("Error fetching cat sitter by user ID:", error);
+  //     throw error;
+  //   }
+  // }
+
+  async function signOut() {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      Alert.alert(translateError(error.code));
+      return;
     }
+    setSession(null);
+    Alert.alert("Você saiu com sucesso.");
+    router.navigate("/login");
   }
+
+  // async function updateProfile({
+  //   name,
+  //   phone,
+  //   dateBirth,
+  // }: {
+  //   name: string;
+  //   phone: string;
+  //   dateBirth: Date;
+  // }) {
+  //   try {
+  //     setLoading(true);
+  //     if (!session?.user) throw new Error("Nenhum usuário na sessão!");
+
+  //     const updates = {
+  //       id: session?.user.id,
+  //       name,
+  //       phone,
+  //       dateBirth,
+  //       updated_at: new Date(),
+  //     };
+  //     const { error } = await supabase.from("users").upsert(updates);
+  //     if (error) {
+  //       throw new Error(translateError(error.code));
+  //     }
+  //   } catch (error) {
+  //     if (error instanceof Error) {
+  //       Alert.alert(error.message);
+  //     }
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
 
   return (
     <AuthContext.Provider
       value={{
-        user,
-        signInWithEmail,
-        loading,
-        signUpWithEmail,
+        signIn,
+        signUp,
+        signOut,
         session,
-        getCatSitterByUserId,
+        loading,
       }}
     >
       {children}

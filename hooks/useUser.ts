@@ -1,7 +1,9 @@
 import { AuthContext } from "@/context/AuthProvider";
 import { supabase } from "@/lib/supabase";
 import translateError from "@/scripts/translate-error";
+import { router } from "expo-router";
 import { useContext, useEffect, useState } from "react";
+
 import { Alert } from "react-native";
 
 export const useUser = () => {
@@ -39,15 +41,7 @@ export const useUser = () => {
     fetchData();
   }, [userId, session]);
 
-  async function updateProfile({
-    name,
-    phone,
-    dateBirth,
-  }: {
-    name: string;
-    phone: string;
-    dateBirth: Date;
-  }) {
+  async function updateProfile(name: string, phone: string, dateBirth: Date) {
     try {
       setLoading(true);
       if (!userId) throw new Error("Nenhum usuário na sessão!");
@@ -56,13 +50,15 @@ export const useUser = () => {
         id: userId,
         name,
         phone,
-        dateBirth,
+        date_birth: dateBirth,
         updated_at: new Date(),
       };
       const { error } = await supabase.from("users").upsert(updates);
       if (error) {
         throw new Error(translateError(error.code));
       }
+      Alert.alert("Perfil atualizado com sucesso!");
+      router.push("/(tabs)/profile");
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert(error.message);

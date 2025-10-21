@@ -171,22 +171,6 @@ export default function AuthProvider({
     }
   }
 
-  // async function getCatSitterByUserId(userId: string) {
-  //   try {
-  //     const { data, error } = await supabase
-  //       .from("cat_sitters")
-  //       .select("*")
-  //       .eq("id_user", userId)
-  //       .maybeSingle();
-
-  //     if (error) throw translateError(error.code);
-  //     return data;
-  //   } catch (error) {
-  //     console.error("Error fetching cat sitter by user ID:", error);
-  //     throw error;
-  //   }
-  // }
-
   async function signOut() {
     const { error } = await supabase.auth.signOut();
     if (error) {
@@ -197,39 +181,6 @@ export default function AuthProvider({
     Alert.alert("Você saiu com sucesso.");
     router.navigate("/login");
   }
-
-  // async function updateProfile({
-  //   name,
-  //   phone,
-  //   dateBirth,
-  // }: {
-  //   name: string;
-  //   phone: string;
-  //   dateBirth: Date;
-  // }) {
-  //   try {
-  //     setLoading(true);
-  //     if (!session?.user) throw new Error("Nenhum usuário na sessão!");
-
-  //     const updates = {
-  //       id: session?.user.id,
-  //       name,
-  //       phone,
-  //       dateBirth,
-  //       updated_at: new Date(),
-  //     };
-  //     const { error } = await supabase.from("users").upsert(updates);
-  //     if (error) {
-  //       throw new Error(translateError(error.code));
-  //     }
-  //   } catch (error) {
-  //     if (error instanceof Error) {
-  //       Alert.alert(error.message);
-  //     }
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
 
   return (
     <AuthContext.Provider

@@ -254,60 +254,62 @@ export default function SignUp() {
               </Text>
             )}
           </View>
-        </>
 
-        <View>
-          <Controller
-            control={control}
-            name="confirmPassword"
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                label="Confirmar senha"
-                right={
-                  <TextInput.Icon
-                    icon={() =>
-                      showConfirmPassword ? (
-                        <Icon name="visibility" size={20} color="#888" />
-                      ) : (
-                        <Icon name="visibility-off" size={20} color="#888" />
-                      )
-                    }
-                    onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-                  />
-                }
-                onChangeText={onChange}
-                value={value}
-                secureTextEntry={!showConfirmPassword}
-                placeholder="Confirme sua senha"
-              />
+          <View>
+            <Controller
+              control={control}
+              name="confirmPassword"
+              render={({ field: { onChange, value } }) => (
+                <TextInput
+                  label="Confirmar senha"
+                  right={
+                    <TextInput.Icon
+                      icon={() =>
+                        showConfirmPassword ? (
+                          <Icon name="visibility" size={20} color="#888" />
+                        ) : (
+                          <Icon name="visibility-off" size={20} color="#888" />
+                        )
+                      }
+                      onPress={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                    />
+                  }
+                  onChangeText={onChange}
+                  value={value}
+                  secureTextEntry={!showConfirmPassword}
+                  placeholder="Confirme sua senha"
+                />
+              )}
+            />
+            {errors.confirmPassword && (
+              <Text style={styles.messageAlert}>
+                {errors.confirmPassword?.message}
+              </Text>
             )}
-          />
-          {errors.confirmPassword && (
-            <Text style={styles.messageAlert}>
-              {errors.confirmPassword?.message}
-            </Text>
-          )}
-        </View>
+          </View>
 
-        <View>
-          <Button
-            mode="contained"
-            disabled={loading}
-            style={styles.mt20}
-            onPress={handleSubmit((data) => {
-              signUp(
-                data.email,
-                data.password,
-                data.name,
-                data.phone.replace(/\D/g, ""),
-                data.birthDate as Date,
-                data.type
-              );
-            })}
-          >
-            Criar conta
-          </Button>
-        </View>
+          <View>
+            <Button
+              mode="contained"
+              disabled={loading}
+              style={styles.mt20}
+              onPress={handleSubmit((data) => {
+                signUp(
+                  data.email,
+                  data.password,
+                  data.name,
+                  data.phone.replace(/\D/g, ""),
+                  data.birthDate as Date,
+                  data.type
+                );
+              })}
+            >
+              Criar conta
+            </Button>
+          </View>
+        </>
       </ScrollView>
     </SafeAreaView>
   );

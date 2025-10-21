@@ -1,5 +1,6 @@
 import { AuthContext } from "@/context/AuthProvider";
 import { useUser } from "@/hooks/useUser";
+import { router } from "expo-router";
 import React, { useContext } from "react";
 import {
   Button,
@@ -7,9 +8,11 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 export default function TutorProfile() {
   const { user: userData } = useUser();
@@ -22,6 +25,15 @@ export default function TutorProfile() {
       >
         {userData ? (
           <>
+            <View>
+              <TouchableOpacity
+                onPress={() => {
+                  router.push("/edits/editprofile");
+                }}
+              >
+                <Icon name="edit" size={24} color="#000" />
+              </TouchableOpacity>
+            </View>
             <View>
               <Image
                 style={{ borderRadius: 150, width: 144, height: 144 }}
@@ -55,9 +67,7 @@ export default function TutorProfile() {
             <View>
               <Text>Configurações</Text>
               {/* <Link href="/relatorios">Relatórios</Link> */}
-              <Text>Relatórios</Text>
               {/* <Link href="/trocarusuario">Trocar usuário</Link> */}
-              <Text>Trocar usuário</Text>
               <Button title="Sair" onPress={signOut} />
             </View>
           </>

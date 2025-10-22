@@ -43,7 +43,7 @@ export default function AuthProvider({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
-  const { user } = useUser();
+  const { user, resetUser } = useUser();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -57,6 +57,7 @@ export default function AuthProvider({
 
   async function signIn(email: string, password: string) {
     setLoading(true);
+    resetUser();
 
     const { error } = await supabase.auth.signInWithPassword({
       email: email,
@@ -65,8 +66,17 @@ export default function AuthProvider({
 
     if (error) {
       Alert.alert(translateError(error.code));
-    } else {
+    }
+
+    Alert.alert("user", JSON.stringify(user));
+    Alert.alert("session", JSON.stringify(session));
+
+    if (user && user?.deleted_at !== null) {
+      router.navigate("/desactiveUser");
+    } else if (user && user?.deleted_at === null) {
       router.navigate("./(tabs)/");
+    } else {
+      router.navigate("/");
     }
     setLoading(false);
   }
@@ -179,6 +189,7 @@ export default function AuthProvider({
       Alert.alert(translateError(error.code));
       return;
     }
+    resetUser();
     setSession(null);
 
     if (user?.deleted_at === null) {

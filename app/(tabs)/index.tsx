@@ -31,7 +31,7 @@ export default function Index() {
     } else if (user.roles?.includes("tutor") && user.deleted_at === null) {
       return <TutorHome user={{ id: user.id }} />;
     } else {
-      return <Redirect href="../desactiveUser" />;
+      return <Redirect href="./login" />;
     }
   };
 

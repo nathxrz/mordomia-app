@@ -13,7 +13,10 @@ export const useUser = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!userId) return;
+    if (!session || !userId) {
+      setUser(null);
+      return;
+    }
     setLoading(true);
 
     const fetchData = async () => {
@@ -51,6 +54,10 @@ export const useUser = () => {
 
     fetchData();
   }, [userId, session]);
+
+  const resetUser = () => {
+    setUser(null);
+  };
 
   async function updateProfile(
     avatar_url: string | null,
@@ -128,5 +135,12 @@ export const useUser = () => {
     return data;
   }
 
-  return { user, updateProfile, desactivateProfile, loading, activeUsers };
+  return {
+    user,
+    updateProfile,
+    desactivateProfile,
+    loading,
+    activeUsers,
+    resetUser,
+  };
 };

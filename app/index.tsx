@@ -13,6 +13,7 @@ export default function App() {
       ) : (
         <Redirect href="/login" />
       )}
+      TODO: adicionar a validação de usuário desativado aqui
     </View>
   );
 }

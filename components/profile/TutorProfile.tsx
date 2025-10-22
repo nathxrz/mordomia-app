@@ -14,10 +14,12 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import ConfirmedModal from "../modais/ConfirmedModal";
 
 export default function TutorProfile() {
-  const { user: userData } = useUser();
+  const { user: userData, desactivateProfile } = useUser();
   const { signOut } = useContext(AuthContext);
+  const [modalVisible, setModalVisible] = React.useState(false);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -71,10 +73,24 @@ export default function TutorProfile() {
               <Text>Gerenciar meus pets</Text>
             </View>
 
-            <View>
+            <View style={styles.gap}>
               <Text>Configurações</Text>
               {/* <Link href="/relatorios">Relatórios</Link> */}
               {/* <Link href="/trocarusuario">Trocar usuário</Link> */}
+              <Button
+                title="Excluir conta"
+                onPress={() => setModalVisible(true)}
+              />
+              <ConfirmedModal
+                modalVisible={modalVisible}
+                onConfirm={() => {
+                  desactivateProfile();
+                  setModalVisible(false);
+                }}
+                onCancel={() => {
+                  setModalVisible(false);
+                }}
+              />
               <Button title="Sair" onPress={signOut} />
             </View>
           </>
@@ -90,5 +106,10 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 40,
     padding: 12,
+  },
+  gap: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 12,
   },
 });

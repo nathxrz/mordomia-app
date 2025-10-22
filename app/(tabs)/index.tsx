@@ -2,6 +2,7 @@ import AdminHome from "@/components/home/AdminHome";
 import CatSitterHome from "@/components/home/CatSitterHome";
 import TutorHome from "@/components/home/TutorHome";
 import { useUser } from "@/hooks/useUser";
+import { router } from "expo-router";
 import React from "react";
 import { ActivityIndicator, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -23,12 +24,14 @@ export default function Index() {
   }
 
   const getHomeScreen = () => {
-    if (user.roles.includes("admin")) {
+    if (user.roles.includes("admin") && user.deleted_at === null) {
       return <AdminHome user={{ id: user.id }} />;
-    } else if (user.roles.includes("catsitter")) {
+    } else if (user.roles.includes("catsitter") && user.deleted_at === null) {
       return <CatSitterHome user={{ id: user.id }} />;
-    } else {
+    } else if (user.roles.includes("tutor") && user.deleted_at === null) {
       return <TutorHome user={{ id: user.id }} />;
+    } else {
+      router.push("../desactiveUser/");
     }
   };
 

@@ -1,3 +1,4 @@
+import { useUser } from "@/hooks/useUser";
 import { Session } from "@supabase/supabase-js";
 import { useRouter } from "expo-router";
 import { createContext, useEffect, useState } from "react";
@@ -42,6 +43,7 @@ export default function AuthProvider({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
+  const { user } = useUser();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {

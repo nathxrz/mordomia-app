@@ -74,5 +74,48 @@ export const useUser = () => {
     }
   }
 
-  return { user, updateProfile, loading };
+  async function desactivateProfile() {
+    try {
+      setLoading(true);
+      if (!userId) throw new Error("Nenhum usuário na sessão!");
+
+      const { error } = await supabase
+        .from("users")
+        .update({ deleted_at: new Date() })
+        .eq("id", userId);
+      if (error) {
+        throw new Error(translateError(error.code));
+      }
+      Alert.alert("Perfil excluído com sucesso!");
+
+      const { error: signOutError } = await supabase.auth.signOut();
+      if (signOutError) {
+        throw new Error(translateError(signOutError.code));
+      }
+
+      router.push("/login");
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function activeUsers() {
+    if (!userId) return;
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .is("deleted_at", null);
+
+    if (error) {
+      throw new Error(translateError(error.code));
+    }
+
+    return data;
+  }
+
+  return { user, updateProfile, desactivateProfile, loading, activeUsers };
 };

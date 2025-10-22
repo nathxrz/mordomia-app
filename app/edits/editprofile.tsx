@@ -73,7 +73,7 @@ export default function EditProfile() {
       quality: 1,
     });
 
-    if (!result.canceled) {
+    if (!result.canceled && result.assets && result.assets.length > 0) {
       setImage(result.assets[0].uri);
     }
   };
@@ -102,6 +102,8 @@ export default function EditProfile() {
         phone: maskPhone(user.phone),
         birthDate: user.date_birth ? new Date(user.date_birth) : null,
       });
+
+      setImage(user.avatar_url || null);
     }
   }, [user, reset]);
 

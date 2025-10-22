@@ -1,5 +1,6 @@
 import { AuthContext } from "@/context/AuthProvider";
 import { useUser } from "@/hooks/useUser";
+
 import { router } from "expo-router";
 import React, { useContext } from "react";
 import {
@@ -17,6 +18,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 export default function TutorProfile() {
   const { user: userData } = useUser();
   const { signOut } = useContext(AuthContext);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -37,7 +39,12 @@ export default function TutorProfile() {
             <View>
               <Image
                 style={{ borderRadius: 150, width: 144, height: 144 }}
-                source={require("../../assets/images/avatar.png")}
+                // source={require("../../assets/images/avatar.png")}
+                source={
+                  userData.avatar_url
+                    ? { uri: userData.avatar_url }
+                    : require("../../assets/images/avatar.png")
+                }
               />
               <Text>{userData.name}</Text>
               <Text>{userData.email}</Text>

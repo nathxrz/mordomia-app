@@ -41,13 +41,19 @@ export const useUser = () => {
     fetchData();
   }, [userId, session]);
 
-  async function updateProfile(name: string, phone: string, dateBirth: Date) {
+  async function updateProfile(
+    avatar_url: string | null,
+    name: string,
+    phone: string,
+    dateBirth: Date
+  ) {
     try {
       setLoading(true);
       if (!userId) throw new Error("Nenhum usuário na sessão!");
 
       const updates = {
         id: userId,
+        avatar_url,
         name,
         phone,
         date_birth: dateBirth,

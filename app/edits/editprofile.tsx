@@ -2,12 +2,19 @@ import { AuthContext } from "@/context/AuthProvider";
 import { useUser } from "@/hooks/useUser";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import MaskInput from "react-native-mask-input";
 import { Button, Text, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -17,6 +24,7 @@ const requiredMessage = "Campo obrigatório";
 
 const schema = yup
   .object({
+    avatar_url: yup.string().nullable(),
     name: yup
       .string()
       .trim()
@@ -55,6 +63,21 @@ export default function EditProfile() {
 
   const { loading } = useContext(AuthContext);
 
+  const [image, setImage] = React.useState<string | null>(null);
+
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
   const {
     control,
     handleSubmit,
@@ -62,6 +85,7 @@ export default function EditProfile() {
     formState: { errors },
   } = useForm({
     defaultValues: {
+      avatar_url: "",
       name: "",
       phone: "",
       birthDate: null,
@@ -73,6 +97,7 @@ export default function EditProfile() {
   useEffect(() => {
     if (user) {
       reset({
+        avatar_url: user.avatar_url,
         name: user.name,
         phone: maskPhone(user.phone),
         birthDate: user.date_birth ? new Date(user.date_birth) : null,
@@ -87,11 +112,12 @@ export default function EditProfile() {
         showsVerticalScrollIndicator={false}
       >
         <>
-          {/* <View>
-            <Controller
-            />
-            avatar_url
-          </View> */}
+          <View style={styles.container}>
+            <Button onPress={pickImage}>
+              Escolher uma foto de perfil
+              {image && <Image source={{ uri: image }} />}
+            </Button>
+          </View>
           <View style={{ marginBottom: 16 }}>
             <Text variant="labelLarge">Nome completo</Text>
             <Controller
@@ -199,6 +225,7 @@ export default function EditProfile() {
               style={styles.mt20}
               onPress={handleSubmit((data) => {
                 updateProfile(
+                  image,
                   data.name,
                   data.phone.replace(/\D/g, ""),
                   data.birthDate as Date

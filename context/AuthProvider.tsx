@@ -180,8 +180,11 @@ export default function AuthProvider({
       return;
     }
     setSession(null);
-    Alert.alert("Você saiu com sucesso.");
-    router.navigate("/login");
+
+    if (user?.deleted_at === null) {
+      Alert.alert("Você saiu com sucesso.");
+    }
+    router.replace("/");
   }
 
   return (

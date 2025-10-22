@@ -14,30 +14,41 @@ export const useUser = () => {
 
   useEffect(() => {
     if (!userId) return;
+    setLoading(true);
 
     const fetchData = async () => {
-      const { data: user, error } = await supabase
-        .from("users")
-        .select("*, cat_sitters(id), tutors(id)")
-        .eq("id", userId)
-        .maybeSingle();
+      try {
+        const { data: user, error } = await supabase
+          .from("users")
+          .select("*, cat_sitters(id), tutors(id)")
+          .eq("id", userId)
+          .maybeSingle();
 
-      user.roles = [];
-      user.email = session?.user.email;
+        if (error) throw new Error(translateError(error.code));
 
-      if (user?.cat_sitters?.length > 0) {
-        user.roles.push("catsitter");
-      }
+        if (user) {
+          user.roles = [];
+          user.email = session?.user.email;
 
-      if (user?.tutors?.length > 0) {
-        user.roles.push("tutor");
-      }
+          if (user.cat_sitters?.length > 0) {
+            user.roles.push("catsitter");
+          }
 
-      setUser(user);
-      if (error) {
-        throw new Error(translateError(error.code));
+          if (user.tutors?.length > 0) {
+            user.roles.push("tutor");
+          }
+
+          setUser(user);
+        } else {
+          setUser(null);
+        }
+      } catch (err) {
+        console.error("Erro ao buscar usuário:", err);
+      } finally {
+        setLoading(false);
       }
     };
+
     fetchData();
   }, [userId, session]);
 

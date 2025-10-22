@@ -6,14 +6,13 @@ import { View } from "react-native";
 export default function App() {
   const { session } = useContext(AuthContext);
 
-  return (
-    <View>
-      {session && session.user ? (
-        <Redirect href="/(tabs)" />
-      ) : (
-        <Redirect href="/login" />
-      )}
-      TODO: adicionar a validação de usuário desativado aqui
-    </View>
-  );
+  function handleRedirect() {
+    if (session && session.user) {
+      return <Redirect href="/(tabs)" />;
+    } else {
+      return <Redirect href="/login" />;
+    }
+  }
+
+  return <View>{handleRedirect()}</View>;
 }

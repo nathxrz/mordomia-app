@@ -14,7 +14,7 @@ export const useUser = () => {
 
   useEffect(() => {
     if (!session || !userId) {
-      setUser(null);
+      resetUser();
       return;
     }
     setLoading(true);
@@ -53,7 +53,7 @@ export const useUser = () => {
     };
 
     fetchData();
-  }, [userId, session]);
+  }, [userId, session?.user?.id, session]);
 
   const resetUser = () => {
     setUser(null);

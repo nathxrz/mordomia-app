@@ -43,7 +43,7 @@ export default function AuthProvider({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
-  const { user, resetUser } = useUser();
+  const { user } = useUser();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -57,12 +57,21 @@ export default function AuthProvider({
 
   async function signIn(email: string, password: string) {
     setLoading(true);
-    resetUser();
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { error, data } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
     });
+
+    const { data: userData, error: userError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", data?.user?.id)
+      .single();
+
+    if (userError) {
+      Alert.alert(translateError(userError.code));
+    }
 
     if (error) {
       Alert.alert(translateError(error.code));
@@ -71,9 +80,9 @@ export default function AuthProvider({
     Alert.alert("user", JSON.stringify(user));
     Alert.alert("session", JSON.stringify(session));
 
-    if (user && user?.deleted_at !== null) {
+    if (userData && userData?.deleted_at !== null) {
       router.navigate("/desactiveUser");
-    } else if (user && user?.deleted_at === null) {
+    } else if (userData && userData?.deleted_at === null) {
       router.navigate("./(tabs)/");
     } else {
       router.navigate("/");
@@ -189,7 +198,6 @@ export default function AuthProvider({
       Alert.alert(translateError(error.code));
       return;
     }
-    resetUser();
     setSession(null);
 
     if (user?.deleted_at === null) {

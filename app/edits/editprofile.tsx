@@ -120,6 +120,7 @@ export default function EditProfile() {
               {image && <Image source={{ uri: image }} />}
             </Button>
           </View>
+
           <View style={{ marginBottom: 16 }}>
             <Text variant="labelLarge">Nome completo</Text>
             <Controller

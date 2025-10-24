@@ -1,5 +1,5 @@
 import { useUser } from "@/hooks/useUser";
-import { Session } from "@supabase/supabase-js";
+import { createClient, Session } from "@supabase/supabase-js";
 import { useRouter } from "expo-router";
 import { createContext, useEffect, useState } from "react";
 import { Alert, AppState } from "react-native";
@@ -27,12 +27,16 @@ export const AuthContext = createContext<{
   signOut: () => Promise<void>;
   session: Session | null;
   loading: boolean;
+  confirmedPassword: (password: string) => Promise<boolean>;
 }>({
   signIn: async () => {},
   signUp: async () => {},
   signOut: async () => {},
   session: null,
   loading: false,
+  confirmedPassword: async () => {
+    return false;
+  },
 });
 
 export default function AuthProvider({
@@ -63,6 +67,10 @@ export default function AuthProvider({
       password: password,
     });
 
+    if (error) {
+      Alert.alert(translateError(error.code));
+    }
+
     const { data: userData, error: userError } = await supabase
       .from("users")
       .select("*")
@@ -72,13 +80,6 @@ export default function AuthProvider({
     if (userError) {
       Alert.alert(translateError(userError.code));
     }
-
-    if (error) {
-      Alert.alert(translateError(error.code));
-    }
-
-    Alert.alert("user", JSON.stringify(user));
-    Alert.alert("session", JSON.stringify(session));
 
     if (userData && userData?.deleted_at !== null) {
       router.navigate("/desactiveUser");
@@ -206,6 +207,40 @@ export default function AuthProvider({
     router.replace("/");
   }
 
+  async function confirmedPassword(password: string) {
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (!user?.email) throw new Error("Usuário não autenticado.");
+    if (userError) {
+      throw new Error(translateError(userError.code));
+    }
+
+    const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!;
+    const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_KEY!;
+
+    const temSupabase = createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      },
+    });
+
+    const { error: passwordError } = await temSupabase.auth.signInWithPassword({
+      email: user.email,
+      password: password,
+    });
+
+    if (passwordError) {
+      Alert.alert(translateError(passwordError.code));
+      return false;
+    }
+
+    return true;
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -214,6 +249,7 @@ export default function AuthProvider({
         signOut,
         session,
         loading,
+        confirmedPassword,
       }}
     >
       {children}

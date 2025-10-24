@@ -1,7 +1,7 @@
 import { AuthContext } from "@/context/AuthProvider";
 import { useUser } from "@/hooks/useUser";
 
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import React, { useContext } from "react";
 import {
   Button,
@@ -15,11 +15,14 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import ConfirmedModal from "../modais/ConfirmedModal";
+import ConfirmedModalPassword from "../modais/ConfirmedModalPassword";
 
 export default function TutorProfile() {
-  const { user: userData, desactivateProfile } = useUser();
+  const { user: userData } = useUser();
   const { signOut } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = React.useState(false);
+  const [modalVisibleConfirmedPassword, setModalVisibleConfirmedPassword] =
+    React.useState(false);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -69,28 +72,34 @@ export default function TutorProfile() {
 
             <View>
               <Text>Pets</Text>
-              {/* <Link href="/pets">Gerenciar meus pets</Link> */}
-              <Text>Gerenciar meus pets</Text>
+              <Link href="/pets">Ver pets</Link>
             </View>
 
             <View style={styles.gap}>
               <Text>Configurações</Text>
               {/* <Link href="/relatorios">Relatórios</Link> */}
               {/* <Link href="/trocarusuario">Trocar usuário</Link> */}
+
               <Button
                 title="Excluir conta"
                 onPress={() => setModalVisible(true)}
               />
+
               <ConfirmedModal
                 modalVisible={modalVisible}
                 onConfirm={() => {
-                  desactivateProfile();
                   setModalVisible(false);
+                  setModalVisibleConfirmedPassword(true);
                 }}
-                onCancel={() => {
-                  setModalVisible(false);
-                }}
+                onCancel={() => setModalVisible(false)}
               />
+
+              <ConfirmedModalPassword
+                modalVisible={modalVisibleConfirmedPassword}
+                onConfirm={() => setModalVisibleConfirmedPassword(false)}
+                onCancel={() => setModalVisibleConfirmedPassword(false)}
+              />
+
               <Button title="Sair" onPress={signOut} />
             </View>
           </>

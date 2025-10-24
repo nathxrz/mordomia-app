@@ -3,7 +3,6 @@ import { useUser } from "@/hooks/useUser";
 import { supabase } from "@/lib/supabase";
 import translateError from "@/scripts/translate-error";
 import { yupResolver } from "@hookform/resolvers/yup";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from "expo-image-picker";
 import React, { useContext } from "react";
 
@@ -15,7 +14,6 @@ import {
   ScrollView,
   StyleSheet,
   Switch,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
@@ -31,14 +29,14 @@ const schema = yup
       .trim()
       .required(requiredMessage)
       .min(3, "Nome deve ter no mínimo 3 caracteres"),
-    birthDate: yup
-      .date()
-      .nullable()
-      .when("$isEnabled", {
-        is: true,
-        then: (schema) => schema.required("Campo obrigatório"),
-        otherwise: (schema) => schema.nullable(),
-      }),
+    // birthDate: yup
+    //   .date()
+    //   .nullable()
+    //   .when("$isEnabled", {
+    //     is: true,
+    //     then: (schema) => schema.required("Campo obrigatório"),
+    //     otherwise: (schema) => schema.nullable(),
+    //   }),
     gender: yup
       .string()
       .trim()
@@ -49,13 +47,12 @@ const schema = yup
       .trim()
       .required(requiredMessage)
       .min(3, "Raça deve ter no mínimo 3 caracteres"),
-    avatar_url: yup.string().required(requiredMessage),
   })
   .required();
 
 async function createPet(
   name: string,
-  birthDate: Date | null | undefined,
+  // birthDate: Date | null | undefined,
   gender: string,
   breed: string,
   isCastrated: boolean,
@@ -63,23 +60,28 @@ async function createPet(
   userId: string
 ) {
   try {
-    const { error: insertPet } = await supabase.from("cats").insert([
+    const { data, error } = await supabase.from("cats").insert([
       {
-        name: name,
-        birth_date: birthDate,
-        gender: gender,
-        breed: breed,
-        is_castrated: isCastrated,
+        name,
+        date_birth: null,
+        gender,
+        breed,
+        castrated: isCastrated,
         avatar_url: image,
-        id_user: userId,
+        id_tutor: userId,
       },
     ]);
 
-    if (insertPet) throw translateError(insertPet.code);
+    if (error) {
+      console.log("Erro Supabase:", error); // Mostra erro completo no console
+      throw new Error(translateError(error.code));
+    }
 
+    console.log("Pet criado:", data);
     Alert.alert("Pet adicionado com sucesso!");
   } catch (error) {
-    console.log("Erro ao criar pet:", error);
+    console.error("Erro ao criar pet:", error);
+    Alert.alert("Erro ao criar pet", String(error));
   }
 }
 
@@ -115,8 +117,7 @@ export default function RegisterPet({ onClose }: { onClose: () => void }) {
       name: "",
       breed: "",
       gender: "",
-      birthDate: undefined,
-      avatar_url: "",
+      // birthDate: undefined,
     },
     mode: "onSubmit",
     resolver: yupResolver(schema),
@@ -147,7 +148,7 @@ export default function RegisterPet({ onClose }: { onClose: () => void }) {
           )}
         </View>
 
-        <View>
+        {/* <View>
           {isEnabled && (
             <Controller
               control={control}
@@ -197,7 +198,7 @@ export default function RegisterPet({ onClose }: { onClose: () => void }) {
             />
             <Text style={{ marginLeft: 8 }}>Sei a data de nascimento</Text>
           </View>
-        </View>
+        </View> */}
 
         <View>
           <Controller
@@ -258,14 +259,27 @@ export default function RegisterPet({ onClose }: { onClose: () => void }) {
             disabled={loading}
             style={styles.mt20}
             onPress={handleSubmit(async (data) => {
+              if (!user) throw new Error("Usuário não autenticado");
+
+              // if (isEnabled) {
+              //   data.birthDate = data.birthDate;
+              // } else {
+              //   data.birthDate = null;
+              // }
+
+              if (!image) {
+                Alert.alert("Por favor, selecione uma imagem para o pet.");
+                return;
+              }
+
               await createPet(
                 data.name,
-                data.birthDate,
+                // data.birthDate,
                 data.gender,
                 data.breed,
                 isCastrated,
                 image,
-                user!.id
+                user?.id
               );
               onClose();
             })}

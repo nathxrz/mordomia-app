@@ -6,5 +6,15 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts",
+    "scripts/translate-error.js",
+    "scripts/format-date.js",
+    "scripts/mask-phone.js",
+    "scripts/mask-phone.js",
+    "scripts/translate-error.js"
+  ]
 }

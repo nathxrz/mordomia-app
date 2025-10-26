@@ -6,9 +6,9 @@ import { useContext, useEffect, useState } from "react";
 
 import { Alert } from "react-native";
 
-export const useUser = () => {
+export const useUser = ({ id }: { id?: string } = {}) => {
   const { session } = useContext(AuthContext);
-  const userId = session?.user.id || null;
+  const userId = session?.user.id || id || null;
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 

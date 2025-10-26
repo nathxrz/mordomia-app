@@ -1,10 +1,12 @@
 import { AuthContext } from "@/context/AuthProvider";
 import { useUser } from "@/hooks/useUser";
+import formatDate from "@/scripts/format-date";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 
+import maskPhone from "@/scripts/mask-phone";
 import React, { useContext, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
@@ -40,22 +42,6 @@ const schema = yup
     birthDate: yup.date().required(requiredMessage).nullable(),
   })
   .required();
-
-function formatDate(dateString?: string | Date) {
-  if (!dateString) return "";
-  const date = dateString instanceof Date ? dateString : new Date(dateString);
-  return date.toLocaleDateString("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
-}
-
-function maskPhone(phone?: string) {
-  if (!phone) return "";
-  const cleaned = phone.replace(/\D/g, "");
-  return cleaned.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
-}
 
 export default function EditProfile() {
   const { user, updateProfile } = useUser();
@@ -129,8 +115,8 @@ export default function EditProfile() {
               render={({ field: { onChange, value } }) => (
                 <TextInput
                   onChangeText={onChange}
-                  value={value || user?.name}
-                  placeholder={user?.name}
+                  value={value}
+                  placeholder={"Digite seu nome completo"}
                 />
               )}
             />

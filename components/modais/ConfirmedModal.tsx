@@ -4,10 +4,12 @@ export default function ConfirmedModal({
   modalVisible,
   onConfirm,
   onCancel,
+  message,
 }: {
   modalVisible: boolean;
   onConfirm: () => void;
   onCancel: () => void;
+  message: string;
 }) {
   return (
     <Modal
@@ -17,7 +19,7 @@ export default function ConfirmedModal({
       onRequestClose={onCancel}
     >
       <View>
-        <Text>Tem certeza que deseja continuar?</Text>
+        <Text>{message}</Text>
         <Button title="Confirmar" onPress={onConfirm} />
         <Button title="Cancelar" onPress={onCancel} />
       </View>

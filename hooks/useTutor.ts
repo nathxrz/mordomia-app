@@ -1,25 +1,27 @@
 import { supabase } from "@/lib/supabase";
 import translateError from "@/scripts/translate-error";
 import { useEffect, useState } from "react";
+import { useUser } from "./useUser";
 
-export const useTutor = ({ userId }: { userId: string }) => {
-  const [tutorData, setTutorData] = useState<any>(null);
+export const useTutor = () => {
+  const { user } = useUser();
+  const [userTutor, setUserTutor] = useState<any>(null);
 
   useEffect(() => {
-    if (!userId) return;
+    if (!user?.id) return;
 
     const fetchData = async () => {
       const { data: tutor, error } = await supabase
         .from("tutors")
         .select("*")
-        .eq("id_user", userId)
+        .eq("id_user", user?.id)
         .maybeSingle();
 
       if (error) throw translateError(error.code);
-      setTutorData(tutor);
+      setUserTutor(tutor);
     };
     fetchData();
-  }, [userId]);
+  }, [user?.id]);
 
-  return tutorData;
+  return userTutor;
 };

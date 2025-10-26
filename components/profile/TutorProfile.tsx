@@ -44,7 +44,6 @@ export default function TutorProfile() {
             <View>
               <Image
                 style={{ borderRadius: 150, width: 144, height: 144 }}
-                // source={require("../../assets/images/avatar.png")}
                 source={
                   userData.avatar_url
                     ? { uri: userData.avatar_url }
@@ -72,7 +71,7 @@ export default function TutorProfile() {
 
             <View>
               <Text>Pets</Text>
-              <Link href="/pets">Ver pets</Link>
+              <Link href="/cats">Meus Pets</Link>
             </View>
 
             <View style={styles.gap}>
@@ -92,6 +91,7 @@ export default function TutorProfile() {
                   setModalVisibleConfirmedPassword(true);
                 }}
                 onCancel={() => setModalVisible(false)}
+                message="Tem certeza que deseja excluir sua conta?"
               />
 
               <ConfirmedModalPassword
@@ -100,7 +100,10 @@ export default function TutorProfile() {
                 onCancel={() => setModalVisibleConfirmedPassword(false)}
               />
 
-              <Button title="Sair" onPress={signOut} />
+              <Button
+                title="Sair"
+                onPress={() => signOut(userData.deleted_at)}
+              />
             </View>
           </>
         ) : (

@@ -1,4 +1,3 @@
-import { useUser } from "@/hooks/useUser";
 import { createClient, Session } from "@supabase/supabase-js";
 import { useRouter } from "expo-router";
 import { createContext, useEffect, useState } from "react";
@@ -24,7 +23,7 @@ export const AuthContext = createContext<{
     dateBirth: Date,
     type: string
   ) => Promise<void>;
-  signOut: () => Promise<void>;
+  signOut: (userDeletedAt: null | Date) => Promise<void>;
   session: Session | null;
   loading: boolean;
   confirmedPassword: (password: string) => Promise<boolean>;
@@ -47,7 +46,6 @@ export default function AuthProvider({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
-  const { user } = useUser();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -69,6 +67,8 @@ export default function AuthProvider({
 
     if (error) {
       Alert.alert(translateError(error.code));
+      setLoading(false);
+      return;
     }
 
     const { data: userData, error: userError } = await supabase
@@ -79,6 +79,8 @@ export default function AuthProvider({
 
     if (userError) {
       Alert.alert(translateError(userError.code));
+      setLoading(false);
+      return;
     }
 
     if (userData && userData?.deleted_at !== null) {
@@ -193,18 +195,22 @@ export default function AuthProvider({
     }
   }
 
-  async function signOut() {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      Alert.alert(translateError(error.code));
-      return;
-    }
-    setSession(null);
+  async function signOut(userDeletedAt: null | Date) {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        Alert.alert(translateError(error.code));
+        return;
+      }
+      if (userDeletedAt === null) {
+        Alert.alert("Você saiu com sucesso.");
+      }
+      setSession(null);
 
-    if (user?.deleted_at === null) {
-      Alert.alert("Você saiu com sucesso.");
+      router.replace("/login");
+    } catch (err: any) {
+      Alert.alert("Atenção", translateError(err.code));
     }
-    router.replace("/");
   }
 
   async function confirmedPassword(password: string) {

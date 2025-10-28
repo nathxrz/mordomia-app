@@ -22,7 +22,6 @@ import { Button, Text, TextInput } from "react-native-paper";
 import Picker from "react-native-picker-select";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as yup from "yup";
-import LoadingScreen from "../LoadinfScreen";
 
 const requiredMessage = "Campo obrigatório";
 
@@ -110,10 +109,6 @@ export default function EditCat({ catId }: { catId: string }) {
       });
     }
   }, [cat, reset]);
-
-  if (!cat) {
-    return <LoadingScreen />;
-  }
 
   return (
     <SafeAreaView>

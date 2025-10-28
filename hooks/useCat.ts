@@ -35,6 +35,7 @@ export const useCat = (catId: string) => {
 
   async function deleteCat(catId: string) {
     try {
+      setLoading(true);
       const { error } = await supabase.from("cats").delete().eq("id", catId);
 
       if (error) {
@@ -47,6 +48,8 @@ export const useCat = (catId: string) => {
     } catch (error) {
       Alert.alert("Erro ao excluir pet", String(error));
       return false;
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -92,5 +95,27 @@ export const useCat = (catId: string) => {
     }
   }
 
-  return { cat, deleteCat, updateCat, fetchCat };
+  async function fetchCatExtraInfo() {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("care_profiles")
+        .select("*")
+        .eq("id_cat", catId)
+        .maybeSingle();
+
+      if (error) {
+        throw new Error(translateError(error.code));
+      }
+
+      return data;
+    } catch (error) {
+      Alert.alert("Erro ao buscar informações extras do gato", String(error));
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return { cat, deleteCat, updateCat, fetchCat, fetchCatExtraInfo, loading };
 };

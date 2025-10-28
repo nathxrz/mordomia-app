@@ -1,9 +1,11 @@
 import CatDetailsProfile from "@/components/cats/CatDetails";
+import CatExtraInfoProfile from "@/components/cats/CatExtraInfoProfile";
 import ConfirmedModal from "@/components/modais/ConfirmedModal";
 import { useCat } from "@/hooks/useCat";
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
-import { Button, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
+import { Button } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 export default function CatDetails() {
@@ -24,14 +26,24 @@ export default function CatDetails() {
       >
         <Icon name="edit" size={24} color="#000" />
       </TouchableOpacity>
+
+      {/* Informações básicas do gato: */}
       <CatDetailsProfile catId={id as string} />
+
+      {/* Informações adicionais do gato: */}
+      <CatExtraInfoProfile catId={id as string} />
+
       <Button
-        title="voltar"
+        mode="contained"
         onPress={() => {
           router.back();
         }}
-      />
-      <Button title="excluir gato" onPress={() => setModalVisible(true)} />
+      >
+        voltar
+      </Button>
+      <Button mode="outlined" onPress={() => setModalVisible(true)}>
+        excluir gato
+      </Button>
 
       <ConfirmedModal
         modalVisible={modalVisible}

@@ -25,6 +25,7 @@ export default function CatDetails({ catId }: { catId: string }) {
         source={{ uri: cat?.avatar_url }}
         style={{ width: 100, height: 100 }}
       />
+      <Text>Informações Básicas:</Text>
       <Text>Nome: {cat?.name}</Text>
       {cat?.date_birth && (
         <Text>Data de Nascimento: {formatDate(cat.date_birth)}</Text>

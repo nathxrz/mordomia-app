@@ -46,7 +46,7 @@ const schema = yup
       .required("Selecione a raça do gato(a)")
       .min(3, "Raça deve ter no mínimo 3 caracteres"),
     castrated: yup.boolean().required("Campo obrigatório"),
-    gender: yup.string().nullable().required("Selecione o gênero do gato(a)"),
+    gender: yup.string().required("Selecione o gênero do gato(a)"),
   })
   .required();
 

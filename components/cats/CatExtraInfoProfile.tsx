@@ -6,12 +6,12 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 export default function CatExtraInfoProfile({ catId }: { catId: string }) {
-  const { fetchCatExtraInfo } = useCat(catId as string);
+  const { getCatExtraInfo } = useCat(catId as string);
   const [catExtraInfo, setCatExtraInfo] = React.useState<any>(null);
 
   useEffect(() => {
     const getExtraInfo = async () => {
-      const info = await fetchCatExtraInfo();
+      const info = await getCatExtraInfo();
       return info;
     };
 

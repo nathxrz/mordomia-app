@@ -96,6 +96,7 @@ export default function CatList() {
     if (cats.length === 0) {
       return <Text>Você não possui pets cadastrados.</Text>;
     }
+
     return (
       <FlatList
         data={cats}

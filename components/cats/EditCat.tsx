@@ -13,8 +13,6 @@ import {
 
 import { Controller, useForm } from "react-hook-form";
 
-import { useTutor } from "@/hooks/useTutor";
-
 import { AuthContext } from "@/context/AuthProvider";
 import { useCat } from "@/hooks/useCat";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -54,7 +52,6 @@ const schema = yup
 
 export default function EditCat({ catId }: { catId: string }) {
   const [open, setOpen] = React.useState(false);
-  const userTutor = useTutor();
   const { cat, updateCat } = useCat(catId as string);
   const { loading } = useContext(AuthContext);
 
@@ -302,8 +299,6 @@ export default function EditCat({ catId }: { catId: string }) {
             disabled={loading}
             style={styles.mt20}
             onPress={handleSubmit(async (data) => {
-              if (!userTutor) throw new Error("Usuário não autenticado");
-
               const birthDateToUpdate = data.knowBirthDate
                 ? data.birthDate
                 : null;

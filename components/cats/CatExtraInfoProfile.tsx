@@ -1,6 +1,6 @@
 import { useCat } from "@/hooks/useCat";
-import { router } from "expo-router";
-import React, { useEffect } from "react";
+import { router, useFocusEffect } from "expo-router";
+import React, { useCallback } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -9,18 +9,72 @@ export default function CatExtraInfoProfile({ catId }: { catId: string }) {
   const { getCatExtraInfo } = useCat(catId as string);
   const [catExtraInfo, setCatExtraInfo] = React.useState<any>(null);
 
-  useEffect(() => {
-    const getExtraInfo = async () => {
-      const info = await getCatExtraInfo();
-      return info;
-    };
-
-    const catExtraInfo = getExtraInfo();
-    if (catExtraInfo) {
-      setCatExtraInfo(catExtraInfo);
+  const fetchExtraInfo = useCallback(async () => {
+    const info = await getCatExtraInfo();
+    if (info) {
+      setCatExtraInfo(info);
+    } else {
+      setCatExtraInfo(null);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [catId]);
+  }, [getCatExtraInfo]);
+
+  useFocusEffect(() => {
+    fetchExtraInfo();
+  });
+
+  const hasExtraInfo = () => {
+    if (catExtraInfo) {
+      return (
+        <View style={styles.infoContainer}>
+          <Text style={styles.label}>Humor / Temperamento:</Text>
+          <Text style={styles.value}>
+            {catExtraInfo.feeling || "Não informado"}
+          </Text>
+
+          <Text style={styles.label}>Uso da caixa de areia:</Text>
+          <Text style={styles.value}>
+            {catExtraInfo.litter_box || "Não informado"}
+          </Text>
+
+          <Text style={styles.label}>Sociabilidade:</Text>
+          <View>
+            <Text style={styles.value}>
+              Com humanos: {catExtraInfo.sociability_humans || "Não informado"}
+            </Text>
+          </View>
+          <View>
+            <Text style={styles.value}>
+              Com outros animais:{" "}
+              {catExtraInfo.sociability_animals || "Não informado"}
+            </Text>
+          </View>
+
+          <Text style={styles.label}>Nível de atividade:</Text>
+          <Text style={styles.value}>
+            {catExtraInfo.activity_level || "Não informado"}
+          </Text>
+
+          <Text style={styles.label}>Anotações de saúde:</Text>
+          <Text style={styles.value}>
+            {catExtraInfo.health_notes || "Não informado"}
+          </Text>
+
+          <Text style={styles.label}>Necessidades especiais:</Text>
+          <Text style={styles.value}>
+            {catExtraInfo.special_needs || "Não informado"}
+          </Text>
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>
+            Nenhuma informação adicional cadastrada para este gato.
+          </Text>
+        </View>
+      );
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -35,37 +89,7 @@ export default function CatExtraInfoProfile({ catId }: { catId: string }) {
         <Icon name="edit" size={24} color="#000" />
       </TouchableOpacity>
       <Text style={styles.sectionTitle}>Bem-estar e Comportamento</Text>
-      <View style={styles.infoContainer}>
-        <Text style={styles.label}>Humor / Temperamento:</Text>
-        <Text style={styles.value}>
-          {catExtraInfo?.feeling || "Não informado"}
-        </Text>
-
-        <Text style={styles.label}>Uso da caixa de areia:</Text>
-        <Text style={styles.value}>
-          {catExtraInfo?.litter_box || "Não informado"}
-        </Text>
-
-        <Text style={styles.label}>Sociabilidade:</Text>
-        <Text style={styles.value}>
-          {catExtraInfo?.sociability || "Não informado"}
-        </Text>
-
-        <Text style={styles.label}>Nível de atividade:</Text>
-        <Text style={styles.value}>
-          {catExtraInfo?.active_level || "Não informado"}
-        </Text>
-
-        <Text style={styles.label}>Anotações de saúde:</Text>
-        <Text style={styles.value}>
-          {catExtraInfo?.health_notes || "Nenhuma anotação"}
-        </Text>
-
-        <Text style={styles.label}>Necessidades especiais:</Text>
-        <Text style={styles.value}>
-          {catExtraInfo?.special_needs || "Nenhuma"}
-        </Text>
-      </View>
+      {hasExtraInfo()}
     </View>
   );
 }

@@ -1,9 +1,9 @@
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { Button } from "react-native-paper";
+import { Button, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import React, { useEffect } from "react";
+import React, { useCallback } from "react";
 
 import { useCat } from "@/hooks/useCat";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -19,9 +19,9 @@ const schema = yup
     litter_box: yup.string().required(requiredMessage),
     sociability_humans: yup.string().required(requiredMessage),
     sociability_animals: yup.string().required(requiredMessage),
-    active_level: yup.string().required(requiredMessage),
-    health_notes: yup.string().required(requiredMessage),
-    special_needs: yup.string().required(requiredMessage),
+    activity_level: yup.string().required(requiredMessage),
+    health_notes: yup.string(),
+    special_needs: yup.string(),
   })
   .required();
 
@@ -30,7 +30,6 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
     control,
     handleSubmit,
     reset,
-    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -38,7 +37,7 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
       litter_box: "",
       sociability_humans: "",
       sociability_animals: "",
-      active_level: "",
+      activity_level: "",
       health_notes: "",
       special_needs: "",
     },
@@ -46,21 +45,26 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
     resolver: yupResolver(schema),
   });
 
-  const { loading, updateCatExtraInfo, catExtraInfo } = useCat(catId);
+  const { loading, updateCatExtraInfo, getCatExtraInfo } = useCat(catId);
 
-  useEffect(() => {
+  const fetchExtraInfo = useCallback(async () => {
+    const catExtraInfo = await getCatExtraInfo();
     if (catExtraInfo) {
       reset({
         feeling: catExtraInfo.feeling,
         litter_box: catExtraInfo.litter_box,
         sociability_humans: catExtraInfo.sociability_humans,
         sociability_animals: catExtraInfo.sociability_animals,
-        active_level: catExtraInfo.active_level,
+        activity_level: catExtraInfo.activity_level,
         health_notes: catExtraInfo.health_notes,
         special_needs: catExtraInfo.special_needs,
       });
     }
-  }, [catExtraInfo, reset]);
+  }, [getCatExtraInfo, reset]);
+
+  useFocusEffect(() => {
+    fetchExtraInfo();
+  });
 
   return (
     <SafeAreaView>
@@ -205,7 +209,7 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
           <Text>Nível de energia e atividade diária</Text>
           <Controller
             control={control}
-            name="active_level"
+            name="activity_level"
             render={({ field: { value, onChange } }) => (
               <View style={{ marginTop: 20 }}>
                 <Picker
@@ -221,9 +225,9 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
                   onValueChange={(value) => onChange(value)}
                   value={value}
                 />
-                {errors.active_level && (
+                {errors.activity_level && (
                   <Text style={styles.messageAlert}>
-                    {errors.active_level.message}
+                    {errors.activity_level.message}
                   </Text>
                 )}
               </View>
@@ -238,18 +242,18 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
             name="health_notes"
             render={({ field: { value, onChange } }) => (
               <View style={{ marginTop: 20 }}>
-                <Picker
-                  placeholder={{
-                    label: "Selecione o nível de atividade",
-                    value: null,
-                  }}
-                  items={[
-                    { label: "Baixo", value: "low" },
-                    { label: "Médio", value: "medium" },
-                    { label: "Alto", value: "high" },
-                  ]}
-                  onValueChange={(value) => onChange(value)}
+                <TextInput
+                  placeholder="Observações gerais de saúde"
                   value={value}
+                  onChangeText={onChange}
+                  multiline
+                  numberOfLines={4}
+                  style={{
+                    borderWidth: 1,
+                    borderColor: "#ccc",
+                    borderRadius: 4,
+                    padding: 8,
+                  }}
                 />
                 {errors.health_notes && (
                   <Text style={styles.messageAlert}>
@@ -268,18 +272,18 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
             name="special_needs"
             render={({ field: { value, onChange } }) => (
               <View style={{ marginTop: 20 }}>
-                <Picker
-                  placeholder={{
-                    label: "Selecione o nível de atividade",
-                    value: null,
-                  }}
-                  items={[
-                    { label: "Baixo", value: "low" },
-                    { label: "Médio", value: "medium" },
-                    { label: "Alto", value: "high" },
-                  ]}
-                  onValueChange={(value) => onChange(value)}
+                <TextInput
+                  placeholder="Cuidados especiais"
                   value={value}
+                  onChangeText={onChange}
+                  multiline
+                  numberOfLines={4}
+                  style={{
+                    borderWidth: 1,
+                    borderColor: "#ccc",
+                    borderRadius: 4,
+                    padding: 8,
+                  }}
                 />
                 {errors.special_needs && (
                   <Text style={styles.messageAlert}>
@@ -302,7 +306,7 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
                 data.litter_box,
                 data.sociability_humans,
                 data.sociability_animals,
-                data.active_level,
+                data.activity_level,
                 data.health_notes,
                 data.special_needs
               );

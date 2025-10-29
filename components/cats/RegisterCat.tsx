@@ -220,8 +220,8 @@ export default function RegisterCat() {
                 <Picker
                   placeholder={{ label: "Selecione o gênero", value: null }}
                   items={[
-                    { label: "Masculino", value: "male" },
-                    { label: "Feminino", value: "female" },
+                    { label: "Macho", value: "Macho" },
+                    { label: "Fêmea", value: "Fêmea" },
                   ]}
                   onValueChange={(value) => onChange(value)}
                   value={value}

@@ -84,13 +84,13 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
                 <Picker
                   placeholder={{ label: "Selecione o humor", value: null }}
                   items={[
-                    { label: "Feliz", value: "happy" },
-                    { label: "Brincalhão", value: "playful" },
-                    { label: "Afetuoso", value: "affectionate" },
-                    { label: "Estressado", value: "stressed" },
-                    { label: "Ansioso", value: "anxious" },
-                    { label: "Medroso", value: "scared" },
-                    { label: "Agressivo", value: "aggressive" },
+                    { label: "Feliz", value: "Feliz" },
+                    { label: "Brincalhão", value: "Brincalhão" },
+                    { label: "Afetuoso", value: "Afetuoso" },
+                    { label: "Estressado", value: "Estressado" },
+                    { label: "Ansioso", value: "Ansioso" },
+                    { label: "Medroso", value: "Medroso" },
+                    { label: "Agressivo", value: "Agressivo" },
                   ]}
                   onValueChange={(value) => onChange(value)}
                   value={value}
@@ -118,14 +118,17 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
                     value: null,
                   }}
                   items={[
-                    { label: "Usa a caixa de areia", value: "uses_litter_box" },
+                    {
+                      label: "Usa a caixa de areia",
+                      value: "Usa a caixa de areia",
+                    },
                     {
                       label: "Não usa a caixa de areia",
-                      value: "does_not_use_litter_box",
+                      value: "Não usa a caixa de areia",
                     },
                     {
                       label: "Urina ou faz cocô fora da caixa",
-                      value: "pees_or_poops_outside_box",
+                      value: "Urina ou faz cocô fora da caixa",
                     },
                   ]}
                   onValueChange={(value) => onChange(value)}
@@ -154,11 +157,11 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
                     value: null,
                   }}
                   items={[
-                    { label: "Sociável", value: "sociable" },
-                    { label: "Tímido", value: "shy" },
-                    { label: "Agressivo", value: "aggressive" },
-                    { label: "Medroso", value: "scared" },
-                    { label: "Indiferente", value: "indifferent" },
+                    { label: "Sociável", value: "Sociável" },
+                    { label: "Tímido", value: "Tímido" },
+                    { label: "Agressivo", value: "Agressivo" },
+                    { label: "Medroso", value: "Medroso" },
+                    { label: "Indiferente", value: "Indiferente" },
                   ]}
                   onValueChange={(value) => onChange(value)}
                   value={value}
@@ -186,11 +189,11 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
                     value: null,
                   }}
                   items={[
-                    { label: "Sociável", value: "sociable" },
-                    { label: "Tímido", value: "shy" },
-                    { label: "Agressivo", value: "aggressive" },
-                    { label: "Medroso", value: "scared" },
-                    { label: "Indiferente", value: "indifferent" },
+                    { label: "Sociável", value: "Sociável" },
+                    { label: "Tímido", value: "Tímido" },
+                    { label: "Agressivo", value: "Agressivo" },
+                    { label: "Medroso", value: "Medroso" },
+                    { label: "Indiferente", value: "Indiferente" },
                   ]}
                   onValueChange={(value) => onChange(value)}
                   value={value}
@@ -218,9 +221,9 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
                     value: null,
                   }}
                   items={[
-                    { label: "Baixo", value: "low" },
-                    { label: "Médio", value: "medium" },
-                    { label: "Alto", value: "high" },
+                    { label: "Baixo", value: "Baixo" },
+                    { label: "Médio", value: "Médio" },
+                    { label: "Alto", value: "Alto" },
                   ]}
                   onValueChange={(value) => onChange(value)}
                   value={value}

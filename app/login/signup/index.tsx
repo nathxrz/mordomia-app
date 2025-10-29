@@ -243,7 +243,7 @@ export default function SignUp() {
                   }
                   onChangeText={onChange}
                   value={value}
-                  secureTextEntry
+                  secureTextEntry={!showPassword}
                   placeholder="Digite sua senha"
                 />
               )}

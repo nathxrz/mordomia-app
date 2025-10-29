@@ -26,7 +26,7 @@ const requiredMessage = "Campo obrigatório";
 
 const schema = yup
   .object({
-    avatar_url: yup.string().nullable(),
+    avatar_url: yup.string().required("Selecione uma foto de perfil"),
     name: yup
       .string()
       .trim()
@@ -43,15 +43,8 @@ const schema = yup
   })
   .required();
 
-export default function EditProfile() {
-  const { user, updateProfile } = useUser();
-  const [open, setOpen] = useState(false);
-
-  const { loading } = useContext(AuthContext);
-
-  const [image, setImage] = React.useState<string | null>(null);
-
-  const pickImage = async () => {
+async function pickImageAndSet(onChange: (uri: string) => void) {
+  try {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
       allowsEditing: true,
@@ -59,10 +52,20 @@ export default function EditProfile() {
       quality: 1,
     });
 
-    if (!result.canceled && result.assets && result.assets.length > 0) {
-      setImage(result.assets[0].uri);
+    if (!result.canceled && result.assets.length > 0) {
+      const uri = result.assets[0].uri;
+      onChange(uri);
     }
-  };
+  } catch (error) {
+    console.error("Erro ao selecionar imagem:", error);
+  }
+}
+
+export default function EditProfile() {
+  const { user, updateProfile } = useUser();
+  const [open, setOpen] = useState(false);
+
+  const { loading } = useContext(AuthContext);
 
   const {
     control,
@@ -88,8 +91,6 @@ export default function EditProfile() {
         phone: maskPhone(user.phone),
         birthDate: user.date_birth ? new Date(user.date_birth) : null,
       });
-
-      setImage(user.avatar_url || null);
     }
   }, [user, reset]);
 
@@ -100,11 +101,35 @@ export default function EditProfile() {
         showsVerticalScrollIndicator={false}
       >
         <>
-          <View style={styles.container}>
-            <Button onPress={pickImage}>
-              Escolher uma foto de perfil
-              {image && <Image source={{ uri: image }} />}
-            </Button>
+          <View>
+            <Controller
+              control={control}
+              name="avatar_url"
+              render={({ field: { value, onChange } }) => (
+                <View style={styles.container}>
+                  <Button onPress={() => pickImageAndSet(onChange)}>
+                    Selecionar foto do gato(a)
+                  </Button>
+
+                  {value && (
+                    <Image
+                      style={{
+                        width: 100,
+                        height: 100,
+                        marginTop: 10,
+                        borderRadius: 10,
+                      }}
+                      source={{ uri: value }}
+                    />
+                  )}
+                </View>
+              )}
+            />
+            {errors.avatar_url && (
+              <Text style={styles.messageAlert}>
+                {errors.avatar_url?.message}
+              </Text>
+            )}
           </View>
 
           <View style={{ marginBottom: 16 }}>
@@ -214,7 +239,7 @@ export default function EditProfile() {
               style={styles.mt20}
               onPress={handleSubmit((data) => {
                 updateProfile(
-                  image,
+                  data.avatar_url,
                   data.name,
                   data.phone.replace(/\D/g, ""),
                   data.birthDate as Date

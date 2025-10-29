@@ -58,7 +58,7 @@ export default function EditCat({ catId }: { catId: string }) {
   async function pickImageAndSet(onChange: (uri: string) => void) {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: ["images"],
         allowsEditing: true,
         aspect: [1, 1],
         quality: 1,
@@ -235,8 +235,8 @@ export default function EditCat({ catId }: { catId: string }) {
                 <Picker
                   placeholder={{ label: "Selecione o gênero", value: null }}
                   items={[
-                    { label: "Masculino", value: "male" },
-                    { label: "Feminino", value: "female" },
+                    { label: "Macho", value: "Macho" },
+                    { label: "Fêmea", value: "Fêmea" },
                   ]}
                   onValueChange={(value) => onChange(value)}
                   value={value}

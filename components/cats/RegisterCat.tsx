@@ -336,13 +336,9 @@ export default function RegisterCat({ catId }: { catId: string }) {
             onPress={handleSubmit(async (data) => {
               if (!userTutor) throw new Error("Usuário não autenticado");
 
-              console.log("Data de nascimento", data.birthDate);
-
               const birthDateToUpdate = data.knowBirthDate
                 ? data.birthDate
                 : null;
-
-              console.log("Data de nascimento", birthDateToUpdate);
 
               await createCat(
                 data.name,

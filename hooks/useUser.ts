@@ -2,7 +2,7 @@ import { AuthContext } from "@/context/AuthProvider";
 import { supabase } from "@/lib/supabase";
 import translateError from "@/scripts/translate-error";
 import { router } from "expo-router";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 
 import { Alert } from "react-native";
 
@@ -92,6 +92,92 @@ export const useUser = ({ id }: { id?: string } = {}) => {
     }
   }
 
+  const getAddressUser = useCallback(async () => {
+    try {
+      setLoading(true);
+      if (!userId) throw new Error("Nenhum usuário na sessão!");
+
+      const { data, error } = await supabase
+        .from("addresses")
+        .select("*")
+        .eq("id_user", userId)
+        .maybeSingle();
+      if (error) {
+        throw new Error(translateError(error.code));
+      }
+      return data;
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [userId]);
+
+  async function updateAddressUser(
+    cep: string,
+    street: string,
+    state: string,
+    city: string,
+    neighborhood: string,
+    number: string,
+    complement: string | undefined
+  ) {
+    try {
+      setLoading(true);
+      if (!userId) throw new Error("Nenhum usuário na sessão!");
+
+      const hasAddress = await getAddressUser();
+      console.log("hasAddress:", hasAddress);
+
+      if (hasAddress) {
+        const { error: updateError } = await supabase
+          .from("addresses")
+          .update({
+            cep,
+            street,
+            state,
+            city,
+            neighborhood,
+            number,
+            complement,
+            updated_at: new Date(),
+          })
+          .eq("id_user", userId);
+
+        if (updateError) {
+          console.log(updateError);
+          throw new Error(translateError(updateError.code));
+        }
+        Alert.alert("Endereço atualizado com sucesso!");
+      } else {
+        const { error: insertError } = await supabase.from("addresses").insert({
+          id_user: userId,
+          cep,
+          street,
+          city,
+          neighborhood,
+          state,
+          number,
+          complement,
+          created_at: new Date(),
+        });
+        if (insertError) {
+          throw new Error(translateError(insertError.code));
+        }
+        Alert.alert("Endereço cadastrado com sucesso!");
+      }
+      router.push("/(tabs)/profile");
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function desactivateProfile() {
     try {
       setLoading(true);
@@ -142,5 +228,7 @@ export const useUser = ({ id }: { id?: string } = {}) => {
     loading,
     activeUsers,
     resetUser,
+    getAddressUser,
+    updateAddressUser,
   };
 };

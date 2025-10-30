@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import AddressUser from "../AddressUser";
 import ConfirmedModal from "../modais/ConfirmedModal";
 import ConfirmedModalPassword from "../modais/ConfirmedModalPassword";
 
@@ -57,15 +58,8 @@ export default function TutorProfile() {
             <View>
               <Text>Informações básicas</Text>
               <Text>{userData.phone}</Text>
-              <Text>
-                <Text>
-                  Cidade, <Text>Estado</Text>
-                </Text>
-                <Text>
-                  Rua, <Text>número</Text>, <Text>bairro</Text>,{" "}
-                  <Text>complemento</Text>
-                </Text>
-              </Text>
+              <AddressUser />
+
               <Text>{new Date(userData.date_birth).toLocaleDateString()}</Text>
             </View>
 

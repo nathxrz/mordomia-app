@@ -30,7 +30,6 @@ export const useCat = (catId: string) => {
   }, [catId]);
 
   useEffect(() => {
-    console.log("renderizou");
     fetchCat();
   }, [fetchCat]);
 
@@ -79,6 +78,7 @@ export const useCat = (catId: string) => {
           breed,
           castrated: isCastrated,
           avatar_url: image,
+          updated_at: new Date(),
         };
 
         const { error } = await supabase
@@ -149,6 +149,7 @@ export const useCat = (catId: string) => {
             activity_level,
             health_notes,
             special_needs,
+            updated_at: new Date(),
           };
 
           const { error: updateError } = await supabase
@@ -162,7 +163,7 @@ export const useCat = (catId: string) => {
         } else {
           const { error: insertError } = await supabase
             .from("care_profiles")
-            .upsert({
+            .insert({
               id_cat: catId,
               feeling,
               litter_box,
@@ -171,6 +172,7 @@ export const useCat = (catId: string) => {
               activity_level,
               health_notes,
               special_needs,
+              created_at: new Date(),
             });
 
           if (insertError) {

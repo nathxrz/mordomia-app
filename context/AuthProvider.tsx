@@ -118,6 +118,7 @@ export default function AuthProvider({
           name: name,
           phone: phone,
           date_birth: dateBirth,
+          created_at: new Date(),
         },
       ]);
 

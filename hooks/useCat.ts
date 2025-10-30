@@ -30,6 +30,7 @@ export const useCat = (catId: string) => {
   }, [catId]);
 
   useEffect(() => {
+    console.log("renderizou");
     fetchCat();
   }, [fetchCat]);
 

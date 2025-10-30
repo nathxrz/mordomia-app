@@ -1,16 +1,7 @@
-import { AuthContext } from "@/context/AuthProvider";
-import { supabase } from "@/lib/supabase";
-import translateError from "@/scripts/translate-error";
 import { yupResolver } from "@hookform/resolvers/yup";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from "expo-image-picker";
-import React, { useContext } from "react";
-import Picker from "react-native-picker-select";
-
-import { Controller, useForm } from "react-hook-form";
-
-import { useTutor } from "@/hooks/useTutor";
 import { router } from "expo-router";
+import React, { useContext } from "react";
 import {
   Alert,
   Image,
@@ -20,33 +11,46 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+
+import { Controller, useForm } from "react-hook-form";
+
+import { AuthContext } from "@/context/AuthProvider";
+import { useCat } from "@/hooks/useCat";
+import { useTutor } from "@/hooks/useTutor";
+import { supabase } from "@/lib/supabase";
+import translateError from "@/scripts/translate-error";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { Button, Text, TextInput } from "react-native-paper";
+import Picker from "react-native-picker-select";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as yup from "yup";
+
+const requiredMessage = "Campo obrigatório";
+
 const schema = yup
   .object({
-    avatar_url: yup.string().required("Selecione uma foto do seu gato(a)"),
+    avatar_url: yup.string().required(requiredMessage),
     name: yup
       .string()
       .trim()
-      .required("Campo obrigatório")
-      .min(2, "Nome deve ter no mínimo 2 caracteres"),
+      .required(requiredMessage)
+      .min(3, "Nome deve ter no mínimo 3 caracteres"),
     knowBirthDate: yup.boolean(),
     birthDate: yup
       .date()
       .nullable()
       .when("knowBirthDate", {
         is: true,
-        then: (schema) => schema.required("Selecione a data de nascimento"),
+        then: (schema) => schema.required("Campo obrigatório"),
         otherwise: (schema) => schema.nullable(),
       }),
     breed: yup
       .string()
       .trim()
-      .required("Selecione a raça do gato(a)")
+      .required(requiredMessage)
       .min(3, "Raça deve ter no mínimo 3 caracteres"),
-    castrated: yup.boolean().required("Campo obrigatório"),
-    gender: yup.string().required("Selecione o gênero do gato(a)"),
+    castrated: yup.boolean().required(),
+    gender: yup.string().nullable().required(requiredMessage),
   })
   .required();
 
@@ -82,27 +86,29 @@ async function createCat(
   }
 }
 
-async function pickImageAndSet(onChange: (uri: string) => void) {
-  try {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images"],
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-
-    if (!result.canceled && result.assets.length > 0) {
-      const uri = result.assets[0].uri;
-      onChange(uri);
-    }
-  } catch (error) {
-    console.error("Erro ao selecionar imagem:", error);
-  }
-}
-export default function RegisterCat() {
+export default function RegisterCat({ catId }: { catId: string }) {
   const [open, setOpen] = React.useState(false);
-  const userTutor = useTutor();
+  const { cat } = useCat(catId as string);
   const { loading } = useContext(AuthContext);
+  const userTutor = useTutor();
+
+  async function pickImageAndSet(onChange: (uri: string) => void) {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ["images"],
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
+
+      if (!result.canceled && result.assets.length > 0) {
+        const uri = result.assets[0].uri;
+        onChange(uri);
+      }
+    } catch (error) {
+      console.error("Erro ao selecionar imagem:", error);
+    }
+  }
 
   const {
     control,
@@ -122,6 +128,18 @@ export default function RegisterCat() {
     mode: "onSubmit",
     resolver: yupResolver(schema),
   });
+  //   if (cat) {
+  //     reset({
+  //       avatar_url: cat.avatar_url,
+  //       name: cat.name,
+  //       breed: cat.breed,
+  //       birthDate: cat.date_birth ? new Date(cat.date_birth) : undefined,
+  //       knowBirthDate: !!cat.date_birth,
+  //       castrated: !!cat.castrated,
+  //       gender: cat.gender,
+  //     });
+  //   }
+  // }, [cat, reset]);
 
   return (
     <SafeAreaView>
@@ -130,6 +148,38 @@ export default function RegisterCat() {
         showsVerticalScrollIndicator={false}
       >
         <Text>Cadastro de Pet</Text>
+
+        <View>
+          <Controller
+            control={control}
+            name="avatar_url"
+            render={({ field: { value, onChange } }) => (
+              <View style={styles.container}>
+                <Button onPress={() => pickImageAndSet(onChange)}>
+                  {"Selecionar foto de perfil do gato(a)"}
+                </Button>
+
+                {value && (
+                  <Image
+                    style={{
+                      width: 100,
+                      height: 100,
+                      marginTop: 10,
+                      borderRadius: 10,
+                    }}
+                    source={{ uri: value }}
+                  />
+                )}
+              </View>
+            )}
+          />
+          {errors.avatar_url && (
+            <Text style={styles.messageAlert}>
+              {errors.avatar_url?.message}
+            </Text>
+          )}
+        </View>
+
         <View>
           <Controller
             control={control}
@@ -139,7 +189,7 @@ export default function RegisterCat() {
                 label="Nome"
                 onChangeText={onChange}
                 value={value}
-                placeholder="Digite o nome do gato(a)"
+                placeholder={"Digite o nome do seu gato(a)"}
               />
             )}
           />
@@ -186,7 +236,7 @@ export default function RegisterCat() {
                           return;
                         }
 
-                        onChange(selectedDate || value);
+                        onChange(selectedDate);
                         setOpen(false);
                       }}
                       maximumDate={new Date()}
@@ -198,8 +248,8 @@ export default function RegisterCat() {
                       editable={false}
                       label="Data de nascimento"
                       pointerEvents="none"
-                      value={value ? value.toLocaleDateString() : "dd/mm/aaaa"}
-                      placeholder="Selecione sua data de nascimento"
+                      value={value ? value.toLocaleDateString() : ""}
+                      placeholder="Selecione a data de nascimento"
                     />
                   </TouchableOpacity>
                 </>
@@ -245,7 +295,7 @@ export default function RegisterCat() {
                 label="Raça"
                 onChangeText={onChange}
                 value={value}
-                placeholder="Digite a raça do gato(a)"
+                placeholder={cat?.breed}
               />
             )}
           />
@@ -279,37 +329,6 @@ export default function RegisterCat() {
         </View>
 
         <View>
-          <Controller
-            control={control}
-            name="avatar_url"
-            render={({ field: { value, onChange } }) => (
-              <View style={styles.container}>
-                <Button onPress={() => pickImageAndSet(onChange)}>
-                  Selecionar foto do gato(a)
-                </Button>
-
-                {value && (
-                  <Image
-                    style={{
-                      width: 100,
-                      height: 100,
-                      marginTop: 10,
-                      borderRadius: 10,
-                    }}
-                    source={{ uri: value }}
-                  />
-                )}
-              </View>
-            )}
-          />
-          {errors.avatar_url && (
-            <Text style={styles.messageAlert}>
-              {errors.avatar_url?.message}
-            </Text>
-          )}
-        </View>
-
-        <View>
           <Button
             mode="contained"
             disabled={loading}
@@ -317,9 +336,13 @@ export default function RegisterCat() {
             onPress={handleSubmit(async (data) => {
               if (!userTutor) throw new Error("Usuário não autenticado");
 
+              console.log("Data de nascimento", data.birthDate);
+
               const birthDateToUpdate = data.knowBirthDate
                 ? data.birthDate
                 : null;
+
+              console.log("Data de nascimento", birthDateToUpdate);
 
               await createCat(
                 data.name,

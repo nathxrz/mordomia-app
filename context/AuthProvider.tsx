@@ -190,7 +190,8 @@ export default function AuthProvider({
       Alert.alert("Verifique seu email para confirmar o cadastro.");
       router.navigate("/");
     } catch (err: any) {
-      Alert.alert("Atenção", translateError(err.code));
+      console.error("Erro no signUp:", err);
+      Alert.alert("Atenção", err.message || translateError(err.code));
     } finally {
       setLoading(false);
     }

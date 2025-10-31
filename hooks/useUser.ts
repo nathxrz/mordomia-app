@@ -129,7 +129,6 @@ export const useUser = ({ id }: { id?: string } = {}) => {
       if (!userId) throw new Error("Nenhum usuário na sessão!");
 
       const hasAddress = await getAddressUser();
-      console.log("hasAddress:", hasAddress);
 
       if (hasAddress) {
         const { error: updateError } = await supabase
@@ -147,7 +146,6 @@ export const useUser = ({ id }: { id?: string } = {}) => {
           .eq("id_user", userId);
 
         if (updateError) {
-          console.log(updateError);
           throw new Error(translateError(updateError.code));
         }
         Alert.alert("Endereço atualizado com sucesso!");

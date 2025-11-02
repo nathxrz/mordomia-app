@@ -1,9 +1,15 @@
-export default function formatDate(dateString) {
-  if (!dateString) return "";
-  const date = dateString instanceof Date ? dateString : new Date(dateString);
-  return date.toLocaleDateString("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
+export default function formatDate(dateInput) {
+  if (!dateInput) return "";
+
+  if (dateInput instanceof Date) {
+  } else if (typeof dateInput === "string") {
+    // Extrai ano, mês e dia diretamente da string YYYY-MM-DD
+    const parts = dateInput.split("-");
+    if (parts.length !== 3) return "";
+    const [year, month, day] = parts;
+
+    return `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${year}`;
+  } else {
+    return "";
+  }
 }

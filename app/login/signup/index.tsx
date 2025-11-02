@@ -1,11 +1,10 @@
 import { AuthContext } from "@/context/AuthProvider";
 import { yupResolver } from "@hookform/resolvers/yup";
-import DateTimePicker from "@react-native-community/datetimepicker";
 
 import { useContext, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import MaskInput from "react-native-mask-input";
 import { Button, RadioButton, Text, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -29,7 +28,31 @@ const schema = yup
         /^\([1-9]{2}\)\s9[0-9]{4}-[0-9]{4}$/,
         "Telefone inválido. Formato esperado: (99) 99999-9999"
       ),
-    birthDate: yup.date().required(requiredMessage).nullable(),
+    birthDate: yup
+      .string()
+      .required(requiredMessage)
+      .test("valid-date", "Data inválida", (value) => {
+        if (!value || value.length < 10) return false;
+
+        const [dayStr, monthStr, yearStr] = value.split("/");
+        const day = Number(dayStr);
+        const month = Number(monthStr);
+        const year = Number(yearStr);
+
+        if (day === 0 || month === 0 || year === 0) return false;
+
+        const parsed = new Date(`${year}-${month}-${day}`);
+        if (isNaN(parsed.getTime())) return false;
+
+        const today = new Date();
+        const hundredYearsAgo = new Date();
+        hundredYearsAgo.setFullYear(today.getFullYear() - 100);
+
+        return parsed <= today && parsed >= hundredYearsAgo;
+      })
+      .test("valid-format", "Data deve estar no formato dd/mm/aaaa", (value) =>
+        /^\d{2}\/\d{2}\/\d{4}$/.test(value || "")
+      ),
     email: yup.string().email("E-mail inválido").required(requiredMessage),
     password: yup
       .string()
@@ -48,7 +71,6 @@ const schema = yup
   .required();
 
 export default function SignUp() {
-  const [open, setOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -66,7 +88,7 @@ export default function SignUp() {
       email: "",
       password: "",
       confirmPassword: "",
-      birthDate: undefined,
+      birthDate: "",
     },
     mode: "onSubmit",
     resolver: yupResolver(schema),
@@ -172,28 +194,31 @@ export default function SignUp() {
               control={control}
               name="birthDate"
               render={({ field: { onChange, value } }) => (
-                <>
-                  {open && (
-                    <DateTimePicker
-                      value={value || new Date()}
-                      onChange={(event, selectedDate) => {
-                        onChange(selectedDate || value);
-                        setOpen(false);
-                      }}
-                      maximumDate={new Date()}
+                <TextInput
+                  label="Data de nascimento"
+                  onChangeText={onChange}
+                  value={value}
+                  placeholder="dd/mm/aaaa"
+                  render={(props) => (
+                    <MaskInput
+                      {...props}
+                      value={value}
+                      onChangeText={(masked) => onChange(masked)}
+                      mask={[
+                        /\d/,
+                        /\d/,
+                        "/",
+                        /\d/,
+                        /\d/,
+                        "/",
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                      ]}
                     />
                   )}
-
-                  <TouchableOpacity onPress={() => setOpen(true)}>
-                    <TextInput
-                      editable={false}
-                      label="Data de nascimento"
-                      pointerEvents="none"
-                      value={value ? value.toLocaleDateString() : "dd/mm/aaaa"}
-                      placeholder="Selecione sua data de nascimento"
-                    />
-                  </TouchableOpacity>
-                </>
+                />
               )}
             />
             {errors.birthDate && (
@@ -296,12 +321,15 @@ export default function SignUp() {
               disabled={loading}
               style={styles.mt20}
               onPress={handleSubmit((data) => {
+                const [day, month, year] = data.birthDate.split("/");
+                const birthDate = new Date(`${year}-${month}-${day}T00:00:00`);
+
                 signUp(
                   data.email,
                   data.password,
                   data.name,
                   data.phone.replace(/\D/g, ""),
-                  data.birthDate as Date,
+                  birthDate,
                   data.type
                 );
               })}

@@ -1,6 +1,7 @@
 import { AuthContext } from "@/context/AuthProvider";
 import { useUser } from "@/hooks/useUser";
 
+import formatDate from "@/scripts/format-date";
 import { Link, router } from "expo-router";
 import React, { useContext } from "react";
 import {
@@ -60,7 +61,7 @@ export default function TutorProfile() {
               <Text>{userData.phone}</Text>
               <AddressUser />
 
-              <Text>{new Date(userData.date_birth).toLocaleDateString()}</Text>
+              <Text>{formatDate(userData.date_birth)}</Text>
             </View>
 
             <View>

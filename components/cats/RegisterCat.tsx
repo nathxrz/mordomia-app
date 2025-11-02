@@ -18,6 +18,7 @@ import { AuthContext } from "@/context/AuthProvider";
 import { useCat } from "@/hooks/useCat";
 import { useTutor } from "@/hooks/useTutor";
 import { supabase } from "@/lib/supabase";
+import formatDate from "@/scripts/format-date";
 import translateError from "@/scripts/translate-error";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Button, Text, TextInput } from "react-native-paper";
@@ -86,7 +87,7 @@ async function createCat(
   }
 }
 
-export default function RegisterCat({ catId }: { catId: string }) {
+export default function RegisterCat({ catId }: { catId?: string }) {
   const [open, setOpen] = React.useState(false);
   const { cat } = useCat(catId as string);
   const { loading } = useContext(AuthContext);
@@ -236,7 +237,14 @@ export default function RegisterCat({ catId }: { catId: string }) {
                           return;
                         }
 
-                        onChange(selectedDate);
+                        // 🔹 Ajuste para remover deslocamento de fuso horário
+                        const localDate = new Date(
+                          selectedDate.getFullYear(),
+                          selectedDate.getMonth(),
+                          selectedDate.getDate()
+                        );
+
+                        onChange(localDate);
                         setOpen(false);
                       }}
                       maximumDate={new Date()}
@@ -248,7 +256,8 @@ export default function RegisterCat({ catId }: { catId: string }) {
                       editable={false}
                       label="Data de nascimento"
                       pointerEvents="none"
-                      value={value ? value.toLocaleDateString() : ""}
+                      // 🔹 Usa sua função utilitária aqui
+                      value={formatDate(value)}
                       placeholder="Selecione a data de nascimento"
                     />
                   </TouchableOpacity>

@@ -1,23 +1,15 @@
 import { AuthContext } from "@/context/AuthProvider";
 import { useUser } from "@/hooks/useUser";
-import formatDate from "@/scripts/format-date";
 import { yupResolver } from "@hookform/resolvers/yup";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 
 import maskPhone from "@/scripts/mask-phone";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import formatDate from "@/scripts/format-date";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import MaskInput from "react-native-mask-input";
 import { Button, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -40,7 +32,31 @@ const schema = yup
         /^\([1-9]{2}\)\s9[0-9]{4}-[0-9]{4}$/,
         "Formato esperado: (99) 99999-9999"
       ),
-    birthDate: yup.date().required(requiredMessage).nullable(),
+    birthDate: yup
+      .string()
+      .required(requiredMessage)
+      .test("valid-date", "Data inválida", (value) => {
+        if (!value || value.length < 10) return false;
+
+        const [dayStr, monthStr, yearStr] = value.split("/");
+        const day = Number(dayStr);
+        const month = Number(monthStr);
+        const year = Number(yearStr);
+
+        if (day === 0 || month === 0 || year === 0) return false;
+
+        const parsed = new Date(`${year}-${month}-${day}`);
+        if (isNaN(parsed.getTime())) return false;
+
+        const today = new Date();
+        const hundredYearsAgo = new Date();
+        hundredYearsAgo.setFullYear(today.getFullYear() - 100);
+
+        return parsed <= today && parsed >= hundredYearsAgo;
+      })
+      .test("valid-format", "Data deve estar no formato dd/mm/aaaa", (value) =>
+        /^\d{2}\/\d{2}\/\d{4}$/.test(value || "")
+      ),
   })
   .required();
 
@@ -64,7 +80,6 @@ async function pickImageAndSet(onChange: (uri: string) => void) {
 
 export default function EditProfileUser() {
   const { user, updateProfile } = useUser();
-  const [open, setOpen] = useState(false);
 
   const { loading } = useContext(AuthContext);
 
@@ -78,7 +93,7 @@ export default function EditProfileUser() {
       avatar_url: "",
       name: "",
       phone: "",
-      birthDate: null,
+      birthDate: "",
     },
     mode: "onSubmit",
     resolver: yupResolver(schema),
@@ -90,7 +105,7 @@ export default function EditProfileUser() {
         avatar_url: user.avatar_url,
         name: user.name,
         phone: maskPhone(user.phone),
-        birthDate: user.date_birth ? new Date(user.date_birth) : null,
+        birthDate: formatDate(user.date_birth),
       });
     }
   }, [user, reset]);
@@ -109,7 +124,7 @@ export default function EditProfileUser() {
               render={({ field: { value, onChange } }) => (
                 <View style={styles.container}>
                   <Button onPress={() => pickImageAndSet(onChange)}>
-                    Selecionar foto do gato(a)
+                    Selecionar foto de perfil
                   </Button>
 
                   {value && (
@@ -193,37 +208,43 @@ export default function EditProfileUser() {
             )}
           </View>
 
-          <View>
+          <View style={{ marginBottom: 16 }}>
+            <Text>Data de nascimento</Text>
             <Controller
               control={control}
               name="birthDate"
               render={({ field: { onChange, value } }) => (
-                <>
-                  {open && (
-                    <DateTimePicker
-                      value={value || new Date(user?.date_birth)}
-                      onChange={(event, selectedDate) => {
-                        onChange(selectedDate || value);
-                        setOpen(false);
+                <TextInput
+                  onChangeText={onChange}
+                  value={value ? value : ""}
+                  placeholder="dd/mm/aaaa"
+                  render={(props) => (
+                    <MaskInput
+                      {...props}
+                      value={value}
+                      onChangeText={(masked) => onChange(masked)}
+                      mask={[
+                        /\d/,
+                        /\d/,
+                        "/",
+                        /\d/,
+                        /\d/,
+                        "/",
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                      ]}
+                      style={{
+                        borderBottomWidth: 1,
+                        borderColor: "#ccc",
+                        paddingVertical: 8,
+                        fontSize: 16,
                       }}
-                      maximumDate={new Date()}
+                      keyboardType="numeric"
                     />
                   )}
-
-                  <TouchableOpacity onPress={() => setOpen(true)}>
-                    <TextInput
-                      editable={false}
-                      label="Data de nascimento"
-                      pointerEvents="none"
-                      value={
-                        value
-                          ? value.toLocaleDateString("pt-BR")
-                          : formatDate(user?.date_birth)
-                      }
-                      placeholder="Selecione sua data de nascimento"
-                    />
-                  </TouchableOpacity>
-                </>
+                />
               )}
             />
             {errors.birthDate && (
@@ -239,11 +260,14 @@ export default function EditProfileUser() {
               disabled={loading}
               style={styles.mt20}
               onPress={handleSubmit((data) => {
+                const [day, month, year] = data.birthDate.split("/");
+                const birthDate = new Date(`${year}-${month}-${day}T00:00:00`);
+
                 updateProfile(
                   data.avatar_url,
                   data.name,
                   data.phone.replace(/\D/g, ""),
-                  data.birthDate as Date
+                  birthDate
                 );
               })}
             >

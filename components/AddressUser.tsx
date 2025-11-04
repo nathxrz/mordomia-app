@@ -23,7 +23,7 @@ export default function AddressUser() {
 
   return (
     <View>
-      <Text>Endereço</Text>
+      <Text style={{ fontWeight: "bold" }}>Endereço</Text>
       {address && (
         <>
           <View>

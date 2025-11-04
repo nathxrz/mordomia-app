@@ -2,38 +2,47 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>E-mail confirmado | Mordomia</title>
     <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
       body {
         font-family: Arial, sans-serif;
         background-color: #fafafa;
         color: #1d1127;
-        margin: 0;
-        padding: 40px 0;
-        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 1.5rem;
       }
 
       .container {
         background-color: #ffffff;
         border-radius: 12px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        width: 90%;
-        max-width: 480px;
-        margin: 0 auto;
-        padding: 40px 30px;
+        width: 100%;
+        max-width: 460px;
+        padding: 2.5rem 1.75rem;
+        text-align: center;
       }
 
       h1 {
         color: #7f13ec;
-        font-size: 24px;
-        margin-bottom: 16px;
+        font-size: clamp(1.4rem, 4vw, 1.8rem);
+        margin-bottom: 1rem;
       }
 
       p {
-        font-size: 15px;
+        font-size: clamp(0.9rem, 3vw, 1rem);
         line-height: 1.6;
         color: #333;
-        margin-bottom: 20px;
+        margin-bottom: 1rem;
       }
 
       a.button {
@@ -42,9 +51,10 @@
         color: #ffffff;
         text-decoration: none;
         font-weight: bold;
-        padding: 12px 24px;
+        padding: 0.75rem 1.5rem;
         border-radius: 8px;
         transition: background-color 0.2s ease;
+        font-size: 1rem;
       }
 
       a.button:hover {
@@ -52,9 +62,47 @@
       }
 
       .footer {
-        margin-top: 32px;
-        font-size: 13px;
+        margin-top: 2rem;
+        font-size: 0.8rem;
         color: #777;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        body {
+          background-color: #1a1a1a;
+          color: #eaeaea;
+        }
+
+        .container {
+          background-color: #2a2a2a;
+        }
+
+        p {
+          color: #ccc;
+        }
+
+        a.button {
+          background-color: #a85bff;
+        }
+
+        a.button:hover {
+          background-color: #8a3be0;
+        }
+
+        .footer {
+          color: #aaa;
+        }
+      }
+
+      @media (max-width: 360px) {
+        .container {
+          padding: 2rem 1rem;
+        }
+
+        a.button {
+          width: 100%;
+          padding: 0.9rem;
+        }
       }
     </style>
   </head>

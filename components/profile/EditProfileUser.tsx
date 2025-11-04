@@ -24,7 +24,11 @@ const schema = yup
       .string()
       .trim()
       .required(requiredMessage)
-      .min(3, "Nome deve ter no mínimo 3 caracteres"),
+      .min(3, "Nome deve ter no mínimo 3 caracteres")
+      .matches(
+        /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/,
+        "O nome deve conter apenas letras e espaços"
+      ),
     phone: yup
       .string()
       .required(requiredMessage)

@@ -54,6 +54,11 @@ export default function CatExtraInfoProfile({ catId }: { catId: string }) {
             {catExtraInfo.activity_level || "Não informado"}
           </Text>
 
+          <Text style={styles.label}>Vacina antirrábica:</Text>
+          <Text style={styles.value}>
+            {catExtraInfo.rabies_vaccine ? "Em dia" : "Atrasada"}
+          </Text>
+
           <Text style={styles.label}>Anotações de saúde:</Text>
           <Text style={styles.value}>
             {catExtraInfo.health_notes || "Não informado"}

@@ -1,6 +1,6 @@
 import { router, useFocusEffect } from "expo-router";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { Button, TextInput } from "react-native-paper";
+import { Button, Switch, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import React, { useCallback } from "react";
@@ -20,6 +20,7 @@ const schema = yup
     sociability_humans: yup.string().required(requiredMessage),
     sociability_animals: yup.string().required(requiredMessage),
     activity_level: yup.string().required(requiredMessage),
+    rabies_vaccine: yup.boolean().required(requiredMessage),
     health_notes: yup.string(),
     special_needs: yup.string(),
   })
@@ -38,6 +39,7 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
       sociability_humans: "",
       sociability_animals: "",
       activity_level: "",
+      rabies_vaccine: false,
       health_notes: "",
       special_needs: "",
     },
@@ -56,6 +58,7 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
         sociability_humans: catExtraInfo.sociability_humans,
         sociability_animals: catExtraInfo.sociability_animals,
         activity_level: catExtraInfo.activity_level,
+        rabies_vaccine: !!catExtraInfo.rabies_vaccine,
         health_notes: catExtraInfo.health_notes,
         special_needs: catExtraInfo.special_needs,
       });
@@ -238,6 +241,38 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
           />
         </View>
 
+        <View style={{ marginTop: 20 }}>
+          <Text>Vacina antirrábica está em dia?</Text>
+          <Controller
+            control={control}
+            name="rabies_vaccine"
+            render={({ field: { value, onChange } }) => (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginTop: 8,
+                }}
+              >
+                <Switch
+                  value={!!value}
+                  onValueChange={onChange}
+                  thumbColor={value ? "#fff" : "#f4f3f4"}
+                  trackColor={{ false: "#767577", true: "#81b0ff" }}
+                />
+                <Text style={{ marginLeft: 8 }}>
+                  {value ? "Sim, está em dia" : "Não ou não sei"}
+                </Text>
+              </View>
+            )}
+          />
+          {errors.rabies_vaccine && (
+            <Text style={styles.messageAlert}>
+              {errors.rabies_vaccine.message}
+            </Text>
+          )}
+        </View>
+
         <View>
           <Text>Observações gerais de saúde</Text>
           <Controller
@@ -310,6 +345,7 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
                 data.sociability_humans,
                 data.sociability_animals,
                 data.activity_level,
+                data.rabies_vaccine,
                 data.health_notes,
                 data.special_needs
               );

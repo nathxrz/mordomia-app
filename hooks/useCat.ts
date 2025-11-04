@@ -57,7 +57,7 @@ export const useCat = (catId: string) => {
     async (
       catId: string,
       name: string,
-      birthDate: Date | null | undefined,
+      age_stage: string,
       gender: string,
       breed: string,
       isCastrated: boolean,
@@ -73,7 +73,7 @@ export const useCat = (catId: string) => {
 
         const updates = {
           name,
-          date_birth: birthDate,
+          age_stage,
           gender,
           breed,
           castrated: isCastrated,
@@ -130,6 +130,7 @@ export const useCat = (catId: string) => {
       sociability_humans: string,
       sociability_animals: string,
       activity_level: string,
+      rabies_vaccine: boolean,
       health_notes: string | undefined,
       special_needs: string | undefined
     ) => {
@@ -148,6 +149,7 @@ export const useCat = (catId: string) => {
             sociability_animals,
             activity_level,
             health_notes,
+            rabies_vaccine,
             special_needs,
             updated_at: new Date(),
           };
@@ -171,6 +173,7 @@ export const useCat = (catId: string) => {
               sociability_animals,
               activity_level,
               health_notes,
+              rabies_vaccine,
               special_needs,
               created_at: new Date(),
             });

@@ -2,20 +2,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import React, { useContext, useEffect } from "react";
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Switch,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, ScrollView, StyleSheet, Switch, View } from "react-native";
 
 import { Controller, useForm } from "react-hook-form";
 
 import { AuthContext } from "@/context/AuthProvider";
 import { useCat } from "@/hooks/useCat";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import { Button, Text, TextInput } from "react-native-paper";
 import Picker from "react-native-picker-select";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -25,33 +17,24 @@ const requiredMessage = "Campo obrigatório";
 
 const schema = yup
   .object({
-    avatar_url: yup.string().required(),
+    avatar_url: yup.string().required("Selecione uma foto do gato"),
     name: yup
       .string()
       .trim()
       .required(requiredMessage)
-      .min(3, "Nome deve ter no mínimo 3 caracteres"),
-    knowBirthDate: yup.boolean(),
-    birthDate: yup
-      .date()
-      .nullable()
-      .when("knowBirthDate", {
-        is: true,
-        then: (schema) => schema.required("Campo obrigatório"),
-        otherwise: (schema) => schema.nullable(),
-      }),
+      .min(2, "Nome deve ter no mínimo 2 caracteres"),
     breed: yup
       .string()
       .trim()
       .required(requiredMessage)
-      .min(3, "Raça deve ter no mínimo 3 caracteres"),
+      .min(2, "Raça deve ter no mínimo 2 caracteres"),
     castrated: yup.boolean().required(),
     gender: yup.string().nullable().required(),
+    age_stage: yup.string().nullable().required(),
   })
   .required();
 
 export default function EditCat({ catId }: { catId: string }) {
-  const [open, setOpen] = React.useState(false);
   const { cat, updateCat } = useCat(catId as string);
   const { loading } = useContext(AuthContext);
 
@@ -77,15 +60,13 @@ export default function EditCat({ catId }: { catId: string }) {
     control,
     handleSubmit,
     reset,
-    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
       avatar_url: "",
       name: "",
       breed: "",
-      birthDate: undefined,
-      knowBirthDate: false,
+      age_stage: undefined,
       castrated: false,
       gender: undefined,
     },
@@ -99,8 +80,7 @@ export default function EditCat({ catId }: { catId: string }) {
         avatar_url: cat.avatar_url,
         name: cat.name,
         breed: cat.breed,
-        birthDate: cat.date_birth ? new Date(cat.date_birth) : undefined,
-        knowBirthDate: !!cat.date_birth,
+        age_stage: cat.age_stage,
         castrated: !!cat.castrated,
         gender: cat.gender,
       });
@@ -167,63 +147,28 @@ export default function EditCat({ catId }: { catId: string }) {
         <View>
           <Controller
             control={control}
-            name="knowBirthDate"
+            name="age_stage"
             render={({ field: { value, onChange } }) => (
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginTop: 20,
-                }}
-              >
-                <Switch
-                  value={!!value}
-                  onValueChange={onChange}
-                  thumbColor={value ? "#fff" : "#f4f3f4"}
-                  trackColor={{ false: "#767577", true: "#81b0ff" }}
+              <View style={{ marginTop: 20 }}>
+                <Picker
+                  placeholder={{ label: "Selecione a idade", value: null }}
+                  items={[
+                    { label: "Filhote — até 1 ano de idade", value: "filhote" },
+                    { label: "Jovem — entre 1 e 3 anos", value: "jovem" },
+                    { label: "Adulto — entre 3 e 7 anos", value: "adulto" },
+                    { label: "Idoso — acima de 7 anos", value: "idoso" },
+                  ]}
+                  onValueChange={(value) => onChange(value)}
+                  value={value}
                 />
-                <Text style={{ marginLeft: 8 }}>Sei a data de nascimento</Text>
+                {errors.age_stage && (
+                  <Text style={styles.messageAlert}>
+                    {errors.age_stage.message}
+                  </Text>
+                )}
               </View>
             )}
           />
-
-          {watch("knowBirthDate") && (
-            <Controller
-              control={control}
-              name="birthDate"
-              render={({ field: { onChange, value } }) => (
-                <>
-                  {open && (
-                    <DateTimePicker
-                      value={value || new Date()}
-                      onChange={(event, selectedDate) => {
-                        if (event.type === "dismissed" || !selectedDate) {
-                          setOpen(false);
-                          return;
-                        }
-                        onChange(selectedDate);
-                        setOpen(false);
-                      }}
-                      maximumDate={new Date()}
-                    />
-                  )}
-
-                  <TouchableOpacity onPress={() => setOpen(true)}>
-                    <TextInput
-                      editable={false}
-                      label="Data de nascimento"
-                      pointerEvents="none"
-                      value={value ? value.toLocaleDateString() : ""}
-                      placeholder="Selecione a data de nascimento"
-                    />
-                  </TouchableOpacity>
-                </>
-              )}
-            />
-          )}
-          {errors.birthDate && (
-            <Text style={styles.messageAlert}>{errors.birthDate.message}</Text>
-          )}
         </View>
 
         <View>
@@ -299,13 +244,10 @@ export default function EditCat({ catId }: { catId: string }) {
             disabled={loading}
             style={styles.mt20}
             onPress={handleSubmit(async (data) => {
-              const birthDateToUpdate = data.knowBirthDate
-                ? data.birthDate
-                : null;
               await updateCat(
                 catId as string,
                 data.name,
-                birthDateToUpdate,
+                data.age_stage,
                 data.gender,
                 data.breed,
                 data.castrated,

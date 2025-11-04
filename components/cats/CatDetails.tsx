@@ -1,5 +1,4 @@
 import { useCat } from "@/hooks/useCat";
-import formatDate from "@/scripts/format-date";
 import { useFocusEffect } from "expo-router";
 import { useCallback } from "react";
 import { Image, Text, View } from "react-native";
@@ -25,11 +24,11 @@ export default function CatDetails({ catId }: { catId: string }) {
         source={{ uri: cat?.avatar_url }}
         style={{ width: 100, height: 100 }}
       />
+      <Text style={{ fontWeight: "bold", textTransform: "capitalize" }}>
+        {cat?.age_stage}
+      </Text>
       <Text>Informações Básicas:</Text>
       <Text>Nome: {cat?.name}</Text>
-      {cat?.date_birth && (
-        <Text>Data de Nascimento: {formatDate(cat?.date_birth)}</Text>
-      )}
       <Text>Genero: {cat?.gender}</Text>
       <Text>Raça: {cat?.breed}</Text>
       <Text>Castrado: {cat?.castrated ? "Sim" : "Não"}</Text>

@@ -16,13 +16,13 @@ const requiredMessage = "Campo obrigatório";
 
 const schema = yup
   .object({
-    cep: yup.string().required(requiredMessage),
-    street: yup.string().required(requiredMessage),
-    state: yup.string().required(requiredMessage),
-    city: yup.string().required(requiredMessage),
-    neighborhood: yup.string().required(requiredMessage),
-    number: yup.string().required(requiredMessage),
-    complement: yup.string(),
+    cep: yup.string().trim().required(requiredMessage),
+    street: yup.string().trim().required(requiredMessage),
+    state: yup.string().trim().required(requiredMessage),
+    city: yup.string().trim().required(requiredMessage),
+    neighborhood: yup.string().trim().required(requiredMessage),
+    number: yup.string().trim().required(requiredMessage),
+    complement: yup.string().trim().optional(),
   })
   .required();
 

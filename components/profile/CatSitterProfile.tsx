@@ -3,7 +3,7 @@ import { useUser } from "@/hooks/useUser";
 
 import { useCatSitter } from "@/hooks/useCatSitter";
 import formatDate from "@/scripts/format-date";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import React, { useContext } from "react";
 import {
   Button,
@@ -69,24 +69,33 @@ export default function CatSitterProfile() {
             <View>
               <Text style={{ fontWeight: "bold" }}>Portfólio</Text>
               <View>
-                <TouchableOpacity
-                  onPress={() => {
-                    router.push("/edits/editBiography");
-                  }}
-                >
+                <View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      router.push("/edits/editPortfolio");
+                    }}
+                  >
+                    <Icon
+                      name={
+                        userCatSitter?.biography || userCatSitter?.portfolio_url
+                          ? "edit"
+                          : "add"
+                      }
+                      size={24}
+                      color="#000"
+                    />
+                  </TouchableOpacity>
                   <Text>
-                    {userCatSitter.biography || "Adicionar biografia"}
+                    {userCatSitter?.biography || "Nenhuma biografia adicionada"}
                   </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    router.push("/edits/editPortfolio");
-                  }}
-                >
-                  <Text>
-                    {userCatSitter.portfolio_url || "Adicionar portfólio"}
-                  </Text>
-                </TouchableOpacity>
+                  {userCatSitter?.portfolio_url ? (
+                    <Link href={userCatSitter.portfolio_url} target="_blank">
+                      {userCatSitter.portfolio_url}
+                    </Link>
+                  ) : (
+                    <Text>Nenhum portfólio adicionado</Text>
+                  )}
+                </View>
               </View>
             </View>
 

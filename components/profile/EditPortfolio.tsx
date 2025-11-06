@@ -60,7 +60,7 @@ export default function EditPortfolio() {
       >
         <>
           <View>
-            <Text>Cuidados especiais que exigem atenção</Text>
+            <Text>Descreva como você cuida dos gatos</Text>
             <Controller
               control={control}
               name="biography"

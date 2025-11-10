@@ -2,7 +2,7 @@ import React from "react";
 import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function TutorHome({ user }: { user: { id: string } }) {
+export default function TutorHome() {
   return (
     <SafeAreaView>
       <Text>Bem-vindo(a) tutor(a)</Text>

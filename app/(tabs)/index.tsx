@@ -24,12 +24,13 @@ export default function Index() {
       );
     }
 
+    console.log("User is admin, rendering AdminHome");
     if (user.roles?.includes("admin") && user.deleted_at === null) {
-      return <AdminHome user={{ id: user.id }} />;
+      return <AdminHome />;
     } else if (user.roles?.includes("catsitter") && user.deleted_at === null) {
-      return <CatSitterHome user={{ id: user.id }} />;
+      return <CatSitterHome />;
     } else if (user.roles?.includes("tutor") && user.deleted_at === null) {
-      return <TutorHome user={{ id: user.id }} />;
+      return <TutorHome />;
     } else {
       return <Redirect href="./login" />;
     }

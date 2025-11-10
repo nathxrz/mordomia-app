@@ -15,9 +15,9 @@ export default function Profile() {
 
   const getProfileScreen = () => {
     if (user?.roles.includes("catsitter")) {
-      return <CatSitterProfile userId={user?.id} />;
+      return <CatSitterProfile />;
     } else if (user?.roles.includes("admin")) {
-      return <AdminProfile userId={user?.id} />;
+      return <AdminProfile />;
     } else {
       return <TutorProfile />;
     }

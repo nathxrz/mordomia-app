@@ -23,7 +23,7 @@ export const useUser = ({ id }: { id?: string } = {}) => {
       try {
         const { data: user, error } = await supabase
           .from("users")
-          .select("*, cat_sitters(id), tutors(id)")
+          .select("*, cat_sitters(id), tutors(id), admins(id)")
           .eq("id", userId)
           .maybeSingle();
 
@@ -39,6 +39,10 @@ export const useUser = ({ id }: { id?: string } = {}) => {
 
           if (user.tutors?.length > 0) {
             user.roles.push("tutor");
+          }
+
+          if (user.admins?.length > 0) {
+            user.roles.push("admin");
           }
 
           setUser(user);

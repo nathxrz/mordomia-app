@@ -12,6 +12,8 @@ export const useCatSitter = ({ id }: { id?: string } = {}) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log("Fetching cat sitter data for user ID:", userId);
+    if (!userId) return;
     setLoading(true);
 
     const fetchData = async () => {

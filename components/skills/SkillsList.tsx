@@ -12,6 +12,7 @@ import {
   View,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import ConfirmedModal from "../modais/ConfirmedModal";
 
 async function fetchSkills() {
   try {
@@ -26,8 +27,21 @@ async function fetchSkills() {
   }
 }
 
+async function deleteSkill(skillId: string) {
+  try {
+    const { error } = await supabase.from("skills").delete().eq("id", skillId);
+
+    if (error) {
+      throw new Error(translateError(error.code));
+    }
+  } catch (error) {
+    Alert.alert("Erro ao excluir a habilidade", String(error));
+  }
+}
+
 export default function SkillsList() {
   const { user } = useUser();
+  const [modalVisible, setModalVisible] = React.useState(false);
   const [skills, setSkills] = React.useState<
     {
       id: string;
@@ -79,13 +93,21 @@ export default function SkillsList() {
             >
               <Icon name="edit" size={24} color="#000" />
             </TouchableOpacity>
-            <TouchableOpacity
-            // onPress={() => {
-            //   router.push("/edits/editSkill");
-            // }}
-            >
+
+            <TouchableOpacity onPress={() => setModalVisible(true)}>
               <Icon name="delete" size={24} color="#000" />
             </TouchableOpacity>
+
+            <ConfirmedModal
+              modalVisible={modalVisible}
+              onConfirm={() => {
+                deleteSkill(id);
+                setModalVisible(false);
+              }}
+              onCancel={() => setModalVisible(false)}
+              message="Tem certeza que deseja excluir esta habilidade?"
+            />
+
             <View>
               <Image
                 source={

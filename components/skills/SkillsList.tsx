@@ -1,12 +1,14 @@
+import { useSkill } from "@/hooks/useSkill";
 import { useUser } from "@/hooks/useUser";
 import { supabase } from "@/lib/supabase";
 import translateError from "@/scripts/translate-error";
-import { useFocusEffect } from "expo-router";
-import React, { useCallback } from "react";
+import { router, useFocusEffect } from "expo-router";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Alert,
   FlatList,
   Image,
+  ScrollView,
   Text,
   TouchableOpacity,
   View,
@@ -27,22 +29,10 @@ async function fetchSkills() {
   }
 }
 
-async function deleteSkill(skillId: string) {
-  try {
-    const { error } = await supabase.from("skills").delete().eq("id", skillId);
-
-    if (error) {
-      throw new Error(translateError(error.code));
-    }
-  } catch (error) {
-    Alert.alert("Erro ao excluir a habilidade", String(error));
-  }
-}
-
 export default function SkillsList() {
-  const { user } = useUser();
-  const [modalVisible, setModalVisible] = React.useState(false);
-  const [skills, setSkills] = React.useState<
+  const { user, getUserAdmin } = useUser();
+  const [modalVisibleConfirmed, setModalVisibleConfirmed] = useState(false);
+  const [skills, setSkills] = useState<
     {
       id: string;
       name: string;
@@ -51,7 +41,6 @@ export default function SkillsList() {
       id_admin: string;
     }[]
   >([]);
-
   useFocusEffect(
     useCallback(() => {
       if (!user?.id) return;
@@ -75,8 +64,21 @@ export default function SkillsList() {
     icon_skill: string;
     id_admin: string;
   }) => {
+    const { deleteSkill } = useSkill(id);
+    const [adminName, setAdminName] = useState<string | null>(null);
+
+    useEffect(() => {
+      if (!id_admin) return;
+      getUserAdmin(id_admin).then(({ name }) => {
+        setAdminName(name);
+      });
+    }, [id_admin]);
+
     return (
-      <>
+      <ScrollView
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+      >
         <View
           style={{
             marginBottom: 20,
@@ -85,47 +87,63 @@ export default function SkillsList() {
             padding: 10,
           }}
         >
-          <View>
-            <TouchableOpacity
-            // onPress={() => {
-            //   router.push("/edits/editSkill");
-            // }}
-            >
-              <Icon name="edit" size={24} color="#000" />
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => setModalVisible(true)}>
-              <Icon name="delete" size={24} color="#000" />
-            </TouchableOpacity>
-
-            <ConfirmedModal
-              modalVisible={modalVisible}
-              onConfirm={() => {
-                deleteSkill(id);
-                setModalVisible(false);
-              }}
-              onCancel={() => setModalVisible(false)}
-              message="Tem certeza que deseja excluir esta habilidade?"
-            />
-
+          <TouchableOpacity onPress={() => router.push(`./skills/${id}`)}>
             <View>
-              <Image
-                source={
-                  icon_skill
-                    ? { uri: icon_skill }
-                    : require("../../assets/images/avatar.png")
-                }
-                style={{ width: 100, height: 100 }}
+              <TouchableOpacity onPress={() => setModalVisibleConfirmed(true)}>
+                <Icon name="delete" size={24} color="#000" />
+              </TouchableOpacity>
+
+              <ConfirmedModal
+                modalVisible={modalVisibleConfirmed}
+                onConfirm={() => {
+                  deleteSkill(id);
+                  setSkills((prevSkills) =>
+                    prevSkills.filter((skill) => skill.id !== id)
+                  );
+                  setModalVisibleConfirmed(false);
+                }}
+                onCancel={() => setModalVisibleConfirmed(false)}
+                message="Tem certeza que deseja excluir esta habilidade?"
               />
-              <Text>{name}</Text>
-              <Text>{description}</Text>
-              <Text>Criado por: {id_admin}</Text>
+
+              <View>
+                <Image
+                  source={
+                    icon_skill
+                      ? { uri: icon_skill }
+                      : require("../../assets/images/avatar.png")
+                  }
+                  style={{ width: 100, height: 100 }}
+                />
+                <Text>{name}</Text>
+                <Text>{description}</Text>
+                <Text>Última atualização por: {adminName}</Text>
+              </View>
             </View>
-          </View>
+          </TouchableOpacity>
         </View>
-      </>
+      </ScrollView>
     );
   };
+
+  // async function deleteSkill(skillId: string) {
+  //   try {
+  //     const { error } = await supabase
+  //       .from("skills")
+  //       .delete()
+  //       .eq("id", skillId);
+
+  //     if (error) {
+  //       throw new Error(translateError(error.code));
+  //     }
+
+  //     setSkills((prevSkills) =>
+  //       prevSkills.filter((skill) => skill.id !== skillId)
+  //     );
+  //   } catch (error) {
+  //     Alert.alert("Erro ao excluir a habilidade", String(error));
+  //   }
+  // }
 
   function renderComponent() {
     if (skills.length === 0) {

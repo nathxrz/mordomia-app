@@ -223,6 +223,27 @@ export const useUser = ({ id }: { id?: string } = {}) => {
     return data;
   }
 
+  async function getUserAdmin(id: string) {
+    try {
+      if (!id) return;
+
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("id", id)
+        .maybeSingle();
+
+      if (error) {
+        throw new Error(translateError(error.code));
+      }
+      return data;
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      }
+    }
+  }
+
   return {
     user,
     updateProfile,
@@ -232,5 +253,6 @@ export const useUser = ({ id }: { id?: string } = {}) => {
     resetUser,
     getAddressUser,
     updateAddressUser,
+    getUserAdmin,
   };
 };

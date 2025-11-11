@@ -14,7 +14,7 @@ export default function ConfirmedModal({
   return (
     <Modal
       animationType="fade"
-      transparent={true}
+      transparent={false}
       visible={modalVisible}
       onRequestClose={onCancel}
     >

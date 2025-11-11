@@ -86,7 +86,7 @@ export default function AuthProvider({
     if (userData && userData?.deleted_at !== null) {
       router.navigate("/desactiveUser");
     } else if (userData && userData?.deleted_at === null) {
-      router.navigate("./(tabs)/");
+      router.navigate("./(tabs)/home");
     } else {
       router.navigate("/");
     }

@@ -15,7 +15,7 @@ export const useSkill = (skillId: string) => {
       setLoading(true);
       const { data, error } = await supabase
         .from("skills")
-        .select("*")
+        .select("*, users (name)")
         .eq("id", skillId)
         .maybeSingle();
 
@@ -58,7 +58,6 @@ export const useSkill = (skillId: string) => {
       id: string;
       name: string;
       description: string;
-      icon_skill: string;
       id_admin: string;
     }) => {
       try {
@@ -68,7 +67,6 @@ export const useSkill = (skillId: string) => {
           .update({
             name: updatedSkill.name,
             description: updatedSkill.description,
-            icon_skill: updatedSkill.icon_skill,
             id_admin: updatedSkill.id_admin,
             updated_at: new Date(),
           })

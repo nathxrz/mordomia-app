@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import React, { useContext } from "react";
-import { Alert, Image, ScrollView, StyleSheet, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, View } from "react-native";
 
 import { Controller, useForm } from "react-hook-form";
 
@@ -29,22 +29,15 @@ const schema = yup
       .max(255, "Descrição deve ter no máximo 255 caracteres")
       .trim()
       .nullable(),
-    icon_skill: yup.string().trim().nullable(),
   })
   .required();
 
-async function createSkill(
-  name: string,
-  description: string,
-  icon_skill: string,
-  userId: string
-) {
+async function createSkill(name: string, description: string, userId: string) {
   try {
     const { error } = await supabase.from("skills").insert([
       {
         name,
         description,
-        icon_skill,
         id_admin: userId,
         created_at: new Date(),
       },
@@ -90,7 +83,6 @@ export default function RegisterSkill() {
     defaultValues: {
       name: "",
       description: "",
-      icon_skill: "",
     },
     mode: "onSubmit",
     resolver: yupResolver(schema),
@@ -103,37 +95,6 @@ export default function RegisterSkill() {
         showsVerticalScrollIndicator={false}
       >
         <Text>Cadastro de Habilidade</Text>
-
-        <View>
-          <Controller
-            control={control}
-            name="icon_skill"
-            render={({ field: { value, onChange } }) => (
-              <View style={styles.container}>
-                <Button onPress={() => pickImageAndSet(onChange)}>
-                  {"Selecionar ícone da habilidade"}
-                </Button>
-
-                {value && (
-                  <Image
-                    style={{
-                      width: 100,
-                      height: 100,
-                      marginTop: 10,
-                      borderRadius: 10,
-                    }}
-                    source={{ uri: value }}
-                  />
-                )}
-              </View>
-            )}
-          />
-          {errors.icon_skill && (
-            <Text style={styles.messageAlert}>
-              {errors.icon_skill?.message}
-            </Text>
-          )}
-        </View>
 
         <View>
           <Controller
@@ -181,12 +142,7 @@ export default function RegisterSkill() {
             onPress={handleSubmit(async (data) => {
               if (!user) throw new Error("Usuário não autenticado");
 
-              await createSkill(
-                data.name,
-                data.description || "",
-                data.icon_skill || "",
-                user.id
-              );
+              await createSkill(data.name, data.description || "", user.id);
             })}
           >
             Salvar alterações

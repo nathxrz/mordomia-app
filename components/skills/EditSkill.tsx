@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import React, { useContext, useEffect } from "react";
-import { Image, ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 
 import { Controller, useForm } from "react-hook-form";
 
@@ -28,7 +28,6 @@ const schema = yup
       .max(255, "Descrição deve ter no máximo 255 caracteres")
       .trim()
       .nullable(),
-    icon_skill: yup.string().trim().nullable(),
   })
   .required();
 
@@ -64,7 +63,6 @@ export default function EditSkill({ skillId }: { skillId: string }) {
     defaultValues: {
       name: "",
       description: "",
-      icon_skill: "",
     },
     mode: "onSubmit",
     resolver: yupResolver(schema),
@@ -75,7 +73,6 @@ export default function EditSkill({ skillId }: { skillId: string }) {
       reset({
         name: skill.name,
         description: skill.description,
-        icon_skill: skill.icon_skill,
       });
     }
   }, [skill, reset]);
@@ -87,37 +84,6 @@ export default function EditSkill({ skillId }: { skillId: string }) {
         showsVerticalScrollIndicator={false}
       >
         <Text>Atualização de Habilidade</Text>
-
-        <View>
-          <Controller
-            control={control}
-            name="icon_skill"
-            render={({ field: { value, onChange } }) => (
-              <View style={styles.container}>
-                <Button onPress={() => pickImageAndSet(onChange)}>
-                  {"Selecionar ícone da habilidade"}
-                </Button>
-
-                {value && (
-                  <Image
-                    style={{
-                      width: 100,
-                      height: 100,
-                      marginTop: 10,
-                      borderRadius: 10,
-                    }}
-                    source={{ uri: value }}
-                  />
-                )}
-              </View>
-            )}
-          />
-          {errors.icon_skill && (
-            <Text style={styles.messageAlert}>
-              {errors.icon_skill?.message}
-            </Text>
-          )}
-        </View>
 
         <View>
           <Controller
@@ -169,7 +135,6 @@ export default function EditSkill({ skillId }: { skillId: string }) {
                 id: skillId,
                 name: data.name,
                 description: data.description || "",
-                icon_skill: data.icon_skill || "",
                 id_admin: user.id,
               });
             })}

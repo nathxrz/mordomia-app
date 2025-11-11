@@ -1,4 +1,3 @@
-import { useSkill } from "@/hooks/useSkill";
 import { useUser } from "@/hooks/useUser";
 import { supabase } from "@/lib/supabase";
 import translateError from "@/scripts/translate-error";
@@ -7,41 +6,41 @@ import React, { useCallback, useState } from "react";
 import {
   Alert,
   FlatList,
+  Image,
   ScrollView,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import ConfirmedModal from "../modais/ConfirmedModal";
 
-async function fetchSkills() {
+async function fetchUsers() {
   try {
-    const { data: skills, error } = await supabase
-      .from("skills")
-      .select("*, users(name)")
-      .order("created_at", { ascending: false });
+    const { data: users, error } = await supabase
+      .from("users")
+      .select("*")
+      .order("name", { ascending: true });
 
     if (error) {
       throw new Error(translateError(error.code));
     }
 
-    return skills;
+    return users;
   } catch (error) {
-    Alert.alert("Erro ao buscar as habilidades", String(error));
+    Alert.alert("Erro ao buscar os usuários", String(error));
     return [];
   }
 }
-export default function SkillsList() {
+
+export default function UsersList() {
   const { user } = useUser();
 
-  const [skills, setSkills] = useState<
+  const [users, setUsers] = useState<
     {
       id: string;
       name: string;
-      description: string;
-      id_admin: string;
-      users?: { name: string };
+      avatar_url: string;
+      created_at: Date;
+      deleted_at: Date | null;
     }[]
   >([]);
 
@@ -49,25 +48,27 @@ export default function SkillsList() {
     useCallback(() => {
       if (!user?.id) return;
 
-      fetchSkills().then((data) => {
-        if (data) setSkills(data);
+      fetchUsers().then((data) => {
+        if (data) setUsers(data);
       });
     }, [user?.id])
   );
 
-  const SkillItem = ({
+  const UserItem = ({
     id,
     name,
-    description,
-    userName,
+    avatar_url,
+    created_at,
+    deleted_at,
   }: {
     id: string;
     name: string;
-    description: string;
-    userName?: string;
+    avatar_url: string;
+    created_at: Date;
+    deleted_at: Date | null;
   }) => {
-    const { deleteSkill } = useSkill(id);
-    const [modalVisibleConfirmed, setModalVisibleConfirmed] = useState(false);
+    // const { deleteUser } = useUser(id);
+    // const [modalVisibleConfirmed, setModalVisibleConfirmed] = useState(false);
 
     return (
       <ScrollView
@@ -83,25 +84,44 @@ export default function SkillsList() {
             borderRadius: 8,
           }}
         >
-          <TouchableOpacity onPress={() => router.push(`/skills/${id}`)}>
+          <TouchableOpacity
+            onPress={() => {
+              router.push(`./users/${id}`);
+            }}
+          >
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
               <View style={{ flex: 1 }}>
+                <Image
+                  source={
+                    avatar_url
+                      ? { uri: avatar_url }
+                      : require("../../assets/images/avatar.png")
+                  }
+                  style={{ width: 100, height: 100 }}
+                />
+
                 <Text style={{ fontWeight: "bold", fontSize: 16 }}>{name}</Text>
-                <Text style={{ marginVertical: 5 }}>{description}</Text>
-                <Text style={{ color: "#666" }}>
-                  Última atualização por: {userName ? userName : "Desconhecido"}
-                </Text>
+                <View>
+                  <Text style={{ marginVertical: 5, color: "#666" }}>
+                    Criado em: {new Date(created_at).toLocaleDateString()}
+                  </Text>
+                  {deleted_at && (
+                    <Text style={{ marginVertical: 5, color: "red" }}>
+                      Deletado em: {new Date(deleted_at).toLocaleDateString()}
+                    </Text>
+                  )}
+                </View>
               </View>
 
-              <TouchableOpacity onPress={() => setModalVisibleConfirmed(true)}>
+              {/* <TouchableOpacity onPress={() => setModalVisibleConfirmed(true)}>
                 <Icon name="delete" size={24} color="#000" />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </TouchableOpacity>
 
-          <ConfirmedModal
+          {/* <ConfirmedModal
             modalVisible={modalVisibleConfirmed}
             onConfirm={() => {
               deleteSkill(id);
@@ -112,27 +132,28 @@ export default function SkillsList() {
             }}
             onCancel={() => setModalVisibleConfirmed(false)}
             message="Tem certeza que deseja excluir esta habilidade?"
-          />
+          /> */}
         </View>
       </ScrollView>
     );
   };
 
   function renderComponent() {
-    if (skills.length === 0) {
+    if (users.length === 0) {
       return <Text>Você não possui habilidades cadastradas.</Text>;
     }
 
     return (
       <FlatList
-        data={skills}
+        data={users}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <SkillItem
+          <UserItem
             id={item.id}
             name={item.name}
-            description={item.description}
-            userName={item.users?.name}
+            avatar_url={item.avatar_url}
+            created_at={item.created_at}
+            deleted_at={item.deleted_at}
           />
         )}
       />

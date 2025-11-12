@@ -7,7 +7,7 @@ import React from "react";
 import { ActivityIndicator, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function Index() {
+export default function HomePage() {
   const { user } = useUser();
 
   const getHomeScreen = () => {
@@ -24,7 +24,6 @@ export default function Index() {
       );
     }
 
-    console.log("User is admin, rendering AdminHome");
     if (user.roles?.includes("admin") && user.deleted_at === null) {
       return <AdminHome />;
     } else if (user.roles?.includes("catsitter") && user.deleted_at === null) {

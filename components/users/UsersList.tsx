@@ -86,7 +86,7 @@ export default function UsersList() {
         >
           <TouchableOpacity
             onPress={() => {
-              router.push(`./users/${id}`);
+              router.push(`/users/${id}`);
             }}
           >
             <View

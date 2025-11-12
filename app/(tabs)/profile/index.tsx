@@ -6,7 +6,7 @@ import { useUser } from "@/hooks/useUser";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function Profile() {
+export default function ProfilePage() {
   const { user } = useUser();
 
   if (!user) {

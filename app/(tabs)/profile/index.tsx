@@ -1,5 +1,4 @@
 import LoadingScreen from "@/components/LoadinfScreen";
-import AdminProfile from "@/components/profile/AdminProfile";
 import CatSitterProfile from "@/components/profile/CatSitterProfile";
 import TutorProfile from "@/components/profile/TutorProfile";
 import { useUser } from "@/hooks/useUser";
@@ -16,8 +15,6 @@ export default function ProfilePage() {
   const getProfileScreen = () => {
     if (user?.roles.includes("catsitter")) {
       return <CatSitterProfile />;
-    } else if (user?.roles.includes("admin")) {
-      return <AdminProfile />;
     } else {
       return <TutorProfile />;
     }

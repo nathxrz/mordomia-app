@@ -20,7 +20,7 @@ const schema = yup
     name: yup
       .string()
       .min(2, "Nome deve ter no mínimo 2 caracteres")
-      .max(20, "Nome deve ter no máximo 20 caracteres")
+      .max(50, "Nome deve ter no máximo 50 caracteres")
       .trim()
       .required(requiredMessage),
     description: yup

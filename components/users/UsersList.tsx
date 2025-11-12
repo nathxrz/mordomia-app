@@ -16,9 +16,9 @@ import {
 async function fetchUsers() {
   try {
     const { data: users, error } = await supabase
-      .from("users")
+      .from("users_with_roles")
       .select("*")
-      .order("name", { ascending: true });
+      .order("roles", { ascending: true });
 
     if (error) {
       throw new Error(translateError(error.code));
@@ -38,6 +38,7 @@ export default function UsersList() {
     {
       id: string;
       name: string;
+      roles: string;
       avatar_url: string;
       created_at: Date;
       deleted_at: Date | null;
@@ -57,19 +58,18 @@ export default function UsersList() {
   const UserItem = ({
     id,
     name,
+    roles,
     avatar_url,
     created_at,
     deleted_at,
   }: {
     id: string;
     name: string;
+    roles: string;
     avatar_url: string;
     created_at: Date;
     deleted_at: Date | null;
   }) => {
-    // const { deleteUser } = useUser(id);
-    // const [modalVisibleConfirmed, setModalVisibleConfirmed] = useState(false);
-
     return (
       <ScrollView
         showsHorizontalScrollIndicator={false}
@@ -101,38 +101,30 @@ export default function UsersList() {
                   }
                   style={{ width: 100, height: 100 }}
                 />
-
                 <Text style={{ fontWeight: "bold", fontSize: 16 }}>{name}</Text>
+                <Text style={{ fontStyle: "italic", color: "#666" }}>
+                  {roles}
+                </Text>
+
                 <View>
                   <Text style={{ marginVertical: 5, color: "#666" }}>
-                    Criado em: {new Date(created_at).toLocaleDateString()}
+                    Criado em:{" "}
+                    {new Intl.DateTimeFormat("pt-BR").format(
+                      new Date(created_at)
+                    )}
                   </Text>
-                  {deleted_at && (
-                    <Text style={{ marginVertical: 5, color: "red" }}>
-                      Deletado em: {new Date(deleted_at).toLocaleDateString()}
-                    </Text>
-                  )}
+                  <Text
+                    style={{
+                      fontWeight: "bold",
+                      color: deleted_at ? "red" : "green",
+                    }}
+                  >
+                    {deleted_at ? "Desativado" : "Ativo"}
+                  </Text>
                 </View>
               </View>
-
-              {/* <TouchableOpacity onPress={() => setModalVisibleConfirmed(true)}>
-                <Icon name="delete" size={24} color="#000" />
-              </TouchableOpacity> */}
             </View>
           </TouchableOpacity>
-
-          {/* <ConfirmedModal
-            modalVisible={modalVisibleConfirmed}
-            onConfirm={() => {
-              deleteSkill(id);
-              setSkills((prevSkills) =>
-                prevSkills.filter((skill) => skill.id !== id)
-              );
-              setModalVisibleConfirmed(false);
-            }}
-            onCancel={() => setModalVisibleConfirmed(false)}
-            message="Tem certeza que deseja excluir esta habilidade?"
-          /> */}
         </View>
       </ScrollView>
     );
@@ -151,6 +143,7 @@ export default function UsersList() {
           <UserItem
             id={item.id}
             name={item.name}
+            roles={item.roles}
             avatar_url={item.avatar_url}
             created_at={item.created_at}
             deleted_at={item.deleted_at}

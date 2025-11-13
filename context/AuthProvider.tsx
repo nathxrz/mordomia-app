@@ -90,11 +90,11 @@ export default function AuthProvider({
       userData?.roles?.includes("admin") &&
       userData?.deleted_at === null
     ) {
-      router.navigate("/(admin)/home");
+      router.push("./admin/home");
     } else if (userData && userData?.deleted_at === null) {
-      router.navigate("/(tabs)/home");
+      router.push("/(tabs)/home");
     } else {
-      router.navigate("/");
+      router.push("/");
     }
     setLoading(false);
   }

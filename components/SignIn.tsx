@@ -208,6 +208,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#7F13EC",
     padding: 16,
     borderRadius: 100,
+    boxShadow: "0px 4px 4px #00000025",
   },
   buttonText: {
     color: "#FFFFFF",

@@ -18,11 +18,14 @@ export default function LoginLayout() {
         <StatusBar style="dark" />
         <Stack
           screenOptions={{
-            headerShown: false,
+            headerShown: true,
           }}
         >
-          <Stack.Screen name="signup/index" />
-          <Stack.Screen name="recover-password/index" />
+          <Stack.Screen name="signup/index" options={{ title: "Cadastro" }} />
+          <Stack.Screen
+            name="recover-password/index"
+            options={{ title: "Redifinir senha" }}
+          />
         </Stack>
       </ThemeProvider>
     </AuthProvider>

@@ -12,8 +12,7 @@ async function fetchUser(id: string) {
     const { data: userData, error } = await supabase
       .from("user_with_email_address_and_roles")
       .select("*")
-      .eq("id", id)
-      .order("name", { ascending: true });
+      .eq("id", id);
 
     if (error) {
       throw new Error(translateError(error.code));
@@ -21,7 +20,7 @@ async function fetchUser(id: string) {
 
     return userData;
   } catch (error) {
-    Alert.alert("Erro ao buscar os usuários", String(error));
+    Alert.alert("Erro ao buscar o usuário", String(error));
   }
 }
 

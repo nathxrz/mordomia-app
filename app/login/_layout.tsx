@@ -21,8 +21,8 @@ export default function LoginLayout() {
             headerShown: false,
           }}
         >
-          <Stack.Screen name="login/signup" />
-          <Stack.Screen name="recover-password" />
+          <Stack.Screen name="signup/index" />
+          <Stack.Screen name="recover-password/index" />
         </Stack>
       </ThemeProvider>
     </AuthProvider>

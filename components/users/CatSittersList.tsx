@@ -13,35 +13,33 @@ import {
   View,
 } from "react-native";
 
-async function fetchUsers() {
+async function fetchCatSitters() {
   try {
-    const { data: users, error } = await supabase
-      .from("users_with_roles")
-      .select("*")
-      .order("roles", { ascending: true });
+    const { data: catSitters, error } = await supabase
+      .from("users")
+      .select("*, cat_sitters!inner(id)")
+      .order("name", { ascending: true });
 
     if (error) {
       throw new Error(translateError(error.code));
     }
 
-    return users;
+    return catSitters;
   } catch (error) {
     Alert.alert("Erro ao buscar os usuários", String(error));
-    return [];
+    return false;
   }
 }
 
-export default function UsersList() {
+export default function CatSittersList() {
   const { user } = useUser();
 
   const [users, setUsers] = useState<
     {
       id: string;
       name: string;
-      roles: string;
+      // skills: string;
       avatar_url: string;
-      created_at: Date;
-      deleted_at: Date | null;
     }[]
   >([]);
 
@@ -49,7 +47,7 @@ export default function UsersList() {
     useCallback(() => {
       if (!user?.id) return;
 
-      fetchUsers().then((data) => {
+      fetchCatSitters().then((data) => {
         if (data) setUsers(data);
       });
     }, [user?.id])
@@ -58,17 +56,13 @@ export default function UsersList() {
   const UserItem = ({
     id,
     name,
-    roles,
+    // skills,
     avatar_url,
-    created_at,
-    deleted_at,
   }: {
     id: string;
     name: string;
-    roles: string;
+    // skills: string;
     avatar_url: string;
-    created_at: Date;
-    deleted_at: Date | null;
   }) => {
     return (
       <ScrollView
@@ -84,13 +78,17 @@ export default function UsersList() {
             borderRadius: 8,
           }}
         >
+          {}
           <TouchableOpacity
             onPress={() => {
-              router.push(`/users/${id}`);
+              router.push(`/users/catsitters/${id}`);
             }}
           >
             <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
             >
               <View style={{ flex: 1 }}>
                 <Image
@@ -103,25 +101,8 @@ export default function UsersList() {
                 />
                 <Text style={{ fontWeight: "bold", fontSize: 16 }}>{name}</Text>
                 <Text style={{ fontStyle: "italic", color: "#666" }}>
-                  {roles}
+                  {/* {skills} */}
                 </Text>
-
-                <View>
-                  <Text style={{ marginVertical: 5, color: "#666" }}>
-                    Criado em:{" "}
-                    {new Intl.DateTimeFormat("pt-BR").format(
-                      new Date(created_at)
-                    )}
-                  </Text>
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      color: deleted_at ? "red" : "green",
-                    }}
-                  >
-                    {deleted_at ? "Desativado" : "Ativo"}
-                  </Text>
-                </View>
               </View>
             </View>
           </TouchableOpacity>
@@ -132,7 +113,7 @@ export default function UsersList() {
 
   function renderComponent() {
     if (users.length === 0) {
-      return <Text>Nenhum usuário encontrado.</Text>;
+      return <Text>Nenhum cat sitter encontrado.</Text>;
     }
 
     return (
@@ -143,10 +124,8 @@ export default function UsersList() {
           <UserItem
             id={item.id}
             name={item.name}
-            roles={item.roles}
+            // skills={item.skills}
             avatar_url={item.avatar_url}
-            created_at={item.created_at}
-            deleted_at={item.deleted_at}
           />
         )}
       />

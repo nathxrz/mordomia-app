@@ -1,29 +1,64 @@
 import { useUser } from "@/hooks/useUser";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialSymbolsOutlined_400Regular } from "@expo-google-fonts/material-symbols-outlined";
+import { useFonts } from "expo-font";
 import { Tabs } from "expo-router";
 import React from "react";
+import { Text } from "react-native";
 
 export default function TabsLayout() {
   const { user } = useUser();
 
   const isAdmin = user?.roles?.includes("admin");
 
+  let [fontsLoaded] = useFonts({
+    MaterialSymbolsOutlined: MaterialSymbolsOutlined_400Regular,
+  });
+
+  if (!fontsLoaded) return null;
+
   return (
     <Tabs
       screenOptions={{
-        headerShown: false,
-        tabBarActiveTintColor: "#4b5563",
+        headerShown: true,
+        headerTitleAlign: "center",
+        headerStyle: {
+          backgroundColor: "#fcfcfc", // cor do header
+        },
+        tabBarActiveTintColor: "#CF0790",
+        tabBarInactiveTintColor: "#757575",
+        tabBarStyle: {
+          backgroundColor: "#fcfcfc",
+          height: 110,
+          borderTopWidth: 1,
+        },
       }}
     >
       {/* Abas comuns */}
       <Tabs.Screen
         name="home/index"
         options={{
-          title: "Home",
+          title: "Mordomia",
           tabBarLabel: () => null,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" color={color} size={size} />
+          tabBarIcon: ({ color }) => (
+            <Text
+              style={{
+                fontFamily: "MaterialSymbolsOutlined",
+                fontSize: 30,
+                lineHeight: 30,
+                color: color,
+                textAlign: "center",
+                marginBottom: 20,
+              }}
+            >
+              home
+            </Text>
           ),
+          tabBarIconStyle: {
+            width: 80,
+            height: 80,
+            justifyContent: "center",
+            alignItems: "center",
+          },
         }}
       />
 
@@ -32,9 +67,26 @@ export default function TabsLayout() {
         options={{
           title: "Usuários",
           tabBarLabel: () => null,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="people" color={color} size={size} />
+          tabBarIcon: ({ color }) => (
+            <Text
+              style={{
+                fontFamily: "MaterialSymbolsOutlined",
+                fontSize: 30,
+                lineHeight: 30,
+                color: color,
+                textAlign: "center",
+                marginBottom: 20,
+              }}
+            >
+              group
+            </Text>
           ),
+          tabBarIconStyle: {
+            width: 80,
+            height: 80,
+            justifyContent: "center",
+            alignItems: "center",
+          },
           href: isAdmin ? undefined : null,
         }}
       />
@@ -44,10 +96,83 @@ export default function TabsLayout() {
         options={{
           title: "Habilidades",
           tabBarLabel: () => null,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="star" color={color} size={size} />
+          tabBarIcon: ({ color }) => (
+            <Text
+              style={{
+                fontFamily: "MaterialSymbolsOutlined",
+                fontSize: 30,
+                lineHeight: 38,
+                color: color,
+                textAlign: "center",
+                marginBottom: 20,
+              }}
+            >
+              military_tech
+            </Text>
           ),
+          tabBarIconStyle: {
+            width: 80,
+            height: 80,
+            justifyContent: "center",
+            alignItems: "center",
+          },
           href: isAdmin ? undefined : null,
+        }}
+      />
+
+      <Tabs.Screen
+        name="schedules/index"
+        options={{
+          title: "Agendamentos",
+          tabBarLabel: () => null,
+          tabBarIcon: ({ color }) => (
+            <Text
+              style={{
+                fontFamily: "MaterialSymbolsOutlined",
+                fontSize: 30,
+                lineHeight: 38,
+                color: color,
+                textAlign: "center",
+                marginBottom: 20,
+              }}
+            >
+              calendar_month
+            </Text>
+          ),
+          tabBarIconStyle: {
+            width: 80,
+            height: 80,
+            justifyContent: "center",
+            alignItems: "center",
+          },
+        }}
+      />
+
+      <Tabs.Screen
+        name="chat/index"
+        options={{
+          title: "Mensagens",
+          tabBarLabel: () => null,
+          tabBarIcon: ({ color }) => (
+            <Text
+              style={{
+                fontFamily: "MaterialSymbolsOutlined",
+                fontSize: 30,
+                lineHeight: 38,
+                color: color,
+                textAlign: "center",
+                marginBottom: 20,
+              }}
+            >
+              Sms
+            </Text>
+          ),
+          tabBarIconStyle: {
+            width: 80,
+            height: 80,
+            justifyContent: "center",
+            alignItems: "center",
+          },
         }}
       />
 
@@ -57,9 +182,26 @@ export default function TabsLayout() {
         options={{
           title: "Perfil",
           tabBarLabel: () => null,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person" color={color} size={size} />
+          tabBarIcon: ({ color }) => (
+            <Text
+              style={{
+                fontFamily: "MaterialSymbolsOutlined",
+                fontSize: 30,
+                lineHeight: 38,
+                color: color,
+                textAlign: "center",
+                marginBottom: 20,
+              }}
+            >
+              person
+            </Text>
           ),
+          tabBarIconStyle: {
+            width: 80,
+            height: 80,
+            justifyContent: "center",
+            alignItems: "center",
+          },
         }}
       />
     </Tabs>

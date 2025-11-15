@@ -3,10 +3,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { useContext, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-
-import { ScrollView, StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import MaskInput from "react-native-mask-input";
-import { Button, RadioButton, Text, TextInput } from "react-native-paper";
+import { Text, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import * as yup from "yup";
@@ -87,12 +87,16 @@ const schema = yup
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [selectedType, setSelectedType] = useState<"tutor" | "catsitter">(
+    "tutor"
+  );
 
   const { signUp, loading } = useContext(AuthContext);
 
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -109,231 +113,305 @@ export default function SignUp() {
   });
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
+    <SafeAreaView edges={[]} style={styles.safeArea}>
+      <KeyboardAwareScrollView
+        contentContainerStyle={{ paddingBottom: 60 }}
+        enableOnAndroid={true}
       >
-        <>
-          <View>
-            <Controller
-              control={control}
-              name="type"
-              render={({ field: { onChange, value } }) => (
-                <RadioButton
-                  value="tutor"
-                  status={value === "tutor" ? "checked" : "unchecked"}
-                  onPress={() => onChange("tutor")}
-                />
-              )}
-            />
-            <Text>Tutor</Text>
+        <View style={styles.container}>
+          <View style={styles.typeContainer}>
+            <Text style={styles.labelType}>Quem é você?</Text>
+            <View style={styles.inputRadioContainer}>
+              {/* Botão Tutor */}
+              <TouchableOpacity
+                style={[
+                  styles.radioButton,
+                  selectedType === "tutor" && styles.radioSelected,
+                ]}
+                onPress={() => {
+                  setSelectedType("tutor");
 
-            <Controller
-              control={control}
-              name="type"
-              render={({ field: { onChange, value } }) => (
-                <RadioButton
-                  value="catsitter"
-                  status={value === "catsitter" ? "checked" : "unchecked"}
-                  onPress={() => onChange("catsitter")}
-                />
+                  setValue("type", "tutor");
+                }}
+              >
+                <Text
+                  style={[
+                    styles.textButtonRadio,
+                    selectedType === "tutor" && styles.textButtonRadioSelected,
+                  ]}
+                >
+                  Tutor
+                </Text>
+              </TouchableOpacity>
+
+              {/* Botão Cat sitter */}
+              <TouchableOpacity
+                style={[
+                  styles.radioButton,
+                  selectedType === "catsitter" && styles.radioSelected,
+                ]}
+                onPress={() => {
+                  setSelectedType("catsitter");
+                  setValue("type", "catsitter");
+                }}
+              >
+                <Text
+                  style={[
+                    styles.textButtonRadio,
+                    selectedType === "catsitter" &&
+                      styles.textButtonRadioSelected,
+                  ]}
+                >
+                  Cat sitter
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={styles.inputsContainer}>
+            <View>
+              <Controller
+                control={control}
+                name="name"
+                render={({ field: { onChange, value } }) => (
+                  <TextInput
+                    mode="outlined"
+                    placeholderTextColor="#7F13EC"
+                    outlineColor="#979797"
+                    activeOutlineColor="#979797"
+                    textColor="#7F13EC"
+                    theme={{ roundness: 100 }}
+                    onChangeText={onChange}
+                    value={value}
+                    placeholder="Nome completo"
+                  />
+                )}
+              />
+              {errors.name && (
+                <Text style={styles.messageAlert}>{errors.name?.message}</Text>
               )}
-            />
-            <Text>Cat sitter</Text>
+            </View>
+
+            <View>
+              <Controller
+                control={control}
+                name="birthDate"
+                render={({ field: { onChange, value } }) => (
+                  <TextInput
+                    mode="outlined"
+                    placeholderTextColor="#7F13EC"
+                    outlineColor="#979797"
+                    activeOutlineColor="#979797"
+                    textColor="#7F13EC"
+                    theme={{ roundness: 100 }}
+                    onChangeText={onChange}
+                    value={value}
+                    placeholder="Data de nascimento (dd/mm/aaaa)"
+                    right={
+                      <TextInput.Icon
+                        icon={() => (
+                          <Icon
+                            name="calendar-month"
+                            size={20}
+                            color="#7F13EC"
+                          />
+                        )}
+                      />
+                    }
+                    render={(props) => (
+                      <MaskInput
+                        {...props}
+                        value={value}
+                        onChangeText={(masked) => onChange(masked)}
+                        mask={[
+                          /\d/,
+                          /\d/,
+                          "/",
+                          /\d/,
+                          /\d/,
+                          "/",
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                        ]}
+                      />
+                    )}
+                  />
+                )}
+              />
+              {errors.birthDate && (
+                <Text style={styles.messageAlert}>
+                  {errors.birthDate?.message}
+                </Text>
+              )}
+            </View>
+
+            <View>
+              <Controller
+                control={control}
+                name="phone"
+                render={({ field: { onChange, value } }) => (
+                  <TextInput
+                    mode="outlined"
+                    placeholderTextColor="#7F13EC"
+                    outlineColor="#979797"
+                    activeOutlineColor="#979797"
+                    textColor="#7F13EC"
+                    theme={{ roundness: 100 }}
+                    onChangeText={onChange}
+                    value={value}
+                    placeholder="Telefone"
+                    render={(props) => (
+                      <MaskInput
+                        {...props}
+                        value={value}
+                        onChangeText={(masked) => onChange(masked)}
+                        mask={[
+                          "(",
+                          /\d/,
+                          /\d/,
+                          ")",
+                          " ",
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          "-",
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                        ]}
+                      />
+                    )}
+                  />
+                )}
+              />
+              {errors.phone && (
+                <Text style={styles.messageAlert}>{errors.phone?.message}</Text>
+              )}
+            </View>
+          </View>
+
+          <View style={styles.inputsContainer}>
+            <Text style={styles.labelCredentials}>Credenciais</Text>
+            <View>
+              <Controller
+                control={control}
+                name="email"
+                render={({ field: { onChange, value } }) => (
+                  <TextInput
+                    mode="outlined"
+                    placeholderTextColor="#7F13EC"
+                    outlineColor="#979797"
+                    activeOutlineColor="#979797"
+                    textColor="#7F13EC"
+                    theme={{ roundness: 100 }}
+                    onChangeText={onChange}
+                    value={value}
+                    activeUnderlineColor="#6200ee"
+                    placeholder="E-mail"
+                  />
+                )}
+              />
+              {errors.email && (
+                <Text style={styles.messageAlert}>{errors.email?.message}</Text>
+              )}
+            </View>
+
+            <View>
+              <Controller
+                control={control}
+                name="password"
+                render={({ field: { onChange, value } }) => (
+                  <TextInput
+                    mode="outlined"
+                    placeholderTextColor="#7F13EC"
+                    outlineColor="#979797"
+                    activeOutlineColor="#979797"
+                    textColor="#7F13EC"
+                    theme={{ roundness: 100 }}
+                    right={
+                      <TextInput.Icon
+                        icon={() =>
+                          showPassword ? (
+                            <Icon name="visibility" size={20} color="#7F13EC" />
+                          ) : (
+                            <Icon
+                              name="visibility-off"
+                              size={20}
+                              color="#7F13EC"
+                            />
+                          )
+                        }
+                        onPress={() => setShowPassword(!showPassword)}
+                      />
+                    }
+                    onChangeText={onChange}
+                    value={value}
+                    secureTextEntry={!showPassword}
+                    placeholder="Senha"
+                  />
+                )}
+              />
+              {errors.password && (
+                <Text style={styles.messageAlert}>
+                  {errors.password?.message}
+                </Text>
+              )}
+            </View>
+
+            <View>
+              <Controller
+                control={control}
+                name="confirmPassword"
+                render={({ field: { onChange, value } }) => (
+                  <TextInput
+                    mode="outlined"
+                    placeholderTextColor="#7F13EC"
+                    outlineColor="#979797"
+                    activeOutlineColor="#979797"
+                    textColor="#7F13EC"
+                    theme={{ roundness: 100 }}
+                    right={
+                      <TextInput.Icon
+                        icon={() =>
+                          showConfirmPassword ? (
+                            <Icon name="visibility" size={20} color="#7F13EC" />
+                          ) : (
+                            <Icon
+                              name="visibility-off"
+                              size={20}
+                              color="#7F13EC"
+                            />
+                          )
+                        }
+                        onPress={() =>
+                          setShowConfirmPassword(!showConfirmPassword)
+                        }
+                      />
+                    }
+                    onChangeText={onChange}
+                    value={value}
+                    secureTextEntry={!showConfirmPassword}
+                    placeholder="Confirmação de senha"
+                  />
+                )}
+              />
+              {errors.confirmPassword && (
+                <Text style={styles.messageAlert}>
+                  {errors.confirmPassword?.message}
+                </Text>
+              )}
+            </View>
           </View>
 
           <View>
-            <Controller
-              control={control}
-              name="name"
-              render={({ field: { onChange, value } }) => (
-                <TextInput
-                  label="Nome completo"
-                  onChangeText={onChange}
-                  value={value}
-                  placeholder="Digite seu nome completo"
-                />
-              )}
-            />
-            {errors.name && (
-              <Text style={styles.messageAlert}>{errors.name?.message}</Text>
-            )}
-          </View>
-
-          <View>
-            <Controller
-              control={control}
-              name="phone"
-              render={({ field: { onChange, value } }) => (
-                <TextInput
-                  label="Telefone"
-                  onChangeText={onChange}
-                  value={value}
-                  placeholder="Digite seu telefone"
-                  render={(props) => (
-                    <MaskInput
-                      {...props}
-                      value={value}
-                      onChangeText={(masked) => onChange(masked)}
-                      mask={[
-                        "(",
-                        /\d/,
-                        /\d/,
-                        ")",
-                        " ",
-                        /\d/,
-                        /\d/,
-                        /\d/,
-                        /\d/,
-                        /\d/,
-                        "-",
-                        /\d/,
-                        /\d/,
-                        /\d/,
-                        /\d/,
-                      ]}
-                    />
-                  )}
-                />
-              )}
-            />
-            {errors.phone && (
-              <Text style={styles.messageAlert}>{errors.phone?.message}</Text>
-            )}
-          </View>
-
-          <View>
-            <Controller
-              control={control}
-              name="birthDate"
-              render={({ field: { onChange, value } }) => (
-                <TextInput
-                  label="Data de nascimento"
-                  onChangeText={onChange}
-                  value={value}
-                  placeholder="dd/mm/aaaa"
-                  render={(props) => (
-                    <MaskInput
-                      {...props}
-                      value={value}
-                      onChangeText={(masked) => onChange(masked)}
-                      mask={[
-                        /\d/,
-                        /\d/,
-                        "/",
-                        /\d/,
-                        /\d/,
-                        "/",
-                        /\d/,
-                        /\d/,
-                        /\d/,
-                        /\d/,
-                      ]}
-                    />
-                  )}
-                />
-              )}
-            />
-            {errors.birthDate && (
-              <Text style={styles.messageAlert}>
-                {errors.birthDate?.message}
-              </Text>
-            )}
-          </View>
-
-          <View>
-            <Controller
-              control={control}
-              name="email"
-              render={({ field: { onChange, value } }) => (
-                <TextInput
-                  label={"Email"}
-                  onChangeText={onChange}
-                  value={value}
-                  activeUnderlineColor="#6200ee"
-                  placeholder="Digite seu email"
-                />
-              )}
-            />
-            {errors.email && (
-              <Text style={styles.messageAlert}>{errors.email?.message}</Text>
-            )}
-          </View>
-
-          <View>
-            <Controller
-              control={control}
-              name="password"
-              render={({ field: { onChange, value } }) => (
-                <TextInput
-                  label="Senha"
-                  right={
-                    <TextInput.Icon
-                      icon={() =>
-                        showPassword ? (
-                          <Icon name="visibility" size={20} color="#888" />
-                        ) : (
-                          <Icon name="visibility-off" size={20} color="#888" />
-                        )
-                      }
-                      onPress={() => setShowPassword(!showPassword)}
-                    />
-                  }
-                  onChangeText={onChange}
-                  value={value}
-                  secureTextEntry={!showPassword}
-                  placeholder="Digite sua senha"
-                />
-              )}
-            />
-            {errors.password && (
-              <Text style={styles.messageAlert}>
-                {errors.password?.message}
-              </Text>
-            )}
-          </View>
-
-          <View>
-            <Controller
-              control={control}
-              name="confirmPassword"
-              render={({ field: { onChange, value } }) => (
-                <TextInput
-                  label="Confirmar senha"
-                  right={
-                    <TextInput.Icon
-                      icon={() =>
-                        showConfirmPassword ? (
-                          <Icon name="visibility" size={20} color="#888" />
-                        ) : (
-                          <Icon name="visibility-off" size={20} color="#888" />
-                        )
-                      }
-                      onPress={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                    />
-                  }
-                  onChangeText={onChange}
-                  value={value}
-                  secureTextEntry={!showConfirmPassword}
-                  placeholder="Confirme sua senha"
-                />
-              )}
-            />
-            {errors.confirmPassword && (
-              <Text style={styles.messageAlert}>
-                {errors.confirmPassword?.message}
-              </Text>
-            )}
-          </View>
-
-          <View>
-            <Button
-              mode="contained"
+            <TouchableOpacity
+              style={styles.button_submit}
               disabled={loading}
-              style={styles.mt20}
               onPress={handleSubmit((data) => {
                 const [day, month, year] = data.birthDate.split("/");
                 const birthDate = new Date(`${year}-${month}-${day}T00:00:00`);
@@ -348,27 +426,92 @@ export default function SignUp() {
                 );
               })}
             >
-              Criar conta
-            </Button>
+              <Text style={styles.buttonText}>
+                {loading ? "Cadastrando..." : "Cadastrar-se"}
+              </Text>
+            </TouchableOpacity>
           </View>
-        </>
-      </ScrollView>
+        </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    backgroundColor: "#FCFCFC",
+    flex: 1,
+  },
   container: {
-    marginTop: 40,
-    padding: 12,
+    flex: 1,
+    paddingVertical: 32,
+    paddingHorizontal: 16,
   },
-  verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    alignSelf: "stretch",
+  typeContainer: {
+    gap: 24,
+    fontSize: 16,
+    marginBottom: 30,
   },
-  mt20: {
-    marginTop: 20,
+  labelType: {
+    fontSize: 25,
+    fontFamily: "Inter",
+    fontWeight: "bold",
+    lineHeight: 24,
+  },
+  inputRadioContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 16,
+  },
+  radioButton: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 50,
+    borderWidth: 2,
+    borderColor: "#E5E5E5",
+    backgroundColor: "#FFFFFF",
+    alignItems: "center",
+  },
+  textButtonRadio: {
+    color: "#4A4459",
+    fontSize: 18,
+    fontWeight: "600",
+  },
+  radioSelected: {
+    backgroundColor: "#DFD2FF",
+    borderColor: "#7F13EC",
+  },
+  textButtonRadioSelected: {
+    color: "#000000",
+    fontWeight: "700",
+  },
+  inputsContainer: {
+    display: "flex",
+    gap: 10,
+  },
+  labelCredentials: {
+    fontFamily: "Inter",
+    fontSize: 18,
+    fontWeight: "700",
+    lineHeight: 24,
+    marginTop: 30,
+    color: "#1D1127",
+  },
+  button_submit: {
+    alignSelf: "flex-end",
+    marginTop: 50,
+    backgroundColor: "#7F13EC",
+    paddingVertical: 10,
+    paddingHorizontal: 40,
+    borderRadius: 100,
+    boxShadow: "0px 4px 4px #00000025",
+  },
+
+  buttonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "normal",
+    textAlign: "center",
   },
   messageAlert: { color: "red" },
 });

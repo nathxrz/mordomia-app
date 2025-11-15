@@ -5,7 +5,6 @@ import LoadingScreen from "@/components/LoadinfScreen";
 import { useUser } from "@/hooks/useUser";
 import { Redirect } from "expo-router";
 import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomePage() {
   const { user } = useUser();
@@ -26,5 +25,5 @@ export default function HomePage() {
     }
   };
 
-  return <SafeAreaView style={{ flex: 1 }}>{getHomeScreen()}</SafeAreaView>;
+  return getHomeScreen();
 }

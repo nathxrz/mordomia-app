@@ -19,8 +19,10 @@ export default function LoginLayout() {
         <Stack
           screenOptions={{
             headerShown: true,
+            headerTitleAlign: "center",
           }}
         >
+          <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="signup/index" options={{ title: "Cadastro" }} />
           <Stack.Screen
             name="recover-password/index"

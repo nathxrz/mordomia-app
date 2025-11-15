@@ -2,14 +2,8 @@ import { AuthContext } from "@/context/AuthProvider";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
-import {
-  Alert,
-  KeyboardAvoidingView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -43,17 +37,16 @@ export default function SignIn() {
   });
 
   return (
-    <SafeAreaView style={{ backgroundColor: "#FCFCFC", flex: 1 }}>
-      <KeyboardAvoidingView
-        behavior="padding"
-        keyboardVerticalOffset={100}
-        style={styles.container}
+    <SafeAreaView edges={[]} style={styles.safeArea}>
+      <KeyboardAwareScrollView
+        contentContainerStyle={{ paddingBottom: 60, flexGrow: 1 }}
+        enableOnAndroid={true}
       >
-        <View>
+        <View style={styles.container}>
           <View>
             <View>
               <Text style={styles.textLabel}>
-                Digite seu e-mail para redifinição
+                Informe o e-mail associado à sua conta
               </Text>
               <Controller
                 control={control}
@@ -62,8 +55,8 @@ export default function SignIn() {
                   <TextInput
                     mode="outlined"
                     placeholderTextColor="#7F13EC"
-                    outlineColor="#7F13EC"
-                    activeOutlineColor="#7F13EC"
+                    outlineColor="#979797"
+                    activeOutlineColor="#979797"
                     textColor="#7F13EC"
                     theme={{ roundness: 100 }}
                     left={
@@ -101,18 +94,22 @@ export default function SignIn() {
             </TouchableOpacity>
           </View>
         </View>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
+  safeArea: {
+    backgroundColor: "#FCFCFC",
+    flex: 1,
+  },
   container: {
     position: "relative",
     flex: 1,
     height: "100%",
-    backgroundColor: "#FCFCFC",
-    padding: 16,
+    paddingHorizontal: 16,
     justifyContent: "center",
+    marginTop: -100,
   },
 
   textLabel: {

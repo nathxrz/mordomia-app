@@ -3,13 +3,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Link } from "expo-router";
 import React, { useContext, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import {
-  KeyboardAvoidingView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -47,134 +42,139 @@ export default function SignIn() {
   });
 
   return (
-    <SafeAreaView style={{ backgroundColor: "#FCFCFC", flex: 1 }}>
-      <KeyboardAvoidingView
-        behavior="padding"
-        keyboardVerticalOffset={100}
-        style={styles.container}
+    <SafeAreaView edges={[]} style={styles.safeArea}>
+      <KeyboardAwareScrollView
+        contentContainerStyle={{ paddingBottom: 60, flexGrow: 1 }}
+        enableOnAndroid={true}
       >
-        <View style={styles.titleSection}>
-          <Text style={styles.title}>Mordomia</Text>
-          <Text style={styles.subtitle}>Seja bem-vindo de volta!</Text>
-        </View>
-        <View>
-          <View style={styles.inputsContainer}>
-            <View>
-              <Controller
-                control={control}
-                name="email"
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    mode="outlined"
-                    placeholderTextColor="#7F13EC"
-                    outlineColor="#7F13EC"
-                    activeOutlineColor="#7F13EC"
-                    textColor="#7F13EC"
-                    theme={{ roundness: 100 }}
-                    left={
-                      <TextInput.Icon
-                        icon={() => (
-                          <Icon name="person" size={20} color="#7F13EC" />
-                        )}
-                      />
-                    }
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    value={value}
-                    placeholder="email@address.com"
-                    autoCapitalize="none"
-                    style={styles.textInput}
-                  />
-                )}
-              />
-
-              {errors.email && (
-                <Text style={styles.messageAlert}>{errors.email?.message}</Text>
-              )}
-            </View>
-
-            <View>
-              <Controller
-                control={control}
-                name="password"
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    mode="outlined"
-                    placeholderTextColor="#7F13EC"
-                    outlineColor="#7F13EC"
-                    activeOutlineColor="#7F13EC"
-                    theme={{ roundness: 100 }}
-                    textColor="#7F13EC"
-                    left={
-                      <TextInput.Icon
-                        icon={() =>
-                          showPassword ? (
-                            <Icon name="visibility" size={20} color="#7F13EC" />
-                          ) : (
-                            <Icon
-                              name="visibility-off"
-                              size={20}
-                              color="#7F13EC"
-                            />
-                          )
-                        }
-                        onPress={() => setShowPassword(!showPassword)}
-                      />
-                    }
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    value={value}
-                    secureTextEntry={!showPassword}
-                    placeholder="Senha"
-                    autoCapitalize="none"
-                    style={styles.textInput}
-                  />
-                )}
-              />
-
-              {errors.password && (
-                <Text style={styles.messageAlert}>
-                  {errors.password?.message}
-                </Text>
-              )}
-            </View>
+        <View style={styles.container}>
+          <View style={styles.titleSection}>
+            <Text style={styles.title}>Mordomia</Text>
+            <Text style={styles.subtitle}>Seja bem-vindo de volta!</Text>
           </View>
-          <Link style={styles.link} href="/login/recover-password">
-            Esqueceu a senha?
-          </Link>
           <View>
-            <TouchableOpacity
-              style={styles.button_submit}
-              disabled={loading}
-              onPress={handleSubmit(async (data) => {
-                await signIn(data.email, data.password);
-              })}
-            >
-              <Text style={styles.buttonText}>
-                {loading ? "Entrando..." : "Entrar"}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+            <View style={styles.inputsContainer}>
+              <View>
+                <Controller
+                  control={control}
+                  name="email"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                      mode="outlined"
+                      placeholderTextColor="#7F13EC"
+                      outlineColor="#979797"
+                      activeOutlineColor="#979797"
+                      textColor="#7F13EC"
+                      theme={{ roundness: 100 }}
+                      left={
+                        <TextInput.Icon
+                          icon={() => (
+                            <Icon name="person" size={20} color="#7F13EC" />
+                          )}
+                        />
+                      }
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                      placeholder="E-mail"
+                      autoCapitalize="none"
+                    />
+                  )}
+                />
 
-        <Link
-          style={{ ...styles.link, ...styles.link_signup }}
-          href="/login/signup"
-        >
-          Não tem uma conta? Crie aqui.
-        </Link>
-      </KeyboardAvoidingView>
+                {errors.email && (
+                  <Text style={styles.messageAlert}>
+                    {errors.email?.message}
+                  </Text>
+                )}
+              </View>
+
+              <View>
+                <Controller
+                  control={control}
+                  name="password"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                      mode="outlined"
+                      placeholderTextColor="#7F13EC"
+                      activeOutlineColor="#979797"
+                      outlineColor="#979797"
+                      theme={{ roundness: 100 }}
+                      textColor="#7F13EC"
+                      left={
+                        <TextInput.Icon
+                          icon={() =>
+                            showPassword ? (
+                              <Icon
+                                name="visibility"
+                                size={20}
+                                color="#7F13EC"
+                              />
+                            ) : (
+                              <Icon
+                                name="visibility-off"
+                                size={20}
+                                color="#7F13EC"
+                              />
+                            )
+                          }
+                          onPress={() => setShowPassword(!showPassword)}
+                        />
+                      }
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                      secureTextEntry={!showPassword}
+                      placeholder="Senha"
+                      autoCapitalize="none"
+                    />
+                  )}
+                />
+
+                {errors.password && (
+                  <Text style={styles.messageAlert}>
+                    {errors.password?.message}
+                  </Text>
+                )}
+              </View>
+            </View>
+            <Link style={styles.link} href="/login/recover-password">
+              Esqueceu a senha?
+            </Link>
+            <View>
+              <TouchableOpacity
+                style={styles.button_submit}
+                disabled={loading}
+                onPress={handleSubmit(async (data) => {
+                  await signIn(data.email, data.password);
+                })}
+              >
+                <Text style={styles.buttonText}>
+                  {loading ? "Entrando..." : "Entrar"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <Link style={styles.link_signup} href="/login/signup">
+            Não tem uma conta? Crie aqui.
+          </Link>
+        </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
+  safeArea: {
+    backgroundColor: "#FCFCFC",
+    flex: 1,
+  },
   container: {
     position: "relative",
     flex: 1,
     height: "100%",
-    backgroundColor: "#FCFCFC",
-    padding: 16,
     justifyContent: "center",
+    paddingHorizontal: 16,
   },
 
   titleSection: {
@@ -199,10 +199,6 @@ const styles = StyleSheet.create({
     display: "flex",
     gap: 14,
   },
-  textInput: {
-    backgroundColor: "#fff",
-    fontSize: 16,
-  },
   button_submit: {
     marginTop: 20,
     backgroundColor: "#7F13EC",
@@ -226,11 +222,10 @@ const styles = StyleSheet.create({
   link_signup: {
     position: "absolute",
     bottom: 26,
-    width: "100%",
-    textAlign: "center",
     color: "#7F13EC",
     fontWeight: "bold",
     fontSize: 14,
+    alignSelf: "center",
   },
   messageAlert: { color: "red", marginTop: 4, fontSize: 12, marginLeft: 10 },
 });

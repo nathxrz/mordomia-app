@@ -7,7 +7,7 @@ import {
   Alert,
   FlatList,
   Image,
-  ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -65,49 +65,32 @@ export default function CatSittersList() {
     avatar_url: string;
   }) => {
     return (
-      <ScrollView
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
+      <TouchableOpacity
+        onPress={() => {
+          router.push(`/users/catsitters/${id}`);
+        }}
+        style={styles.profileCard}
       >
         <View
           style={{
-            marginBottom: 20,
-            borderColor: "#ccc",
-            borderWidth: 1,
-            padding: 10,
-            borderRadius: 8,
+            flexDirection: "row",
+            justifyContent: "space-between",
           }}
         >
-          {}
-          <TouchableOpacity
-            onPress={() => {
-              router.push(`/users/catsitters/${id}`);
-            }}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <View style={{ flex: 1 }}>
-                <Image
-                  source={
-                    avatar_url
-                      ? { uri: avatar_url }
-                      : require("../../assets/images/avatar.png")
-                  }
-                  style={{ width: 100, height: 100 }}
-                />
-                <Text style={{ fontWeight: "bold", fontSize: 16 }}>{name}</Text>
-                <Text style={{ fontStyle: "italic", color: "#666" }}>
-                  {/* {skills} */}
-                </Text>
-              </View>
-            </View>
-          </TouchableOpacity>
+          <View style={{ flex: 1 }}>
+            <Image
+              source={
+                avatar_url
+                  ? { uri: avatar_url }
+                  : require("../../assets/images/avatar.png")
+              }
+              style={{ width: 100, height: 100 }}
+            />
+            <Text style={{ fontWeight: "bold", fontSize: 16 }}>{name}</Text>
+            <Text style={{ fontStyle: "italic", color: "#666" }}></Text>
+          </View>
         </View>
-      </ScrollView>
+      </TouchableOpacity>
     );
   };
 
@@ -132,5 +115,14 @@ export default function CatSittersList() {
     );
   }
 
-  return <View style={{ padding: 20 }}>{renderComponent()}</View>;
+  return renderComponent();
 }
+
+const styles = StyleSheet.create({
+  profileCard: {
+    backgroundColor: "#FCFCFC",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#4A4459",
+  },
+});

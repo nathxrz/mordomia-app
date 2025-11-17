@@ -3,7 +3,7 @@ import { MaterialSymbolsOutlined_400Regular } from "@expo-google-fonts/material-
 import { useFonts } from "expo-font";
 import { Tabs } from "expo-router";
 import React from "react";
-import { Text } from "react-native";
+import { Alert, Text, TouchableOpacity } from "react-native";
 
 export default function TabsLayout() {
   const { user } = useUser();
@@ -38,6 +38,23 @@ export default function TabsLayout() {
         name="home/index"
         options={{
           title: "Mordomia",
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => Alert.alert("Notificações em desenvolvimento...")}
+            >
+              <Text
+                style={{
+                  fontFamily: "MaterialSymbolsOutlined",
+                  fontSize: 30,
+                  lineHeight: 30,
+                  marginRight: 16,
+                  color: "#CF0790",
+                }}
+              >
+                notifications
+              </Text>
+            </TouchableOpacity>
+          ),
           tabBarLabel: () => null,
           tabBarIcon: ({ color }) => (
             <Text
@@ -145,6 +162,7 @@ export default function TabsLayout() {
             justifyContent: "center",
             alignItems: "center",
           },
+          href: !isAdmin ? undefined : null,
         }}
       />
 
@@ -173,6 +191,7 @@ export default function TabsLayout() {
             justifyContent: "center",
             alignItems: "center",
           },
+          href: !isAdmin ? undefined : null,
         }}
       />
 

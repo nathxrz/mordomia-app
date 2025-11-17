@@ -75,15 +75,13 @@ const styles = StyleSheet.create({
   container: {
     position: "relative",
     paddingHorizontal: 16,
+    flex: 1,
   },
   searchBox: {
     marginTop: 22,
   },
   listItems: {
-    flex: 1,
+    flex: 0,
     marginTop: 28,
-
-    borderWidth: 1,
-    borderColor: "red",
   },
 });

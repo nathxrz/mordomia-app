@@ -69,26 +69,44 @@ export default function CatSittersList() {
         onPress={() => {
           router.push(`/users/catsitters/${id}`);
         }}
-        style={styles.profileCard}
       >
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <View style={{ flex: 1 }}>
-            <Image
-              source={
-                avatar_url
-                  ? { uri: avatar_url }
-                  : require("../../assets/images/avatar.png")
-              }
-              style={{ width: 100, height: 100 }}
-            />
-            <Text style={{ fontWeight: "bold", fontSize: 16 }}>{name}</Text>
-            <Text style={{ fontStyle: "italic", color: "#666" }}></Text>
+        <View style={styles.cardContainer}>
+          <View style={styles.cardContent}>
+            <Text style={styles.cardTitle}>{name}</Text>
+            <View style={styles.ratingContainer}>
+              <Text
+                style={{
+                  fontFamily: "MaterialSymbolsOutlined",
+                  fontSize: 16,
+                  lineHeight: 16,
+                  color: "#F2C94C",
+                  marginRight: 4,
+                }}
+              >
+                star
+              </Text>
+              <Text style={styles.ratingValue}>4.9</Text>
+            </View>
+            <View style={styles.priceDistanceContainer}>
+              <Text style={styles.priceText}>R$45/visita</Text>
+              <Text style={styles.distanceText}>1.2km</Text>
+            </View>
+            <Text
+              style={styles.skillsText}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              skills skills skills skills skills skills skills
+            </Text>
           </View>
+          <Image
+            style={styles.profileImage}
+            source={
+              avatar_url
+                ? { uri: avatar_url }
+                : require("../../assets/images/avatar.png")
+            }
+          />
         </View>
       </TouchableOpacity>
     );
@@ -119,11 +137,60 @@ export default function CatSittersList() {
 }
 
 const styles = StyleSheet.create({
-  profileCard: {
+  cardContainer: {
     backgroundColor: "#FCFCFC",
-    borderRadius: 8,
+    borderRadius: 22,
     borderWidth: 1,
-    borderColor: "#4A4459",
+    borderColor: "#E5E5E5",
     marginBottom: 18,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 15,
+    height: 140,
+  },
+  cardContent: {
+    paddingVertical: 18,
+    paddingHorizontal: 21,
+    borderWidth: 1,
+    borderColor: "red",
+    flex: 2,
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 8,
+  },
+  ratingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  ratingValue: {
+    fontSize: 16,
+    color: "#333",
+  },
+  priceDistanceContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 8,
+  },
+  priceText: {
+    fontSize: 16,
+    color: "#333",
+  },
+  distanceText: {
+    fontSize: 16,
+    color: "#333",
+  },
+  skillsText: {
+    fontSize: 14,
+    color: "#666",
+  },
+  profileImage: {
+    flex: 1,
+    height: "100%",
+    borderTopRightRadius: 22,
+    borderBottomRightRadius: 22,
   },
 });

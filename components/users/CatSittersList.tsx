@@ -73,31 +73,60 @@ export default function CatSittersList() {
         <View style={styles.cardContainer}>
           <View style={styles.cardContent}>
             <Text style={styles.cardTitle}>{name}</Text>
-            <View style={styles.ratingContainer}>
-              <Text
-                style={{
-                  fontFamily: "MaterialSymbolsOutlined",
-                  fontSize: 16,
-                  lineHeight: 16,
-                  color: "#F2C94C",
-                  marginRight: 4,
+            <View>
+              <View style={styles.subtitleContainer}>
+                <View style={styles.ratingContainer}>
+                  <Text
+                    style={{
+                      fontFamily: "MaterialSymbolsOutlined",
+                      fontSize: 16,
+                      lineHeight: 16,
+                      color: "#F08000",
+                      marginRight: 4,
+                    }}
+                  >
+                    star
+                  </Text>
+                  <Text style={styles.ratingValue}>4.9</Text>
+                </View>
+                <Text style={styles.priceText}>R$45/visita</Text>
+                <Text style={styles.distanceText}>1.2km</Text>
+              </View>
+            </View>
+            <View style={styles.skillsContainer}>
+              {/* <Text numberOfLines={1} ellipsizeMode="tail"> */}
+              {/* {skills.map((s) => s.short_name).join(" • ")} */}
+              <Text style={styles.skillsText}>Emergências</Text>
+              <Text style={styles.skillsText}>Idosos</Text>
+              <Text style={styles.skillsText}>Medicação</Text>
+              {/* </Text> */}
+            </View>
+            <View style={styles.buttonsContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  router.push(`/users/catsitters/${id}`);
                 }}
               >
-                star
-              </Text>
-              <Text style={styles.ratingValue}>4.9</Text>
+                <Text style={styles.infoText}>Ver perfil</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  Alert.alert("Favoritar em desenvolvimento...");
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: "MaterialSymbolsOutlined",
+                    fontSize: 25,
+                    lineHeight: 25,
+                    color: "#605A6D",
+                    marginRight: 10,
+                  }}
+                >
+                  favorite
+                </Text>
+              </TouchableOpacity>
             </View>
-            <View style={styles.priceDistanceContainer}>
-              <Text style={styles.priceText}>R$45/visita</Text>
-              <Text style={styles.distanceText}>1.2km</Text>
-            </View>
-            <Text
-              style={styles.skillsText}
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
-              skills skills skills skills skills skills skills
-            </Text>
           </View>
           <Image
             style={styles.profileImage}
@@ -146,51 +175,82 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    gap: 15,
-    height: 140,
+    // height: 160,
+    flex: 0,
   },
   cardContent: {
-    paddingVertical: 18,
-    paddingHorizontal: 21,
-    borderWidth: 1,
-    borderColor: "red",
-    flex: 2,
+    flex: 1,
+    padding: 15,
+    gap: 4,
   },
   cardTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 8,
+    fontSize: 16,
+    fontFamily: "Roboto",
+    fontWeight: "700",
+  },
+  subtitleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
   },
   ratingContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 8,
   },
   ratingValue: {
-    fontSize: 16,
-    color: "#333",
-  },
-  priceDistanceContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 8,
+    fontSize: 14,
+    fontFamily: "Roboto",
+    fontWeight: "700",
+    color: "#7F13EC",
   },
   priceText: {
-    fontSize: 16,
-    color: "#333",
+    color: "#4A4459",
+    fontFamily: "Roboto",
+    fontSize: 14,
   },
   distanceText: {
-    fontSize: 16,
-    color: "#333",
+    color: "#4A4459",
+    fontFamily: "Roboto",
+    fontSize: 14,
+  },
+  skillsContainer: {
+    flexDirection: "row",
+    gap: 8,
+    marginTop: 8,
+    overflow: "hidden",
   },
   skillsText: {
+    fontFamily: "Roboto",
+    fontSize: 12,
+    textAlign: "center",
+    borderRadius: 100,
+    color: "#A40BC0",
+    backgroundColor: "#FAE5FF",
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+  },
+  buttonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 12,
+  },
+  infoText: {
     fontSize: 14,
-    color: "#666",
+    fontFamily: "Roboto",
+    textAlign: "center",
+    color: "#fff",
+    backgroundColor: "#7F13EC",
+    borderRadius: 100,
+    paddingVertical: 6,
+    paddingHorizontal: 40,
   },
   profileImage: {
-    flex: 1,
     height: "100%",
+    width: 134,
     borderTopRightRadius: 22,
     borderBottomRightRadius: 22,
+    borderWidth: 1,
+    borderColor: "#E5E5E5",
   },
 });

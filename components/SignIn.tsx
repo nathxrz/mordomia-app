@@ -69,7 +69,7 @@ export default function SignIn() {
                       left={
                         <TextInput.Icon
                           icon={() => (
-                            <Icon name="person" size={20} color="#7F13EC" />
+                            <Icon name="person" size={20} color="#B434CC" />
                           )}
                         />
                       }
@@ -108,13 +108,13 @@ export default function SignIn() {
                               <Icon
                                 name="visibility"
                                 size={20}
-                                color="#7F13EC"
+                                color="#B434CC"
                               />
                             ) : (
                               <Icon
                                 name="visibility-off"
                                 size={20}
-                                color="#7F13EC"
+                                color="#B434CC"
                               />
                             )
                           }

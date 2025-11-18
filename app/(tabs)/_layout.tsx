@@ -22,7 +22,7 @@ export default function TabsLayout() {
         headerShown: true,
         headerTitleAlign: "center",
         headerStyle: {
-          backgroundColor: "#fcfcfc", // cor do header
+          backgroundColor: "#fcfcfc",
         },
         tabBarActiveTintColor: "#CF0790",
         tabBarInactiveTintColor: "#757575",

@@ -213,7 +213,7 @@ export default function SignUp() {
                           <Icon
                             name="calendar-month"
                             size={20}
-                            color="#7F13EC"
+                            color="#B434CC"
                           />
                         )}
                       />
@@ -337,12 +337,12 @@ export default function SignUp() {
                       <TextInput.Icon
                         icon={() =>
                           showPassword ? (
-                            <Icon name="visibility" size={20} color="#7F13EC" />
+                            <Icon name="visibility" size={20} color="#B434CC" />
                           ) : (
                             <Icon
                               name="visibility-off"
                               size={20}
-                              color="#7F13EC"
+                              color="#B434CC"
                             />
                           )
                         }
@@ -379,12 +379,12 @@ export default function SignUp() {
                       <TextInput.Icon
                         icon={() =>
                           showConfirmPassword ? (
-                            <Icon name="visibility" size={20} color="#7F13EC" />
+                            <Icon name="visibility" size={20} color="#B434CC" />
                           ) : (
                             <Icon
                               name="visibility-off"
                               size={20}
-                              color="#7F13EC"
+                              color="#B434CC"
                             />
                           )
                         }

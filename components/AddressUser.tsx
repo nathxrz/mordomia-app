@@ -1,7 +1,7 @@
 import { useUser } from "@/hooks/useUser";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 export default function AddressUser() {
@@ -23,23 +23,25 @@ export default function AddressUser() {
 
   return (
     <View>
-      <Text style={{ fontWeight: "bold" }}>Endereço</Text>
-      {address && (
-        <>
-          <View>
-            <Text>{address?.city}</Text>
-            <Text>{address?.state}</Text>
-          </View>
-          <Text>
-            <Text>{address?.street}</Text>
-            <Text>{address?.number}</Text>
-            <Text>{address?.neighborhood}</Text>
-            <Text>{address?.complement || ""}</Text>
-          </Text>
-        </>
+      {address ? (
+        <View>
+          {address?.cep && (
+            <View>
+              <Text style={styles.titleCard}>
+                {address?.city} - {address?.state}
+              </Text>
+              <Text style={styles.subtitleCard}>
+                {address?.street}, {address?.number}, {address?.neighborhood}.
+              </Text>
+            </View>
+          )}
+        </View>
+      ) : (
+        <Text style={styles.subtitleCard}>Nenhum endereço cadastrado.</Text>
       )}
 
       <TouchableOpacity
+        style={styles.plusIcon}
         onPress={() => {
           router.push("/edits/editaddress");
         }}
@@ -49,3 +51,29 @@ export default function AddressUser() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  cardContainer: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  titleCard: {
+    fontFamily: "Roboto",
+    fontSize: 16,
+    color: "#000000",
+    fontWeight: "700",
+    lineHeight: 20,
+  },
+  subtitleCard: {
+    fontFamily: "Roboto",
+    fontSize: 16,
+    color: "#000000",
+  },
+  plusIcon: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+  },
+});

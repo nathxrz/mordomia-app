@@ -67,7 +67,7 @@ export default function CatSittersList() {
     return (
       <TouchableOpacity
         onPress={() => {
-          router.push(`/(stack)/users/catsitters/${id}`);
+          router.push(`/(tabs)/users/catsitters/${id}`);
         }}
       >
         <View style={styles.cardContainer}>
@@ -99,7 +99,6 @@ export default function CatSittersList() {
               <Text style={styles.skillsText}>Emergências</Text>
               <Text style={styles.skillsText}>Idosos</Text>
               <Text style={styles.skillsText}>Medicação</Text>
-              {/* </Text> */}
             </View>
             <View style={styles.buttonsContainer}>
               <TouchableOpacity

@@ -4,7 +4,6 @@ import CatSitterProfile from "@/components/profile/CatSitterProfile";
 import TutorProfile from "@/components/profile/TutorProfile";
 import { useUser } from "@/hooks/useUser";
 import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ProfilePage() {
   const { user } = useUser();
@@ -23,5 +22,5 @@ export default function ProfilePage() {
     }
   };
 
-  return <SafeAreaView>{getProfileScreen()}</SafeAreaView>;
+  return getProfileScreen();
 }

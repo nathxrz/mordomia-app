@@ -1,7 +1,7 @@
 import { useUser } from "@/hooks/useUser";
 import { MaterialSymbolsOutlined_400Regular } from "@expo-google-fonts/material-symbols-outlined";
 import { useFonts } from "expo-font";
-import { Tabs } from "expo-router";
+import { router, Tabs } from "expo-router";
 import React from "react";
 import { Alert, Text, TouchableOpacity } from "react-native";
 
@@ -200,6 +200,23 @@ export default function TabsLayout() {
         name="profile/index"
         options={{
           title: "Perfil",
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => router.push("/(stack)/edits/editprofile")}
+            >
+              <Text
+                style={{
+                  fontFamily: "MaterialSymbolsOutlined",
+                  fontSize: 30,
+                  lineHeight: 30,
+                  marginRight: 16,
+                  color: "#CF0790",
+                }}
+              >
+                edit
+              </Text>
+            </TouchableOpacity>
+          ),
           tabBarLabel: () => null,
           tabBarIcon: ({ color }) => (
             <Text
@@ -221,6 +238,14 @@ export default function TabsLayout() {
             justifyContent: "center",
             alignItems: "center",
           },
+        }}
+      />
+
+      <Tabs.Screen
+        name="users/catsitters/[id]"
+        options={{
+          title: "Cat sitter",
+          href: null,
         }}
       />
     </Tabs>

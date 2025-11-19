@@ -12,7 +12,7 @@ export default function CatsIndex() {
       </View>
       <Button
         title="Adicionar pet"
-        onPress={() => router.push("/cats/registerCat")}
+        onPress={() => router.push("./(stack)/cats/registerCat")}
       />
     </View>
   );

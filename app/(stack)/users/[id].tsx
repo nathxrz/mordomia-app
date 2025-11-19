@@ -87,7 +87,7 @@ export default function UserDetails() {
           source={
             userData?.avatar_url
               ? { uri: userData?.avatar_url }
-              : require("../../assets/images/avatar.png")
+              : require("../../../assets/images/avatar.png")
           }
           style={{ width: 100, height: 100 }}
         />

@@ -10,7 +10,7 @@ export default function App() {
     if (session && session.user) {
       return <Redirect href="./(tabs)" />;
     } else {
-      return <Redirect href="/login" />;
+      return <Redirect href="./(stack)/login" />;
     }
   }
 

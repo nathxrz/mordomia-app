@@ -86,7 +86,7 @@ export default function CatExtraInfoProfile({ catId }: { catId: string }) {
       <TouchableOpacity
         onPress={() => {
           router.push({
-            pathname: "/cats/editCatExtraInfo",
+            pathname: "./(stack)/cats/editCatExtraInfo",
             params: { id: catId },
           });
         }}

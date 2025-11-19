@@ -19,7 +19,7 @@ export default function CatDetails() {
       <TouchableOpacity
         onPress={() => {
           router.push({
-            pathname: "/cats/editCat",
+            pathname: "./(stack)/cats/",
             params: { id: id },
           });
         }}

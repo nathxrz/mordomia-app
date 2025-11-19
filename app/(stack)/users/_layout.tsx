@@ -31,6 +31,7 @@ export default function UsersLayout() {
             name="catsitters/[id]"
             options={{
               title: "Cat Sitter",
+              headerShown: true,
               headerRight: () => (
                 <TouchableOpacity
                   onPress={() => Alert.alert("Chat em desenvolvimento...")}

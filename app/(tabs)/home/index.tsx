@@ -21,7 +21,7 @@ export default function HomePage() {
     } else if (user.roles?.includes("tutor") && user.deleted_at === null) {
       return <TutorHome />;
     } else {
-      return <Redirect href="./login" />;
+      return <Redirect href="./(stack)/login" />;
     }
   };
 

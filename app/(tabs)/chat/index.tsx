@@ -9,7 +9,7 @@ export default function Chat() {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#F5F7FA", // fundo neutro
+        backgroundColor: "#F5F7FA",
         padding: 20,
       }}
     >
@@ -32,7 +32,7 @@ export default function Chat() {
         <MaterialCommunityIcons
           name="hammer-wrench"
           size={46}
-          color="#6C63FF" // roxo base (altere se tiver paleta específica)
+          color="#6C63FF"
         />
 
         <Text

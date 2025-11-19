@@ -67,7 +67,7 @@ export default function CatSittersList() {
     return (
       <TouchableOpacity
         onPress={() => {
-          router.push(`/users/catsitters/${id}`);
+          router.push(`/(stack)/users/catsitters/${id}`);
         }}
       >
         <View style={styles.cardContainer}>

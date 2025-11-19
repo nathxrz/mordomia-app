@@ -21,7 +21,7 @@ export default function SkillDetails() {
       <TouchableOpacity
         onPress={() => {
           router.push({
-            pathname: "/skills/editSkill",
+            pathname: "./(stack)/skills/editSkill",
             params: { id: id },
           });
         }}

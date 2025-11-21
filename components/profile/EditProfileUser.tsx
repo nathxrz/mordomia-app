@@ -4,16 +4,23 @@ import formatDate from "@/scripts/format-date";
 import maskPhone from "@/scripts/mask-phone";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as ImagePicker from "expo-image-picker";
-import { router, Stack } from "expo-router";
-import React, { useContext, useEffect } from "react";
+import { router, Stack, useFocusEffect } from "expo-router";
+import React, { useCallback, useContext, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  BackHandler,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import MaskInput from "react-native-mask-input";
 import { TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import * as yup from "yup";
+import * as yup from "yup"; // Para usar       // Para o TextInput do Paper
 
 const requiredMessage = "Campo obrigatório";
 
@@ -114,6 +121,23 @@ export default function EditProfileUser() {
     }
   }, [user, reset]);
 
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        router.replace("/(tabs)/profile"); // evita duplicar a tela
+        return true; // evita comportamento padrão
+      };
+
+      const subscription = BackHandler.addEventListener(
+        "hardwareBackPress",
+        onBackPress
+      );
+
+      return () => {
+        subscription.remove();
+      };
+    }, [])
+  );
   return (
     <>
       <Stack.Screen
@@ -205,47 +229,48 @@ export default function EditProfileUser() {
                   control={control}
                   name="birthDate"
                   render={({ field: { onChange, value } }) => (
-                    <TextInput
-                      mode="outlined"
-                      placeholderTextColor="#7F13EC"
-                      outlineColor="#979797"
-                      activeOutlineColor="#979797"
-                      textColor="#7F13EC"
-                      theme={{ roundness: 100 }}
-                      onChangeText={onChange}
-                      value={value}
-                      placeholder="Data de nascimento (dd/mm/aaaa)"
-                      right={
-                        <TextInput.Icon
-                          icon={() => (
-                            <Icon
-                              name="calendar-month"
-                              size={20}
-                              color="#B434CC"
-                            />
-                          )}
-                        />
-                      }
-                      render={(props) => (
-                        <MaskInput
-                          {...props}
-                          value={value}
-                          onChangeText={(masked) => onChange(masked)}
-                          mask={[
-                            /\d/,
-                            /\d/,
-                            "/",
-                            /\d/,
-                            /\d/,
-                            "/",
-                            /\d/,
-                            /\d/,
-                            /\d/,
-                            /\d/,
-                          ]}
-                        />
-                      )}
-                    />
+                    <View style={{ position: "relative" }}>
+                      <MaskInput
+                        value={value}
+                        onChangeText={(masked) => onChange(masked)}
+                        keyboardType="numeric"
+                        placeholder="Data de nascimento (dd/mm/aaaa)"
+                        placeholderTextColor="#7F13EC"
+                        mask={[
+                          /\d/,
+                          /\d/,
+                          "/",
+                          /\d/,
+                          /\d/,
+                          "/",
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                        ]}
+                        style={{
+                          borderWidth: 1,
+                          borderColor: "#979797",
+                          borderRadius: 100,
+                          paddingVertical: 14,
+                          paddingHorizontal: 16,
+                          fontSize: 16,
+                          color: "#7F13EC",
+                          backgroundColor: "#FCFCFC",
+                        }}
+                      />
+                      <Icon
+                        name="calendar-month"
+                        size={20}
+                        color="#B434CC"
+                        style={{
+                          position: "absolute",
+                          right: 16,
+                          top: "50%",
+                          transform: [{ translateY: -10 }],
+                        }}
+                      />
+                    </View>
                   )}
                 />
                 {errors.birthDate && (
@@ -260,40 +285,40 @@ export default function EditProfileUser() {
                   control={control}
                   name="phone"
                   render={({ field: { onChange, value } }) => (
-                    <TextInput
-                      mode="outlined"
-                      placeholderTextColor="#7F13EC"
-                      outlineColor="#979797"
-                      activeOutlineColor="#979797"
-                      textColor="#7F13EC"
-                      theme={{ roundness: 100 }}
-                      onChangeText={onChange}
+                    <MaskInput
                       value={value}
-                      placeholder="Telefone"
-                      render={(props) => (
-                        <MaskInput
-                          {...props}
-                          value={value}
-                          onChangeText={(masked) => onChange(masked)}
-                          mask={[
-                            "(",
-                            /\d/,
-                            /\d/,
-                            ")",
-                            " ",
-                            /\d/,
-                            /\d/,
-                            /\d/,
-                            /\d/,
-                            /\d/,
-                            "-",
-                            /\d/,
-                            /\d/,
-                            /\d/,
-                            /\d/,
-                          ]}
-                        />
-                      )}
+                      onChangeText={(masked) => onChange(masked)}
+                      keyboardType="numeric"
+                      placeholder="(99) 99999-9999"
+                      placeholderTextColor="#7F13EC"
+                      mask={[
+                        "(",
+                        /\d/,
+                        /\d/,
+                        ")",
+                        " ",
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        "-",
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                      ]}
+                      style={{
+                        borderWidth: 1,
+                        borderColor: "#979797",
+                        borderRadius: 100,
+                        paddingVertical: 14,
+                        paddingHorizontal: 16,
+                        fontSize: 16,
+                        color: "#7F13EC",
+                        backgroundColor: "#FCFCFC",
+                        marginBottom: 10,
+                      }}
                     />
                   )}
                 />

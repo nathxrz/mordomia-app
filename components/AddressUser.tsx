@@ -23,7 +23,7 @@ export default function AddressUser() {
   return (
     <TouchableOpacity
       onPress={() => {
-        router.push("/edits/editaddress");
+        router.push("./edits/editProfileAddress/");
       }}
     >
       <View style={styles.cardContainer}>
@@ -41,7 +41,6 @@ export default function AddressUser() {
           location_on
         </Text>
 
-        {/* Texto do endereço */}
         <View style={styles.cardTextContainer}>
           {address ? (
             <View>

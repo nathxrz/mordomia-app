@@ -261,6 +261,14 @@ export default function TabsLayout() {
           href: null,
         }}
       />
+
+      <Tabs.Screen
+        name="edits/editProfileAddress/index"
+        options={{
+          title: "Editar Endereço",
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }

@@ -1,8 +1,7 @@
-import { Button, Modal, StyleSheet, Text, View } from "react-native";
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { TextInput } from "react-native-paper";
 
 import { yupResolver } from "@hookform/resolvers/yup";
-
 import { Controller, useForm } from "react-hook-form";
 
 import { useContext, useState } from "react";
@@ -11,6 +10,8 @@ import * as yup from "yup";
 import { AuthContext } from "@/context/AuthProvider";
 import { useUser } from "@/hooks/useUser";
 import Icon from "react-native-vector-icons/MaterialIcons";
+
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 const requiredMessage = "Campo obrigatório";
 
@@ -52,74 +53,139 @@ export default function ConfirmedModalPassword({
   });
 
   return (
-    <Modal
-      animationType="fade"
-      transparent={true}
-      visible={modalVisible}
-      onRequestClose={onCancel}
-    >
-      <View>
-        <Text>Digite sua senha para prosseguir:</Text>
+    <SafeAreaProvider>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={onCancel}
+      >
+        <SafeAreaView style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>
+              Digite sua senha para prosseguir:
+            </Text>
 
-        <Controller
-          control={control}
-          name="password"
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              label="Senha"
-              right={
-                <TextInput.Icon
-                  icon={() =>
-                    showPassword ? (
-                      <Icon name="visibility" size={20} color="#888" />
-                    ) : (
-                      <Icon name="visibility-off" size={20} color="#888" />
-                    )
+            <View>
+              <Controller
+                control={control}
+                name="password"
+                render={({ field: { onChange, value } }) => (
+                  <TextInput
+                    mode="outlined"
+                    placeholderTextColor="#7F13EC"
+                    outlineColor="#979797"
+                    activeOutlineColor="#979797"
+                    textColor="#7F13EC"
+                    theme={{ roundness: 100 }}
+                    right={
+                      <TextInput.Icon
+                        icon={() =>
+                          showPassword ? (
+                            <Icon name="visibility" size={20} color="#B434CC" />
+                          ) : (
+                            <Icon
+                              name="visibility-off"
+                              size={20}
+                              color="#B434CC"
+                            />
+                          )
+                        }
+                        onPress={() => setShowPassword(!showPassword)}
+                      />
+                    }
+                    onChangeText={onChange}
+                    value={value}
+                    secureTextEntry={!showPassword}
+                    placeholder="Senha"
+                  />
+                )}
+              />
+              {errors.password && (
+                <Text style={styles.messageAlert}>
+                  {errors.password?.message}
+                </Text>
+              )}
+            </View>
+
+            <View style={styles.buttonsContainer}>
+              <TouchableOpacity
+                style={{ ...styles.button, ...styles.buttonConfirm }}
+                onPress={handleSubmit(async (data) => {
+                  const result = await confirmedPassword(data.password);
+                  if (result) {
+                    onConfirm();
+                    desactivateProfile();
                   }
-                  onPress={() => setShowPassword(!showPassword)}
-                />
-              }
-              onChangeText={onChange}
-              value={value}
-              secureTextEntry={!showPassword}
-              placeholder="Digite sua senha"
-            />
-          )}
-        />
+                })}
+              >
+                <Text style={styles.textStyleButtonConfirm}>Confirmar</Text>
+              </TouchableOpacity>
 
-        {errors.password && (
-          <Text style={styles.messageAlert}>{errors.password?.message}</Text>
-        )}
-
-        <Button
-          title="Confirmar"
-          onPress={handleSubmit(async (data) => {
-            const result = await confirmedPassword(data.password);
-            if (result) {
-              onConfirm(); // fecha o modal
-              desactivateProfile(); // chama exclusão
-            }
-          })}
-        />
-
-        <Button title="Cancelar" onPress={onCancel} />
-      </View>
-    </Modal>
+              <TouchableOpacity
+                style={{ ...styles.button, ...styles.buttonCancel }}
+                onPress={onCancel}
+              >
+                <Text style={styles.textStyleButtonCancel}>Cancelar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </SafeAreaView>
+      </Modal>
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 40,
-    padding: 12,
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
-  verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    alignSelf: "stretch",
+  modalView: {
+    borderWidth: 1,
+    borderColor: "#E5E5E5",
+    borderRadius: 22,
+    backgroundColor: "#fff",
+    paddingHorizontal: 35,
+    paddingVertical: 25,
+    marginHorizontal: 20,
+    gap: 20,
+    width: "90%",
   },
-  mt20: {
-    marginTop: 20,
+  modalText: {
+    fontFamily: "Roboto",
+    fontSize: 16,
+    lineHeight: 24,
+    textAlign: "center",
   },
-  messageAlert: { color: "red" },
+  buttonsContainer: {
+    gap: 10,
+  },
+  button: {
+    borderRadius: 22,
+    padding: 15,
+    elevation: 2,
+  },
+  buttonConfirm: {
+    backgroundColor: "#7F13EC",
+  },
+  buttonCancel: {
+    backgroundColor: "#DFD2FF",
+  },
+  textStyleButtonConfirm: {
+    color: "#fcfcfc",
+    textAlign: "center",
+    fontSize: 16,
+  },
+  textStyleButtonCancel: {
+    color: "#5910A2",
+    textAlign: "center",
+    fontSize: 16,
+  },
+  messageAlert: {
+    color: "red",
+    marginTop: 5,
+  },
 });

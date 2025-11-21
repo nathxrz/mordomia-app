@@ -59,6 +59,34 @@ export const useUser = ({ id }: { id?: string } = {}) => {
     fetchData();
   }, [userId, session?.user?.id, session]);
 
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const { data: user, error } = await supabase
+        .from("users")
+        .select("*, cat_sitters(id), tutors(id), admins(id)")
+        .eq("id", userId)
+        .maybeSingle();
+
+      if (error) throw new Error(translateError(error.code));
+
+      if (user) {
+        user.roles = [];
+        user.email = session?.user.email;
+
+        if (user.cat_sitters?.length > 0) user.roles.push("catsitter");
+        if (user.tutors?.length > 0) user.roles.push("tutor");
+        if (user.admins?.length > 0) user.roles.push("admin");
+
+        setUser(user); // <------ ESSENCIAL
+      }
+    } catch (err) {
+      console.error("Erro ao buscar usuário:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const resetUser = () => {
     setUser(null);
   };
@@ -81,11 +109,23 @@ export const useUser = ({ id }: { id?: string } = {}) => {
         date_birth: dateBirth,
         updated_at: new Date(),
       };
-      const { error } = await supabase.from("users").upsert(updates);
+
+      const { data, error } = await supabase
+        .from("users")
+        .update(updates)
+        .eq("id", userId)
+        .select()
+        .single();
+
       if (error) {
         throw new Error(translateError(error.code));
       }
+
+      // 🔥 Atualiza o estado global
+      setUser((prev: any) => ({ ...prev, ...data }));
+
       Alert.alert("Perfil atualizado com sucesso!");
+
       router.push("/(tabs)/profile");
     } catch (error) {
       if (error instanceof Error) {
@@ -254,5 +294,6 @@ export const useUser = ({ id }: { id?: string } = {}) => {
     getAddressUser,
     updateAddressUser,
     getUserAdmin,
+    fetchData,
   };
 };

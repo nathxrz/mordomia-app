@@ -1,18 +1,18 @@
 import { AuthContext } from "@/context/AuthProvider";
 import { useUser } from "@/hooks/useUser";
+import formatDate from "@/scripts/format-date";
+import maskPhone from "@/scripts/mask-phone";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as ImagePicker from "expo-image-picker";
-import { router } from "expo-router";
-
-import maskPhone from "@/scripts/mask-phone";
+import { router, Stack } from "expo-router";
 import React, { useContext, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-
-import formatDate from "@/scripts/format-date";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import MaskInput from "react-native-mask-input";
-import { Button, TextInput } from "react-native-paper";
+import { TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Icon from "react-native-vector-icons/MaterialIcons";
 import * as yup from "yup";
 
 const requiredMessage = "Campo obrigatório";
@@ -115,196 +115,306 @@ export default function EditProfileUser() {
   }, [user, reset]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-      >
-        <>
-          <View>
-            <Controller
-              control={control}
-              name="avatar_url"
-              render={({ field: { value, onChange } }) => (
-                <View style={styles.container}>
-                  <Button onPress={() => pickImageAndSet(onChange)}>
-                    Selecionar foto de perfil
-                  </Button>
-
-                  {value && (
-                    <Image
-                      style={{
-                        width: 100,
-                        height: 100,
-                        marginTop: 10,
-                        borderRadius: 10,
-                      }}
-                      source={{ uri: value }}
-                    />
-                  )}
-                </View>
-              )}
-            />
-            {errors.avatar_url && (
-              <Text style={styles.messageAlert}>
-                {errors.avatar_url?.message}
+    <>
+      <Stack.Screen
+        options={{
+          title: "Editar perfil",
+          headerShown: true,
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => router.push("/(tabs)/profile")}
+              style={{ marginLeft: 16 }}
+            >
+              <Text
+                style={{
+                  fontFamily: "MaterialSymbolsOutlined",
+                  fontSize: 30,
+                  lineHeight: 30,
+                  color: "#000",
+                }}
+              >
+                arrow_back
               </Text>
-            )}
-          </View>
-
-          <View style={{ marginBottom: 16 }}>
-            <Text>Nome completo</Text>
-            <Controller
-              control={control}
-              name="name"
-              render={({ field: { onChange, value } }) => (
-                <TextInput
-                  onChangeText={onChange}
-                  value={value}
-                  placeholder={"Digite seu nome completo"}
-                />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <SafeAreaView edges={[]} style={styles.safeArea}>
+        <KeyboardAwareScrollView
+          contentContainerStyle={{ paddingBottom: 60 }}
+          enableOnAndroid={true}
+        >
+          <View style={styles.container}>
+            <View>
+              <Controller
+                control={control}
+                name="avatar_url"
+                render={({ field: { value, onChange } }) => (
+                  <View style={styles.avatarContainer}>
+                    {value && (
+                      <Image
+                        style={styles.profileImage}
+                        source={{ uri: value }}
+                      />
+                    )}
+                    <TouchableOpacity onPress={() => pickImageAndSet(onChange)}>
+                      <Text style={styles.selectPhotoText}>
+                        Selecionar foto de perfil
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              />
+              {errors.avatar_url && (
+                <Text style={styles.messageAlert}>
+                  {errors.avatar_url?.message}
+                </Text>
               )}
-            />
-            {errors.name && (
-              <Text style={styles.messageAlert}>{errors.name?.message}</Text>
-            )}
-          </View>
+            </View>
 
-          <View style={{ marginBottom: 16 }}>
-            <Text>Telefone</Text>
-            <Controller
-              control={control}
-              name="phone"
-              render={({ field: { onChange, value } }) => (
-                <MaskInput
-                  value={value}
-                  onChangeText={(masked) => onChange(masked)}
-                  mask={[
-                    "(",
-                    /\d/,
-                    /\d/,
-                    ")",
-                    " ",
-                    /\d/,
-                    /\d/,
-                    /\d/,
-                    /\d/,
-                    /\d/,
-                    "-",
-                    /\d/,
-                    /\d/,
-                    /\d/,
-                    /\d/,
-                  ]}
-                  style={{
-                    borderBottomWidth: 1,
-                    borderColor: "#ccc",
-                    paddingVertical: 8,
-                    fontSize: 16,
-                  }}
-                  keyboardType="phone-pad"
-                  placeholder="(99) 99999-9999"
-                />
-              )}
-            />
-            {errors.phone && (
-              <Text style={styles.messageAlert}>{errors.phone?.message}</Text>
-            )}
-          </View>
-
-          <View style={{ marginBottom: 16 }}>
-            <Text>Data de nascimento</Text>
-            <Controller
-              control={control}
-              name="birthDate"
-              render={({ field: { onChange, value } }) => (
-                <TextInput
-                  onChangeText={onChange}
-                  value={value ? value : ""}
-                  placeholder="dd/mm/aaaa"
-                  render={(props) => (
-                    <MaskInput
-                      {...props}
+            <View style={styles.inputsContainer}>
+              <Text style={styles.labelInfoBasics}>Informações básicas</Text>
+              <View>
+                <Controller
+                  control={control}
+                  name="name"
+                  render={({ field: { onChange, value } }) => (
+                    <TextInput
+                      mode="outlined"
+                      placeholderTextColor="#7F13EC"
+                      outlineColor="#979797"
+                      activeOutlineColor="#979797"
+                      textColor="#7F13EC"
+                      theme={{ roundness: 100 }}
+                      onChangeText={onChange}
                       value={value}
-                      onChangeText={(masked) => onChange(masked)}
-                      mask={[
-                        /\d/,
-                        /\d/,
-                        "/",
-                        /\d/,
-                        /\d/,
-                        "/",
-                        /\d/,
-                        /\d/,
-                        /\d/,
-                        /\d/,
-                      ]}
-                      style={{
-                        borderBottomWidth: 1,
-                        borderColor: "#ccc",
-                        paddingVertical: 8,
-                        fontSize: 16,
-                      }}
-                      keyboardType="numeric"
+                      activeUnderlineColor="#6200ee"
+                      placeholder="Nome completo"
                     />
                   )}
                 />
-              )}
-            />
-            {errors.birthDate && (
-              <Text style={styles.messageAlert}>
-                {errors.birthDate?.message}
-              </Text>
-            )}
+                {errors.name && (
+                  <Text style={styles.messageAlert}>
+                    {errors.name?.message}
+                  </Text>
+                )}
+              </View>
+
+              <View>
+                <Controller
+                  control={control}
+                  name="birthDate"
+                  render={({ field: { onChange, value } }) => (
+                    <TextInput
+                      mode="outlined"
+                      placeholderTextColor="#7F13EC"
+                      outlineColor="#979797"
+                      activeOutlineColor="#979797"
+                      textColor="#7F13EC"
+                      theme={{ roundness: 100 }}
+                      onChangeText={onChange}
+                      value={value}
+                      placeholder="Data de nascimento (dd/mm/aaaa)"
+                      right={
+                        <TextInput.Icon
+                          icon={() => (
+                            <Icon
+                              name="calendar-month"
+                              size={20}
+                              color="#B434CC"
+                            />
+                          )}
+                        />
+                      }
+                      render={(props) => (
+                        <MaskInput
+                          {...props}
+                          value={value}
+                          onChangeText={(masked) => onChange(masked)}
+                          mask={[
+                            /\d/,
+                            /\d/,
+                            "/",
+                            /\d/,
+                            /\d/,
+                            "/",
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                          ]}
+                        />
+                      )}
+                    />
+                  )}
+                />
+                {errors.birthDate && (
+                  <Text style={styles.messageAlert}>
+                    {errors.birthDate?.message}
+                  </Text>
+                )}
+              </View>
+
+              <View>
+                <Controller
+                  control={control}
+                  name="phone"
+                  render={({ field: { onChange, value } }) => (
+                    <TextInput
+                      mode="outlined"
+                      placeholderTextColor="#7F13EC"
+                      outlineColor="#979797"
+                      activeOutlineColor="#979797"
+                      textColor="#7F13EC"
+                      theme={{ roundness: 100 }}
+                      onChangeText={onChange}
+                      value={value}
+                      placeholder="Telefone"
+                      render={(props) => (
+                        <MaskInput
+                          {...props}
+                          value={value}
+                          onChangeText={(masked) => onChange(masked)}
+                          mask={[
+                            "(",
+                            /\d/,
+                            /\d/,
+                            ")",
+                            " ",
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                            "-",
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                          ]}
+                        />
+                      )}
+                    />
+                  )}
+                />
+                {errors.phone && (
+                  <Text style={styles.messageAlert}>
+                    {errors.phone?.message}
+                  </Text>
+                )}
+              </View>
+            </View>
+
+            <View>
+              <TouchableOpacity
+                style={styles.button_submit}
+                disabled={loading}
+                onPress={handleSubmit((data) => {
+                  const [day, month, year] = data.birthDate.split("/");
+                  const birthDate = new Date(
+                    `${year}-${month}-${day}T00:00:00`
+                  );
+
+                  updateProfile(
+                    data.avatar_url,
+                    data.name,
+                    data.phone.replace(/\D/g, ""),
+                    birthDate
+                  );
+                })}
+              >
+                <Text style={styles.buttonText}>
+                  {loading ? "Salvando..." : "Salvar alterações"}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-
-          <View>
-            <Button
-              mode="contained"
-              disabled={loading}
-              style={styles.mt20}
-              onPress={handleSubmit((data) => {
-                const [day, month, year] = data.birthDate.split("/");
-                const birthDate = new Date(`${year}-${month}-${day}T00:00:00`);
-
-                updateProfile(
-                  data.avatar_url,
-                  data.name,
-                  data.phone.replace(/\D/g, ""),
-                  birthDate
-                );
-              })}
-            >
-              Salvar alterações
-            </Button>
-
-            <Button
-              onPress={() => {
-                router.push("/(tabs)/profile");
-              }}
-              style={{ marginTop: 10 }}
-            >
-              Cancelar
-            </Button>
-          </View>
-        </>
-      </ScrollView>
-    </SafeAreaView>
+        </KeyboardAwareScrollView>
+      </SafeAreaView>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    backgroundColor: "#F7F6F8",
+    flex: 1,
+  },
   container: {
-    marginTop: 40,
-    padding: 12,
+    flex: 1,
+    paddingVertical: 32,
+    paddingHorizontal: 16,
   },
-  verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    alignSelf: "stretch",
+  avatarContainer: {
+    alignItems: "center",
+    gap: 20,
+    marginBottom: 20,
   },
-  mt20: {
-    marginTop: 20,
+  profileImage: {
+    width: 144,
+    height: 144,
+    borderRadius: 100,
+    borderWidth: 1,
+    borderColor: "#E5E5E5",
+  },
+  selectPhotoText: {
+    color: "#B83FCF",
+    fontSize: 16,
+  },
+  inputRadioContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 16,
+  },
+  radioButton: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 50,
+    borderWidth: 2,
+    borderColor: "#E5E5E5",
+    backgroundColor: "#FFFFFF",
+    alignItems: "center",
+  },
+  textButtonRadio: {
+    color: "#4A4459",
+    fontSize: 18,
+    fontWeight: "600",
+  },
+  radioSelected: {
+    backgroundColor: "#DFD2FF",
+    borderColor: "#7F13EC",
+  },
+  textButtonRadioSelected: {
+    color: "#000000",
+    fontWeight: "700",
+  },
+  inputsContainer: {
+    display: "flex",
+    gap: 10,
+  },
+  labelInfoBasics: {
+    fontFamily: "Inter",
+    fontSize: 18,
+    fontWeight: "700",
+    lineHeight: 24,
+    marginTop: 30,
+    color: "#1D1127",
+  },
+  button_submit: {
+    alignSelf: "flex-end",
+    marginTop: 50,
+    backgroundColor: "#7F13EC",
+    paddingVertical: 10,
+    paddingHorizontal: 40,
+    borderRadius: 100,
+    boxShadow: "0px 4px 4px #00000025",
+  },
+
+  buttonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "normal",
+    textAlign: "center",
   },
   messageAlert: { color: "red" },
 });

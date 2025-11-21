@@ -2,7 +2,6 @@ import { useUser } from "@/hooks/useUser";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
 
 export default function AddressUser() {
   const { getAddressUser } = useUser();
@@ -22,42 +21,79 @@ export default function AddressUser() {
   });
 
   return (
-    <View>
-      {address ? (
-        <View>
-          {address?.cep && (
+    <TouchableOpacity
+      onPress={() => {
+        router.push("/edits/editaddress");
+      }}
+    >
+      <View style={styles.cardContainer}>
+        <Text
+          style={{
+            fontFamily: "MaterialSymbolsOutlined",
+            fontSize: 25,
+            lineHeight: 25,
+            color: "#B434CC",
+            backgroundColor: "#FAE5FF",
+            padding: 14,
+            borderRadius: 13,
+          }}
+        >
+          location_on
+        </Text>
+
+        {/* Texto do endereço */}
+        <View style={styles.cardTextContainer}>
+          {address ? (
             <View>
-              <Text style={styles.titleCard}>
-                {address?.city} - {address?.state}
-              </Text>
-              <Text style={styles.subtitleCard}>
-                {address?.street}, {address?.number}, {address?.neighborhood}.
-              </Text>
+              {address?.cep ? (
+                <>
+                  <Text style={styles.titleCard}>
+                    {address?.city} - {address?.state}
+                  </Text>
+                  <Text style={styles.subtitleCard}>
+                    {address?.street}, {address?.number},{" "}
+                    {address?.neighborhood}. {address?.complement || ""}
+                  </Text>
+                </>
+              ) : null}
             </View>
+          ) : (
+            <Text style={styles.subtitleCard}>Nenhum endereço cadastrado.</Text>
           )}
         </View>
-      ) : (
-        <Text style={styles.subtitleCard}>Nenhum endereço cadastrado.</Text>
-      )}
 
-      <TouchableOpacity
-        style={styles.plusIcon}
-        onPress={() => {
-          router.push("/edits/editaddress");
-        }}
-      >
-        <Icon name={address ? "edit" : "add"} size={24} color="#000" />
-      </TouchableOpacity>
-    </View>
+        {/* Ícone de seta */}
+        <Text
+          style={{
+            fontFamily: "MaterialSymbolsOutlined",
+            fontSize: 25,
+            lineHeight: 25,
+            color: "#000",
+            marginLeft: 10,
+            alignSelf: "center",
+          }}
+        >
+          keyboard_arrow_right
+        </Text>
+      </View>
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   cardContainer: {
-    flex: 1,
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    alignItems: "flex-start",
+    gap: 10,
+    backgroundColor: "#FCFCFC",
+    padding: 14,
+    borderRadius: 22,
+    borderWidth: 1,
+    borderColor: "#E5E5E5",
+  },
+  cardTextContainer: {
+    gap: 2,
+    flex: 1,
   },
   titleCard: {
     fontFamily: "Roboto",
@@ -68,12 +104,7 @@ const styles = StyleSheet.create({
   },
   subtitleCard: {
     fontFamily: "Roboto",
-    fontSize: 16,
-    color: "#000000",
-  },
-  plusIcon: {
-    position: "absolute",
-    top: 0,
-    right: 0,
+    fontSize: 14,
+    color: "#B83FCF",
   },
 });

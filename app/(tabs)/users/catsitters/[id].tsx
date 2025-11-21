@@ -93,7 +93,9 @@ export default function CatSitterDetails() {
           ),
           headerRight: () => (
             <TouchableOpacity
-              onPress={() => Alert.alert("Chat em desenvolvimento...")}
+              onPress={() =>
+                Alert.alert("Chat", "Funcionalidade em desenvolvimento.")
+              }
             >
               <Text
                 style={{
@@ -301,7 +303,12 @@ export default function CatSitterDetails() {
             <View>
               <TouchableOpacity
                 style={styles.button_submit}
-                onPress={() => Alert.alert("Cadastro em desenvolvimento...")}
+                onPress={() =>
+                  Alert.alert(
+                    "Agendamento",
+                    "Funcionalidade em desenvolvimento."
+                  )
+                }
               >
                 <Text style={styles.buttonText}>Agendar</Text>
               </TouchableOpacity>

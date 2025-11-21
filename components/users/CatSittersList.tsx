@@ -110,7 +110,10 @@ export default function CatSittersList() {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  Alert.alert("Favoritar em desenvolvimento...");
+                  Alert.alert(
+                    "Favoritar",
+                    "Funcionalidade em desenvolvimento."
+                  );
                 }}
               >
                 <Text

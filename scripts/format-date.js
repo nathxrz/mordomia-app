@@ -3,7 +3,6 @@ export default function formatDate(dateInput) {
 
   if (dateInput instanceof Date) {
   } else if (typeof dateInput === "string") {
-    // Extrai ano, mês e dia diretamente da string YYYY-MM-DD
     const parts = dateInput.split("-");
     if (parts.length !== 3) return "";
     const [year, month, day] = parts;

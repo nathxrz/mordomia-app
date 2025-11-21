@@ -1,15 +1,17 @@
 import { AuthContext } from "@/context/AuthProvider";
 import { useUser } from "@/hooks/useUser";
+import { formatPhone } from "@/scripts/format-phone";
 
 import formatDate from "@/scripts/format-date";
-import { Link } from "expo-router";
-import React, { useContext } from "react";
+import { router, useFocusEffect } from "expo-router";
+import React, { useCallback, useContext, useState } from "react";
 import {
-  Button,
+  Alert,
   Image,
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -18,11 +20,17 @@ import ConfirmedModal from "../modais/ConfirmedModal";
 import ConfirmedModalPassword from "../modais/ConfirmedModalPassword";
 
 export default function TutorProfile() {
-  const { user: userData } = useUser();
+  const { user: userData, fetchData } = useUser();
   const { signOut } = useContext(AuthContext);
-  const [modalVisible, setModalVisible] = React.useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const [modalVisibleConfirmedPassword, setModalVisibleConfirmedPassword] =
-    React.useState(false);
+    useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [])
+  );
 
   return (
     <SafeAreaView style={styles.safeArea} edges={[]}>
@@ -77,8 +85,16 @@ export default function TutorProfile() {
                 >
                   phone
                 </Text>
-                <Text style={styles.titleCard}>{userData?.phone}</Text>
+                <View style={styles.cardTextContainer}>
+                  <Text style={styles.titleCard}>Telefone</Text>
+                  <Text style={styles.subtitleCard}>
+                    {formatPhone(userData?.phone)}
+                  </Text>
+                </View>
               </View>
+
+              <AddressUser />
+
               <View style={styles.cardContainer}>
                 <Text
                   style={{
@@ -91,24 +107,24 @@ export default function TutorProfile() {
                     borderRadius: 13,
                   }}
                 >
-                  location_on
+                  cake
                 </Text>
-                <AddressUser />
+                <View style={styles.cardTextContainer}>
+                  <Text style={styles.titleCard}>Data de nascimento</Text>
+                  <Text style={styles.subtitleCard}>
+                    {formatDate(userData?.date_birth)}
+                  </Text>
+                </View>
               </View>
-              <View style={styles.cardContainer}>
-                <Text
-                  style={{
-                    fontFamily: "MaterialSymbolsOutlined",
-                    fontSize: 25,
-                    lineHeight: 25,
-                    color: "#B434CC",
-                    backgroundColor: "#FAE5FF",
-                    padding: 14,
-                    borderRadius: 13,
-                  }}
-                >
-                  location_on
-                </Text>
+            </View>
+
+            <View style={styles.basicInfoContainer}>
+              <Text style={styles.titleSection}>Felinos</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  router.push("/(stack)/cats");
+                }}
+              >
                 <View style={styles.cardContainer}>
                   <Text
                     style={{
@@ -121,30 +137,151 @@ export default function TutorProfile() {
                       borderRadius: 13,
                     }}
                   >
-                    calendar_month
+                    pets
                   </Text>
-                  <Text style={styles.titleCard}>
-                    {formatDate(userData.date_birth)}
-                  </Text>
+
+                  <View style={styles.cardPetContainer}>
+                    <View>
+                      <Text style={styles.titleCard}>Ver pets</Text>
+                    </View>
+                    <Text
+                      style={{
+                        fontFamily: "MaterialSymbolsOutlined",
+                        fontSize: 25,
+                        lineHeight: 25,
+                        color: "#000",
+                        marginLeft: 10,
+                      }}
+                    >
+                      keyboard_arrow_right
+                    </Text>
+                  </View>
                 </View>
-              </View>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.basicInfoContainer}>
+              <Text style={styles.titleSection}>Configurações</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  Alert.alert(
+                    "Relatórios",
+                    "Funcionalidade em desenvolvimento."
+                  );
+                }}
+              >
+                <View style={styles.cardContainer}>
+                  <Text
+                    style={{
+                      fontFamily: "MaterialSymbolsOutlined",
+                      fontSize: 25,
+                      lineHeight: 25,
+                      color: "#B434CC",
+                      backgroundColor: "#FAE5FF",
+                      padding: 14,
+                      borderRadius: 13,
+                    }}
+                  >
+                    assignment
+                  </Text>
+
+                  <View style={styles.cardPetContainer}>
+                    <View>
+                      <Text style={styles.titleCard}>Relatórios</Text>
+                    </View>
+                  </View>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  Alert.alert(
+                    "Trocar usuário",
+                    "Funcionalidade em desenvolvimento."
+                  );
+                }}
+              >
+                <View style={styles.cardContainer}>
+                  <Text
+                    style={{
+                      fontFamily: "MaterialSymbolsOutlined",
+                      fontSize: 25,
+                      lineHeight: 25,
+                      color: "#B434CC",
+                      backgroundColor: "#FAE5FF",
+                      padding: 14,
+                      borderRadius: 13,
+                    }}
+                  >
+                    group
+                  </Text>
+
+                  <View style={styles.cardPetContainer}>
+                    <View>
+                      <Text style={styles.titleCard}>Trocar usuário</Text>
+                    </View>
+                  </View>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  setModalVisible(true);
+                }}
+              >
+                <View style={styles.cardContainer}>
+                  <Text
+                    style={{
+                      fontFamily: "MaterialSymbolsOutlined",
+                      fontSize: 25,
+                      lineHeight: 25,
+                      color: "#B434CC",
+                      backgroundColor: "#FAE5FF",
+                      padding: 14,
+                      borderRadius: 13,
+                    }}
+                  >
+                    person_cancel
+                  </Text>
+
+                  <View style={styles.cardPetContainer}>
+                    <View>
+                      <Text style={styles.titleCard}>Excluir conta</Text>
+                    </View>
+                  </View>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  signOut(userData.deleted_at);
+                }}
+              >
+                <View style={styles.cardContainer}>
+                  <Text
+                    style={{
+                      fontFamily: "MaterialSymbolsOutlined",
+                      fontSize: 25,
+                      lineHeight: 25,
+                      color: "#B434CC",
+                      backgroundColor: "#FAE5FF",
+                      padding: 14,
+                      borderRadius: 13,
+                    }}
+                  >
+                    logout
+                  </Text>
+
+                  <View style={styles.cardPetContainer}>
+                    <View>
+                      <Text style={[styles.titleCard, styles.Alert]}>Sair</Text>
+                    </View>
+                  </View>
+                </View>
+              </TouchableOpacity>
             </View>
 
             <View>
-              <Text>Pets</Text>
-              <Link href="/cats">Meus Pets</Link>
-            </View>
-
-            <View>
-              <Text>Configurações</Text>
-              {/* <Link href="/relatorios">Relatórios</Link> */}
-              {/* <Link href="/trocarusuario">Trocar usuário</Link> */}
-
-              <Button
-                title="Excluir conta"
-                onPress={() => setModalVisible(true)}
-              />
-
               <ConfirmedModal
                 modalVisible={modalVisible}
                 onConfirm={() => {
@@ -152,18 +289,13 @@ export default function TutorProfile() {
                   setModalVisibleConfirmedPassword(true);
                 }}
                 onCancel={() => setModalVisible(false)}
-                message="Tem certeza que deseja excluir sua conta?"
+                message="Tem certeza que deseja suspender sua conta?"
               />
 
               <ConfirmedModalPassword
                 modalVisible={modalVisibleConfirmedPassword}
                 onConfirm={() => setModalVisibleConfirmedPassword(false)}
                 onCancel={() => setModalVisibleConfirmedPassword(false)}
-              />
-
-              <Button
-                title="Sair"
-                onPress={() => signOut(userData.deleted_at)}
               />
             </View>
           </View>
@@ -238,6 +370,9 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     borderWidth: 1,
     borderColor: "#E5E5E5",
+  },
+  cardTextContainer: {
+    gap: 2,
   },
   titleCard: {
     fontFamily: "Roboto",
@@ -316,5 +451,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#FAE5FF",
     paddingVertical: 5,
     paddingHorizontal: 10,
+  },
+  cardPetContainer: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  Alert: {
+    color: "#EE0101",
   },
 });

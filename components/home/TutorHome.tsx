@@ -29,7 +29,9 @@ export default function TutorHome() {
                   icon={() => <Icon name="search" size={24} color="#7F13EC" />}
                 />
               }
-              onSubmitEditing={() => Alert.alert("Em desenvolvimento..")}
+              onSubmitEditing={() =>
+                Alert.alert("Busca", "Funcionalidade em desenvolvimento.")
+              }
             />
           </View>
         </KeyboardAwareScrollView>
@@ -39,7 +41,7 @@ export default function TutorHome() {
       </View>
       <TouchableOpacity
         onPress={() => {
-          Alert.alert("Filtragem em desenvolvimento...");
+          Alert.alert("Filtragem", "Funcionalidade em desenvolvimento.");
         }}
         style={{
           position: "absolute",

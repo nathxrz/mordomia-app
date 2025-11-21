@@ -40,7 +40,12 @@ export default function TabsLayout() {
           title: "Mordomia",
           headerRight: () => (
             <TouchableOpacity
-              onPress={() => Alert.alert("Notificações em desenvolvimento...")}
+              onPress={() =>
+                Alert.alert(
+                  "Notificações",
+                  "Funcionalidade em desenvolvimento."
+                )
+              }
             >
               <Text
                 style={{
@@ -202,7 +207,7 @@ export default function TabsLayout() {
           title: "Perfil",
           headerRight: () => (
             <TouchableOpacity
-              onPress={() => router.push("/(stack)/edits/editprofile")}
+              onPress={() => router.push("./edits/editProfileUser/")}
             >
               <Text
                 style={{
@@ -245,6 +250,14 @@ export default function TabsLayout() {
         name="users/catsitters/[id]"
         options={{
           title: "Cat sitter",
+          href: null,
+        }}
+      />
+
+      <Tabs.Screen
+        name="edits/editProfileUser/index"
+        options={{
+          title: "Editar Perfil",
           href: null,
         }}
       />

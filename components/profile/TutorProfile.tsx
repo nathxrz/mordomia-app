@@ -122,7 +122,7 @@ export default function TutorProfile() {
               <Text style={styles.titleSection}>Felinos</Text>
               <TouchableOpacity
                 onPress={() => {
-                  router.push("/(stack)/cats");
+                  router.push("/cats");
                 }}
               >
                 <View style={styles.cardContainer}>

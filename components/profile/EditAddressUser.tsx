@@ -189,9 +189,7 @@ export default function EditAddressUser() {
                     )}
                   />
                   {errors.cep && (
-                    <Text style={styles.messageAlert}>
-                      {errors.cep?.message}
-                    </Text>
+                    <Text style={styles.errorText}>{errors.cep?.message}</Text>
                   )}
                 </View>
                 <View style={{ flex: 1 }}>
@@ -247,23 +245,20 @@ export default function EditAddressUser() {
                           style={{
                             inputIOS: {
                               fontSize: 16,
-                              color: value ? "#7F13EC" : "#B3B3B3",
+                              color: "#7F13EC",
                             },
                             inputAndroid: {
                               fontSize: 16,
-                              color: value ? "#7F13EC" : "#B3B3B3",
+                              color: "#7F13EC",
                             },
                           }}
                         />
-
-                        {errors.state && (
-                          <Text style={styles.messageAlert}>
-                            {errors.state.message}
-                          </Text>
-                        )}
                       </View>
                     )}
                   />
+                  {errors.state && (
+                    <Text style={styles.errorText}>{errors.state.message}</Text>
+                  )}
                 </View>
               </View>
 
@@ -288,7 +283,7 @@ export default function EditAddressUser() {
                     )}
                   />
                   {errors.street && (
-                    <Text style={styles.messageAlert}>
+                    <Text style={styles.errorText}>
                       {errors.street?.message}
                     </Text>
                   )}
@@ -316,7 +311,7 @@ export default function EditAddressUser() {
                     )}
                   />
                   {errors.neighborhood && (
-                    <Text style={styles.messageAlert}>
+                    <Text style={styles.errorText}>
                       {errors.neighborhood?.message}
                     </Text>
                   )}
@@ -344,9 +339,7 @@ export default function EditAddressUser() {
                     )}
                   />
                   {errors.city && (
-                    <Text style={styles.messageAlert}>
-                      {errors.city?.message}
-                    </Text>
+                    <Text style={styles.errorText}>{errors.city?.message}</Text>
                   )}
                 </View>
               </View>
@@ -373,7 +366,7 @@ export default function EditAddressUser() {
                       )}
                     />
                     {errors.number && (
-                      <Text style={styles.messageAlert}>
+                      <Text style={styles.errorText}>
                         {errors.number?.message}
                       </Text>
                     )}
@@ -398,7 +391,7 @@ export default function EditAddressUser() {
                       )}
                     />
                     {errors.complement && (
-                      <Text style={styles.messageAlert}>
+                      <Text style={styles.errorText}>
                         {errors.complement?.message}
                       </Text>
                     )}
@@ -516,7 +509,11 @@ const styles = StyleSheet.create({
     fontWeight: "normal",
     textAlign: "center",
   },
-  messageAlert: { color: "red" },
+  errorText: {
+    color: "#EE0101",
+    fontSize: 13,
+    marginTop: 4,
+  },
   cepStateContainer: {
     flexDirection: "row",
     gap: 10,

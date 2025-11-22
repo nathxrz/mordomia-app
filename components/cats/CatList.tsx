@@ -8,6 +8,7 @@ import {
   FlatList,
   Image,
   ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -59,35 +60,16 @@ export default function CatList() {
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
       >
-        <View
-          style={{
-            marginBottom: 20,
-            borderColor: "#ccc",
-            borderWidth: 1,
-            padding: 10,
+        <TouchableOpacity
+          onPress={() => {
+            router.push(`./cats/${id}`);
           }}
         >
-          <TouchableOpacity
-            onPress={() => {
-              router.push(`./cats/${id}`);
-            }}
-          >
-            <View
-              style={{
-                marginBottom: 10,
-                display: "flex",
-                flexDirection: "row",
-                gap: 10,
-              }}
-            >
-              <Image
-                source={{ uri: avatar_url }}
-                style={{ width: 100, height: 100 }}
-              />
-              <Text>{name}</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+          <View style={styles.catItem}>
+            <Image source={{ uri: avatar_url }} style={styles.catItemImage} />
+            <Text style={styles.catItemText}>{name}</Text>
+          </View>
+        </TouchableOpacity>
       </ScrollView>
     );
   };
@@ -108,5 +90,34 @@ export default function CatList() {
     );
   }
 
-  return <View>{renderComponent()}</View>;
+  return renderComponent();
 }
+
+const styles = StyleSheet.create({
+  catItem: {
+    borderWidth: 1,
+    borderColor: "#E5E5E5",
+    backgroundColor: "#fcfcfc",
+    borderRadius: 22,
+
+    paddingVertical: 13,
+    paddingHorizontal: 20,
+
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+
+    marginBottom: 10,
+  },
+  catItemImage: {
+    width: 70,
+    height: 70,
+    borderRadius: 100,
+  },
+  catItemText: {
+    fontFamily: "Roboto",
+    fontSize: 18,
+    fontWeight: "bold",
+    lineHeight: 20,
+  },
+});

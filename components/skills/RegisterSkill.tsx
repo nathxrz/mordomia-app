@@ -110,7 +110,7 @@ export default function RegisterSkill() {
             )}
           />
           {errors.name && (
-            <Text style={styles.messageAlert}>{errors.name?.message}</Text>
+            <Text style={styles.errorText}>{errors.name?.message}</Text>
           )}
         </View>
 
@@ -128,9 +128,7 @@ export default function RegisterSkill() {
             )}
           />
           {errors.description && (
-            <Text style={styles.messageAlert}>
-              {errors.description?.message}
-            </Text>
+            <Text style={styles.errorText}>{errors.description?.message}</Text>
           )}
         </View>
 
@@ -174,5 +172,9 @@ const styles = StyleSheet.create({
   mt20: {
     marginTop: 20,
   },
-  messageAlert: { color: "red" },
+  errorText: {
+    color: "#EE0101",
+    fontSize: 13,
+    marginTop: 4,
+  },
 });

@@ -269,6 +269,22 @@ export default function TabsLayout() {
           href: null,
         }}
       />
+
+      <Tabs.Screen
+        name="cats/index"
+        options={{
+          title: "Meus Pets",
+          href: null,
+        }}
+      />
+
+      <Tabs.Screen
+        name="cats/registerCat"
+        options={{
+          title: "Adicionar felino",
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }

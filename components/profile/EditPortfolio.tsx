@@ -80,7 +80,7 @@ export default function EditPortfolio() {
                     }}
                   />
                   {errors.biography && (
-                    <Text style={styles.messageAlert}>
+                    <Text style={styles.errorText}>
                       {errors.biography.message}
                     </Text>
                   )}
@@ -110,7 +110,7 @@ export default function EditPortfolio() {
                     }}
                   />
                   {errors.portfolio_url && (
-                    <Text style={styles.messageAlert}>
+                    <Text style={styles.errorText}>
                       {errors.portfolio_url.message}
                     </Text>
                   )}
@@ -159,5 +159,9 @@ const styles = StyleSheet.create({
   mt20: {
     marginTop: 20,
   },
-  messageAlert: { color: "red" },
+  errorText: {
+    color: "#EE0101",
+    fontSize: 13,
+    marginTop: 4,
+  },
 });

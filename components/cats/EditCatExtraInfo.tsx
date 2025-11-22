@@ -99,9 +99,7 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
                   value={value}
                 />
                 {errors.feeling && (
-                  <Text style={styles.messageAlert}>
-                    {errors.feeling.message}
-                  </Text>
+                  <Text style={styles.errorText}>{errors.feeling.message}</Text>
                 )}
               </View>
             )}
@@ -138,7 +136,7 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
                   value={value}
                 />
                 {errors.litter_box && (
-                  <Text style={styles.messageAlert}>
+                  <Text style={styles.errorText}>
                     {errors.litter_box.message}
                   </Text>
                 )}
@@ -170,7 +168,7 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
                   value={value}
                 />
                 {errors.sociability_humans && (
-                  <Text style={styles.messageAlert}>
+                  <Text style={styles.errorText}>
                     {errors.sociability_humans.message}
                   </Text>
                 )}
@@ -202,7 +200,7 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
                   value={value}
                 />
                 {errors.sociability_animals && (
-                  <Text style={styles.messageAlert}>
+                  <Text style={styles.errorText}>
                     {errors.sociability_animals.message}
                   </Text>
                 )}
@@ -232,7 +230,7 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
                   value={value}
                 />
                 {errors.activity_level && (
-                  <Text style={styles.messageAlert}>
+                  <Text style={styles.errorText}>
                     {errors.activity_level.message}
                   </Text>
                 )}
@@ -267,7 +265,7 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
             )}
           />
           {errors.rabies_vaccine && (
-            <Text style={styles.messageAlert}>
+            <Text style={styles.errorText}>
               {errors.rabies_vaccine.message}
             </Text>
           )}
@@ -294,7 +292,7 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
                   }}
                 />
                 {errors.health_notes && (
-                  <Text style={styles.messageAlert}>
+                  <Text style={styles.errorText}>
                     {errors.health_notes.message}
                   </Text>
                 )}
@@ -324,7 +322,7 @@ export default function EditCatExtraInfo({ catId }: { catId: string }) {
                   }}
                 />
                 {errors.special_needs && (
-                  <Text style={styles.messageAlert}>
+                  <Text style={styles.errorText}>
                     {errors.special_needs.message}
                   </Text>
                 )}
@@ -380,5 +378,9 @@ const styles = StyleSheet.create({
   mt20: {
     marginTop: 20,
   },
-  messageAlert: { color: "red" },
+  errorText: {
+    color: "#EE0101",
+    fontSize: 13,
+    marginTop: 4,
+  },
 });

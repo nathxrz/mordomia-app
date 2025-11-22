@@ -102,9 +102,7 @@ export default function ConfirmedModalPassword({
                 )}
               />
               {errors.password && (
-                <Text style={styles.messageAlert}>
-                  {errors.password?.message}
-                </Text>
+                <Text style={styles.errorText}>{errors.password?.message}</Text>
               )}
             </View>
 
@@ -184,8 +182,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 16,
   },
-  messageAlert: {
-    color: "red",
-    marginTop: 5,
+  errorText: {
+    color: "#EE0101",
+    fontSize: 13,
+    marginTop: 4,
   },
 });

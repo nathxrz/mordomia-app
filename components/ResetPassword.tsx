@@ -77,7 +77,7 @@ export default function SignIn() {
               />
 
               {errors.email && (
-                <Text style={styles.messageAlert}>{errors.email?.message}</Text>
+                <Text style={styles.errorText}>{errors.email?.message}</Text>
               )}
             </View>
           </View>
@@ -140,5 +140,9 @@ const styles = StyleSheet.create({
     fontWeight: "normal",
     textAlign: "center",
   },
-  messageAlert: { color: "red", marginTop: 4, fontSize: 12, marginLeft: 10 },
+  errorText: {
+    color: "#EE0101",
+    fontSize: 13,
+    marginTop: 4,
+  },
 });

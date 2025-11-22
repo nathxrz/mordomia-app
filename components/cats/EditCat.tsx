@@ -120,9 +120,7 @@ export default function EditCat({ catId }: { catId: string }) {
             )}
           />
           {errors.avatar_url && (
-            <Text style={styles.messageAlert}>
-              {errors.avatar_url?.message}
-            </Text>
+            <Text style={styles.errorText}>{errors.avatar_url?.message}</Text>
           )}
         </View>
 
@@ -140,7 +138,7 @@ export default function EditCat({ catId }: { catId: string }) {
             )}
           />
           {errors.name && (
-            <Text style={styles.messageAlert}>{errors.name?.message}</Text>
+            <Text style={styles.errorText}>{errors.name?.message}</Text>
           )}
         </View>
 
@@ -162,7 +160,7 @@ export default function EditCat({ catId }: { catId: string }) {
                   value={value}
                 />
                 {errors.age_stage && (
-                  <Text style={styles.messageAlert}>
+                  <Text style={styles.errorText}>
                     {errors.age_stage.message}
                   </Text>
                 )}
@@ -187,9 +185,7 @@ export default function EditCat({ catId }: { catId: string }) {
                   value={value}
                 />
                 {errors.gender && (
-                  <Text style={styles.messageAlert}>
-                    {errors.gender.message}
-                  </Text>
+                  <Text style={styles.errorText}>{errors.gender.message}</Text>
                 )}
               </View>
             )}
@@ -210,7 +206,7 @@ export default function EditCat({ catId }: { catId: string }) {
             )}
           />
           {errors.breed && (
-            <Text style={styles.messageAlert}>{errors.breed?.message}</Text>
+            <Text style={styles.errorText}>{errors.breed?.message}</Text>
           )}
         </View>
 
@@ -284,5 +280,9 @@ const styles = StyleSheet.create({
   mt20: {
     marginTop: 20,
   },
-  messageAlert: { color: "red" },
+  errorText: {
+    color: "#EE0101",
+    fontSize: 13,
+    marginTop: 4,
+  },
 });

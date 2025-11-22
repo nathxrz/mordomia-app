@@ -124,8 +124,8 @@ export default function EditProfileUser() {
   useFocusEffect(
     useCallback(() => {
       const onBackPress = () => {
-        router.replace("/(tabs)/profile"); // evita duplicar a tela
-        return true; // evita comportamento padrão
+        router.replace("/(tabs)/profile");
+        return true;
       };
 
       const subscription = BackHandler.addEventListener(
@@ -190,7 +190,7 @@ export default function EditProfileUser() {
                 )}
               />
               {errors.avatar_url && (
-                <Text style={styles.messageAlert}>
+                <Text style={styles.errorText}>
                   {errors.avatar_url?.message}
                 </Text>
               )}
@@ -218,9 +218,7 @@ export default function EditProfileUser() {
                   )}
                 />
                 {errors.name && (
-                  <Text style={styles.messageAlert}>
-                    {errors.name?.message}
-                  </Text>
+                  <Text style={styles.errorText}>{errors.name?.message}</Text>
                 )}
               </View>
 
@@ -274,7 +272,7 @@ export default function EditProfileUser() {
                   )}
                 />
                 {errors.birthDate && (
-                  <Text style={styles.messageAlert}>
+                  <Text style={styles.errorText}>
                     {errors.birthDate?.message}
                   </Text>
                 )}
@@ -317,15 +315,12 @@ export default function EditProfileUser() {
                         fontSize: 16,
                         color: "#7F13EC",
                         backgroundColor: "#FCFCFC",
-                        marginBottom: 10,
                       }}
                     />
                   )}
                 />
                 {errors.phone && (
-                  <Text style={styles.messageAlert}>
-                    {errors.phone?.message}
-                  </Text>
+                  <Text style={styles.errorText}>{errors.phone?.message}</Text>
                 )}
               </View>
             </View>
@@ -441,5 +436,9 @@ const styles = StyleSheet.create({
     fontWeight: "normal",
     textAlign: "center",
   },
-  messageAlert: { color: "red" },
+  errorText: {
+    color: "#EE0101",
+    fontSize: 13,
+    marginTop: 4,
+  },
 });

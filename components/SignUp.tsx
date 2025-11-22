@@ -188,7 +188,7 @@ export default function SignUp() {
                 )}
               />
               {errors.name && (
-                <Text style={styles.messageAlert}>{errors.name?.message}</Text>
+                <Text style={styles.errorText}>{errors.name?.message}</Text>
               )}
             </View>
 
@@ -241,7 +241,7 @@ export default function SignUp() {
                 )}
               />
               {errors.birthDate && (
-                <Text style={styles.messageAlert}>
+                <Text style={styles.errorText}>
                   {errors.birthDate?.message}
                 </Text>
               )}
@@ -290,7 +290,7 @@ export default function SignUp() {
                 )}
               />
               {errors.phone && (
-                <Text style={styles.messageAlert}>{errors.phone?.message}</Text>
+                <Text style={styles.errorText}>{errors.phone?.message}</Text>
               )}
             </View>
           </View>
@@ -317,7 +317,7 @@ export default function SignUp() {
                 )}
               />
               {errors.email && (
-                <Text style={styles.messageAlert}>{errors.email?.message}</Text>
+                <Text style={styles.errorText}>{errors.email?.message}</Text>
               )}
             </View>
 
@@ -357,9 +357,7 @@ export default function SignUp() {
                 )}
               />
               {errors.password && (
-                <Text style={styles.messageAlert}>
-                  {errors.password?.message}
-                </Text>
+                <Text style={styles.errorText}>{errors.password?.message}</Text>
               )}
             </View>
 
@@ -401,7 +399,7 @@ export default function SignUp() {
                 )}
               />
               {errors.confirmPassword && (
-                <Text style={styles.messageAlert}>
+                <Text style={styles.errorText}>
                   {errors.confirmPassword?.message}
                 </Text>
               )}
@@ -513,5 +511,9 @@ const styles = StyleSheet.create({
     fontWeight: "normal",
     textAlign: "center",
   },
-  messageAlert: { color: "red" },
+  errorText: {
+    color: "#EE0101",
+    fontSize: 13,
+    marginTop: 4,
+  },
 });

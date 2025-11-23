@@ -285,6 +285,21 @@ export default function TabsLayout() {
           href: null,
         }}
       />
+
+      <Tabs.Screen
+        name="cats/[id]"
+        options={{
+          title: "Detalhes do Felino",
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="cats/editCat"
+        options={{
+          title: "Editar informações",
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }

@@ -205,7 +205,7 @@ export default function EditProfileUser() {
                   render={({ field: { onChange, value } }) => (
                     <TextInput
                       mode="outlined"
-                      placeholderTextColor="#7F13EC"
+                      placeholderTextColor="#7f13ecab"
                       outlineColor="#979797"
                       activeOutlineColor="#979797"
                       textColor="#7F13EC"
@@ -233,7 +233,7 @@ export default function EditProfileUser() {
                         onChangeText={(masked) => onChange(masked)}
                         keyboardType="numeric"
                         placeholder="Data de nascimento (dd/mm/aaaa)"
-                        placeholderTextColor="#7F13EC"
+                        placeholderTextColor="#7f13ecab"
                         mask={[
                           /\d/,
                           /\d/,
@@ -288,7 +288,7 @@ export default function EditProfileUser() {
                       onChangeText={(masked) => onChange(masked)}
                       keyboardType="numeric"
                       placeholder="(99) 99999-9999"
-                      placeholderTextColor="#7F13EC"
+                      placeholderTextColor="#7f13ecab"
                       mask={[
                         "(",
                         /\d/,

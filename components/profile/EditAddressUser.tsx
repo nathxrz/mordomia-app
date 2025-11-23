@@ -174,7 +174,7 @@ export default function EditAddressUser() {
                         ]}
                         keyboardType="numeric"
                         placeholder="00000-000"
-                        placeholderTextColor="#7F13EC"
+                        placeholderTextColor="#7f13ecab"
                         style={{
                           borderWidth: 1,
                           borderColor: "#979797",
@@ -270,7 +270,7 @@ export default function EditAddressUser() {
                     render={({ field: { onChange, value } }) => (
                       <TextInput
                         mode="outlined"
-                        placeholderTextColor="#7F13EC"
+                        placeholderTextColor="#7f13ecab"
                         outlineColor="#979797"
                         activeOutlineColor="#979797"
                         textColor="#7F13EC"
@@ -298,7 +298,7 @@ export default function EditAddressUser() {
                     render={({ field: { onChange, value } }) => (
                       <TextInput
                         mode="outlined"
-                        placeholderTextColor="#7F13EC"
+                        placeholderTextColor="#7f13ecab"
                         outlineColor="#979797"
                         activeOutlineColor="#979797"
                         textColor="#7F13EC"
@@ -326,7 +326,7 @@ export default function EditAddressUser() {
                     render={({ field: { onChange, value } }) => (
                       <TextInput
                         mode="outlined"
-                        placeholderTextColor="#7F13EC"
+                        placeholderTextColor="#7f13ecab"
                         outlineColor="#979797"
                         activeOutlineColor="#979797"
                         textColor="#7F13EC"
@@ -353,7 +353,7 @@ export default function EditAddressUser() {
                       render={({ field: { onChange, value } }) => (
                         <TextInput
                           mode="outlined"
-                          placeholderTextColor="#7F13EC"
+                          placeholderTextColor="#7f13ecab"
                           outlineColor="#979797"
                           activeOutlineColor="#979797"
                           textColor="#7F13EC"
@@ -378,7 +378,7 @@ export default function EditAddressUser() {
                       render={({ field: { onChange, value } }) => (
                         <TextInput
                           mode="outlined"
-                          placeholderTextColor="#7F13EC"
+                          placeholderTextColor="#7f13ecab"
                           outlineColor="#979797"
                           activeOutlineColor="#979797"
                           textColor="#7F13EC"

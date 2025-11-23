@@ -62,7 +62,7 @@ export default function CatList() {
       >
         <TouchableOpacity
           onPress={() => {
-            router.push(`./cats/${id}`);
+            router.push(`/(tabs)/cats/${id}`);
           }}
         >
           <View style={styles.catItem}>

@@ -1,143 +1,181 @@
 import { useCat } from "@/hooks/useCat";
-import { router, useFocusEffect } from "expo-router";
+import { useFocusEffect } from "expo-router";
 import React, { useCallback } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-
-import Icon from "react-native-vector-icons/MaterialIcons";
 
 export default function CatExtraInfoProfile({ catId }: { catId: string }) {
   const { getCatExtraInfo } = useCat(catId as string);
   const [catExtraInfo, setCatExtraInfo] = React.useState<any>(null);
 
+  const [openRoutine, setOpenRoutine] = React.useState(false);
+  const [openHealthNotes, setOpenHealthNotes] = React.useState(false);
+  const [openSpecialNeeds, setOpenSpecialNeeds] = React.useState(false);
+
   const fetchExtraInfo = useCallback(async () => {
     const info = await getCatExtraInfo();
-    if (info) {
-      setCatExtraInfo(info);
-    } else {
-      setCatExtraInfo(null);
-    }
+    setCatExtraInfo(info || null);
   }, [getCatExtraInfo]);
 
   useFocusEffect(() => {
     fetchExtraInfo();
   });
 
-  const hasExtraInfo = () => {
-    if (catExtraInfo) {
-      return (
-        <View style={styles.infoContainer}>
-          <Text style={styles.label}>Humor / Temperamento:</Text>
-          <Text style={styles.value}>
-            {catExtraInfo.feeling || "Não informado"}
-          </Text>
-
-          <Text style={styles.label}>Uso da caixa de areia:</Text>
-          <Text style={styles.value}>
-            {catExtraInfo.litter_box || "Não informado"}
-          </Text>
-
-          <Text style={styles.label}>Sociabilidade:</Text>
-          <View>
-            <Text style={styles.value}>
-              Com humanos: {catExtraInfo.sociability_humans || "Não informado"}
-            </Text>
-          </View>
-          <View>
-            <Text style={styles.value}>
-              Com outros animais:{" "}
-              {catExtraInfo.sociability_animals || "Não informado"}
-            </Text>
-          </View>
-
-          <Text style={styles.label}>Nível de atividade:</Text>
-          <Text style={styles.value}>
-            {catExtraInfo.activity_level || "Não informado"}
-          </Text>
-
-          <Text style={styles.label}>Vacina antirrábica:</Text>
-          <Text style={styles.value}>
-            {catExtraInfo.rabies_vaccine ? "Em dia" : "Atrasada"}
-          </Text>
-
-          <Text style={styles.label}>Anotações de saúde:</Text>
-          <Text style={styles.value}>
-            {catExtraInfo.health_notes || "Não informado"}
-          </Text>
-
-          <Text style={styles.label}>Necessidades especiais:</Text>
-          <Text style={styles.value}>
-            {catExtraInfo.special_needs || "Não informado"}
-          </Text>
-        </View>
-      );
-    } else {
-      return (
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>
-            Nenhuma informação adicional cadastrada para este gato.
-          </Text>
-        </View>
-      );
-    }
-  };
-
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        onPress={() => {
-          router.push({
-            pathname: "./(stack)/cats/editCatExtraInfo",
-            params: { id: catId },
-          });
-        }}
-      >
-        <Icon name="edit" size={24} color="#000" />
-      </TouchableOpacity>
-      <Text style={styles.sectionTitle}>Bem-estar e Comportamento</Text>
-      {hasExtraInfo()}
+    <View style={styles.aboutContainer}>
+      <View style={styles.cardExpansiveContainer}>
+        <View style={styles.headerExpandable}>
+          <Text style={styles.titleAboutSection}>Rotina e comportamento</Text>
+          <TouchableOpacity onPress={() => setOpenRoutine(!openRoutine)}>
+            <Text
+              style={{
+                fontFamily: "MaterialSymbolsOutlined",
+                fontSize: 30,
+                lineHeight: 30,
+                color: "#000",
+              }}
+            >
+              {openRoutine ? "keyboard_arrow_up" : "keyboard_arrow_down"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {openRoutine &&
+          (catExtraInfo ? (
+            <View>
+              <Text style={styles.description}>
+                <Text style={styles.bold}>Humor / Temperamento: </Text>
+                {catExtraInfo.feeling || "Não informado"}
+              </Text>
+              <Text style={styles.description}>
+                <Text style={styles.bold}>Uso da caixa de areia: </Text>
+                {catExtraInfo.litter_box || "Não informado"}
+              </Text>
+              <Text style={styles.description}>
+                <Text style={styles.bold}>Sociabilidade com humanos: </Text>
+                {catExtraInfo.sociability_humans || "Não informado"}
+              </Text>
+              <Text style={styles.description}>
+                <Text style={styles.bold}>
+                  Sociabilidade com outros animais:{" "}
+                </Text>
+                {catExtraInfo.sociability_animals || "Não informado"}
+              </Text>
+              <Text style={styles.description}>
+                <Text style={styles.bold}>Nível de atividade: </Text>
+                {catExtraInfo.activity_level || "Não informado"}
+              </Text>
+            </View>
+          ) : (
+            <Text style={styles.description}>
+              Nenhuma informação adicional disponível.
+            </Text>
+          ))}
+      </View>
+
+      <View style={styles.cardExpansiveContainer}>
+        <View style={styles.headerExpandable}>
+          <Text style={styles.titleAboutSection}>
+            Observações gerais de saúde
+          </Text>
+          <TouchableOpacity
+            onPress={() => setOpenHealthNotes(!openHealthNotes)}
+          >
+            <Text
+              style={{
+                fontFamily: "MaterialSymbolsOutlined",
+                fontSize: 30,
+                lineHeight: 30,
+                color: "#000",
+              }}
+            >
+              {openHealthNotes ? "keyboard_arrow_up" : "keyboard_arrow_down"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {openHealthNotes &&
+          (catExtraInfo ? (
+            <View>
+              <Text style={styles.description}>
+                <Text style={styles.bold}>Vacina antirrábica: </Text>
+                {catExtraInfo.rabies_vaccine ? "Em dia" : "Atrasada"}
+              </Text>
+              <Text style={styles.description}>
+                <Text style={styles.bold}>Anotações de saúde: </Text>
+                {catExtraInfo.health_notes || "Não informado"}
+              </Text>
+            </View>
+          ) : (
+            <Text style={styles.description}>Nenhum dado registrado.</Text>
+          ))}
+      </View>
+
+      <View style={styles.cardExpansiveContainer}>
+        <View style={styles.headerExpandable}>
+          <Text style={styles.titleAboutSection}>Cuidados especiais</Text>
+          <TouchableOpacity
+            onPress={() => setOpenSpecialNeeds(!openSpecialNeeds)}
+          >
+            <Text
+              style={{
+                fontFamily: "MaterialSymbolsOutlined",
+                fontSize: 30,
+                lineHeight: 30,
+                color: "#000",
+              }}
+            >
+              {openSpecialNeeds ? "keyboard_arrow_up" : "keyboard_arrow_down"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {openSpecialNeeds &&
+          (catExtraInfo ? (
+            <View>
+              <Text style={styles.description}>
+                <Text style={styles.bold}>Necessidades especiais: </Text>
+                {catExtraInfo.special_needs || "Não informado"}
+              </Text>
+            </View>
+          ) : (
+            <Text style={styles.description}>
+              Nenhuma informação adicional disponível.
+            </Text>
+          ))}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 16,
-    marginTop: 16,
-    elevation: 2,
+  aboutContainer: {
+    gap: 8,
   },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#1D1127",
-    marginBottom: 12,
+  cardExpansiveContainer: {
+    position: "relative",
+    backgroundColor: "#FCFCFC",
+    borderRadius: 22,
+    borderWidth: 1,
+    borderColor: "#E5E5E5",
+    paddingHorizontal: 14,
+    paddingVertical: 20,
+    gap: 20,
   },
-  infoContainer: {
-    marginBottom: 8,
-  },
-  label: {
-    fontWeight: "500",
-    color: "#7F13EC",
-    marginTop: 8,
-  },
-  value: {
-    fontSize: 16,
-    color: "#333",
-    marginLeft: 8,
-  },
-  emptyContainer: {
+  headerExpandable: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
-    justifyContent: "center",
   },
-  emptyText: {
+  titleAboutSection: {
+    fontFamily: "Roboto",
     fontSize: 16,
-    color: "#555",
-    marginBottom: 12,
-    textAlign: "center",
+    fontWeight: "700",
   },
-  updateButton: {
-    marginTop: 16,
-    borderColor: "#7F13EC",
+  description: {
+    fontFamily: "Roboto",
+    fontSize: 16,
+    color: "#4A4459",
+    marginBottom: 30,
   },
+  bold: { fontWeight: "700" },
 });

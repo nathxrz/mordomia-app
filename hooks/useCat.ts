@@ -1,6 +1,5 @@
 import { supabase } from "@/lib/supabase";
 import translateError from "@/scripts/translate-error";
-import { router } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { Alert } from "react-native";
 
@@ -13,6 +12,7 @@ export const useCat = (catId: string) => {
 
     try {
       setLoading(true);
+
       const { data, error } = await supabase
         .from("cats")
         .select("*")
@@ -33,17 +33,13 @@ export const useCat = (catId: string) => {
     fetchCat();
   }, [fetchCat]);
 
-  const deleteCat = useCallback(async (catId: string) => {
+  const deleteCat = useCallback(async () => {
     try {
       setLoading(true);
+
       const { error } = await supabase.from("cats").delete().eq("id", catId);
+      if (error) throw new Error(translateError(error.code));
 
-      if (error) {
-        throw new Error(translateError(error.code));
-      }
-
-      Alert.alert("Gato excluído com sucesso!");
-      router.back();
       return true;
     } catch (error) {
       Alert.alert("Erro ao excluir pet", String(error));
@@ -51,11 +47,10 @@ export const useCat = (catId: string) => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [catId]);
 
   const updateCat = useCallback(
     async (
-      catId: string,
       name: string,
       age_stage: string,
       gender: string,
@@ -65,11 +60,8 @@ export const useCat = (catId: string) => {
     ) => {
       try {
         setLoading(true);
-        if (!catId) {
-          throw new Error(
-            "Erro ao atualizar felino: ID do gato não fornecido."
-          );
-        }
+
+        if (!catId) throw new Error("ID do gato não fornecido.");
 
         const updates = {
           name,
@@ -86,40 +78,34 @@ export const useCat = (catId: string) => {
           .update(updates)
           .eq("id", catId);
 
-        if (error) {
-          throw new Error(translateError(error.code));
-        }
-        Alert.alert("Felino atualizado com sucesso!");
-        setLoading(false);
-        router.back();
+        if (error) throw new Error(translateError(error.code));
+
+        return true;
       } catch (error) {
-        Alert.alert("Erro: ao atualizar pet", String(error));
+        Alert.alert("Erro ao atualizar pet", String(error));
+        return false;
       } finally {
         setLoading(false);
       }
     },
-    []
+    [catId]
   );
 
+  // BUSCA INFO EXTRA
   const getCatExtraInfo = useCallback(async () => {
     try {
-      setLoading(true);
       const { data, error } = await supabase
         .from("care_profiles")
         .select("*")
         .eq("id_cat", catId)
         .maybeSingle();
 
-      if (error) {
-        throw new Error(translateError(error.code));
-      }
+      if (error) throw new Error(translateError(error.code));
 
       return data;
     } catch (error) {
       Alert.alert("Erro ao buscar informações extras do gato", String(error));
       return null;
-    } finally {
-      setLoading(false);
     }
   }, [catId]);
 
@@ -136,58 +122,43 @@ export const useCat = (catId: string) => {
     ) => {
       try {
         setLoading(true);
-        if (!catId) {
-          throw new Error("Erro ao atualizar pet: ID do gato não fornecido.");
-        }
-        const catExtraInfo = await getCatExtraInfo();
+        if (!catId) throw new Error("ID do gato não fornecido.");
 
-        if (catExtraInfo) {
-          const updates = {
-            feeling,
-            litter_box,
-            sociability_humans,
-            sociability_animals,
-            activity_level,
-            health_notes,
-            rabies_vaccine,
-            special_needs,
-            updated_at: new Date(),
-          };
+        const existing = await getCatExtraInfo();
 
-          const { error: updateError } = await supabase
+        const payload = {
+          feeling,
+          litter_box,
+          sociability_humans,
+          sociability_animals,
+          activity_level,
+          health_notes,
+          rabies_vaccine,
+          special_needs,
+          updated_at: new Date(),
+        };
+
+        if (existing) {
+          const { error } = await supabase
             .from("care_profiles")
-            .update(updates)
+            .update(payload)
             .eq("id_cat", catId);
 
-          if (updateError) {
-            throw new Error(translateError(updateError.code));
-          }
+          if (error) throw new Error(translateError(error.code));
         } else {
-          const { error: insertError } = await supabase
-            .from("care_profiles")
-            .insert({
-              id_cat: catId,
-              feeling,
-              litter_box,
-              sociability_humans,
-              sociability_animals,
-              activity_level,
-              health_notes,
-              rabies_vaccine,
-              special_needs,
-              created_at: new Date(),
-            });
+          const { error } = await supabase.from("care_profiles").insert({
+            id_cat: catId,
+            ...payload,
+            created_at: new Date(),
+          });
 
-          if (insertError) {
-            throw new Error(translateError(insertError.code));
-          }
+          if (error) throw new Error(translateError(error.code));
         }
 
-        Alert.alert("Informações extras do felino atualizadas com sucesso!");
-        setLoading(false);
-        router.back();
+        return true;
       } catch (error) {
-        Alert.alert("Erro: ao atualizar felino", String(error));
+        Alert.alert("Erro ao atualizar informações extras", String(error));
+        return false;
       } finally {
         setLoading(false);
       }
@@ -197,11 +168,11 @@ export const useCat = (catId: string) => {
 
   return {
     cat,
+    loading,
+    fetchCat,
     deleteCat,
     updateCat,
-    fetchCat,
-    getCatExtraInfo,
-    loading,
     updateCatExtraInfo,
+    getCatExtraInfo,
   };
 };

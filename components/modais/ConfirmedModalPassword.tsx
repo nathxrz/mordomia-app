@@ -73,7 +73,7 @@ export default function ConfirmedModalPassword({
                 render={({ field: { onChange, value } }) => (
                   <TextInput
                     mode="outlined"
-                    placeholderTextColor="#7F13EC"
+                    placeholderTextColor="#7f13ecab"
                     outlineColor="#979797"
                     activeOutlineColor="#979797"
                     textColor="#7F13EC"

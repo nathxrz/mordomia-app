@@ -23,9 +23,9 @@ export default function CatExtraInfoProfile({ catId }: { catId: string }) {
   return (
     <View style={styles.aboutContainer}>
       <View style={styles.cardExpansiveContainer}>
-        <View style={styles.headerExpandable}>
-          <Text style={styles.titleAboutSection}>Rotina e comportamento</Text>
-          <TouchableOpacity onPress={() => setOpenRoutine(!openRoutine)}>
+        <TouchableOpacity onPress={() => setOpenRoutine(!openRoutine)}>
+          <View style={styles.headerExpandable}>
+            <Text style={styles.titleAboutSection}>Rotina e comportamento</Text>
             <Text
               style={{
                 fontFamily: "MaterialSymbolsOutlined",
@@ -36,8 +36,8 @@ export default function CatExtraInfoProfile({ catId }: { catId: string }) {
             >
               {openRoutine ? "keyboard_arrow_up" : "keyboard_arrow_down"}
             </Text>
-          </TouchableOpacity>
-        </View>
+          </View>
+        </TouchableOpacity>
 
         {openRoutine &&
           (catExtraInfo ? (
@@ -73,13 +73,11 @@ export default function CatExtraInfoProfile({ catId }: { catId: string }) {
       </View>
 
       <View style={styles.cardExpansiveContainer}>
-        <View style={styles.headerExpandable}>
-          <Text style={styles.titleAboutSection}>
-            Observações gerais de saúde
-          </Text>
-          <TouchableOpacity
-            onPress={() => setOpenHealthNotes(!openHealthNotes)}
-          >
+        <TouchableOpacity onPress={() => setOpenHealthNotes(!openHealthNotes)}>
+          <View style={styles.headerExpandable}>
+            <Text style={styles.titleAboutSection}>
+              Observações gerais de saúde
+            </Text>
             <Text
               style={{
                 fontFamily: "MaterialSymbolsOutlined",
@@ -90,8 +88,8 @@ export default function CatExtraInfoProfile({ catId }: { catId: string }) {
             >
               {openHealthNotes ? "keyboard_arrow_up" : "keyboard_arrow_down"}
             </Text>
-          </TouchableOpacity>
-        </View>
+          </View>
+        </TouchableOpacity>
 
         {openHealthNotes &&
           (catExtraInfo ? (
@@ -111,11 +109,11 @@ export default function CatExtraInfoProfile({ catId }: { catId: string }) {
       </View>
 
       <View style={styles.cardExpansiveContainer}>
-        <View style={styles.headerExpandable}>
-          <Text style={styles.titleAboutSection}>Cuidados especiais</Text>
-          <TouchableOpacity
-            onPress={() => setOpenSpecialNeeds(!openSpecialNeeds)}
-          >
+        <TouchableOpacity
+          onPress={() => setOpenSpecialNeeds(!openSpecialNeeds)}
+        >
+          <View style={styles.headerExpandable}>
+            <Text style={styles.titleAboutSection}>Cuidados especiais</Text>
             <Text
               style={{
                 fontFamily: "MaterialSymbolsOutlined",
@@ -126,8 +124,8 @@ export default function CatExtraInfoProfile({ catId }: { catId: string }) {
             >
               {openSpecialNeeds ? "keyboard_arrow_up" : "keyboard_arrow_down"}
             </Text>
-          </TouchableOpacity>
-        </View>
+          </View>
+        </TouchableOpacity>
 
         {openSpecialNeeds &&
           (catExtraInfo ? (

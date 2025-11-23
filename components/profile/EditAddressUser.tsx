@@ -150,231 +150,128 @@ export default function EditAddressUser() {
           enableOnAndroid={true}
         >
           <View style={styles.container}>
-            <View style={styles.inputsContainer}>
-              <View style={styles.cepStateContainer}>
-                <View style={{ flex: 1 }}>
-                  <Controller
-                    control={control}
-                    name="cep"
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <MaskInput
-                        value={value}
-                        onChangeText={(masked, unmasked) => onChange(masked)}
-                        onBlur={() => getCepFromApi(value.replace(/\D/g, ""))}
-                        mask={[
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          "-",
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                        ]}
-                        keyboardType="numeric"
-                        placeholder="00000-000"
-                        placeholderTextColor="#7f13ecab"
-                        style={{
-                          borderWidth: 1,
-                          borderColor: "#979797",
-                          borderRadius: 100,
-                          paddingVertical: 14,
-                          paddingHorizontal: 16,
-                          fontSize: 16,
-                          color: "#7F13EC",
-                          backgroundColor: "#fcfcfc",
-                        }}
-                      />
-                    )}
-                  />
-                  {errors.cep && (
-                    <Text style={styles.errorText}>{errors.cep?.message}</Text>
-                  )}
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Controller
-                    control={control}
-                    name="state"
-                    render={({ field: { value, onChange } }) => (
-                      <View
-                        style={{
-                          borderWidth: 1,
-                          borderColor: "#979797",
-                          borderRadius: 100,
-                          backgroundColor: "#FCFCFC",
-                        }}
-                      >
-                        <Picker
-                          placeholder={{
-                            label: "Estado",
-                            value: null,
-                            color: "#7F13EC",
-                          }}
-                          items={[
-                            { label: "AC", value: "AC" },
-                            { label: "AL", value: "AL" },
-                            { label: "AP", value: "AP" },
-                            { label: "AM", value: "AM" },
-                            { label: "BA", value: "BA" },
-                            { label: "CE", value: "CE" },
-                            { label: "DF", value: "DF" },
-                            { label: "ES", value: "ES" },
-                            { label: "GO", value: "GO" },
-                            { label: "MA", value: "MA" },
-                            { label: "MT", value: "MT" },
-                            { label: "MS", value: "MS" },
-                            { label: "MG", value: "MG" },
-                            { label: "PA", value: "PA" },
-                            { label: "PB", value: "PB" },
-                            { label: "PR", value: "PR" },
-                            { label: "PE", value: "PE" },
-                            { label: "PI", value: "PI" },
-                            { label: "RJ", value: "RJ" },
-                            { label: "RN", value: "RN" },
-                            { label: "RS", value: "RS" },
-                            { label: "RO", value: "RO" },
-                            { label: "RR", value: "RR" },
-                            { label: "SC", value: "SC" },
-                            { label: "SP", value: "SP" },
-                            { label: "SE", value: "SE" },
-                            { label: "TO", value: "TO" },
-                          ]}
-                          onValueChange={(value) => onChange(value)}
-                          value={value}
-                          style={{
-                            inputIOS: {
-                              fontSize: 16,
-                              color: "#7F13EC",
-                            },
-                            inputAndroid: {
-                              fontSize: 16,
-                              color: "#7F13EC",
-                            },
-                          }}
-                        />
-                      </View>
-                    )}
-                  />
-                  {errors.state && (
-                    <Text style={styles.errorText}>{errors.state.message}</Text>
-                  )}
-                </View>
-              </View>
-
-              <View style={styles.inputsContainer}>
-                <View>
-                  <Controller
-                    control={control}
-                    name="street"
-                    render={({ field: { onChange, value } }) => (
-                      <TextInput
-                        mode="outlined"
-                        placeholderTextColor="#7f13ecab"
-                        outlineColor="#979797"
-                        activeOutlineColor="#979797"
-                        textColor="#7F13EC"
-                        theme={{ roundness: 100 }}
-                        onChangeText={onChange}
-                        value={value}
-                        activeUnderlineColor="#6200ee"
-                        placeholder="Rua"
-                      />
-                    )}
-                  />
-                  {errors.street && (
-                    <Text style={styles.errorText}>
-                      {errors.street?.message}
-                    </Text>
-                  )}
-                </View>
-              </View>
-
-              <View style={styles.inputsContainer}>
-                <View>
-                  <Controller
-                    control={control}
-                    name="neighborhood"
-                    render={({ field: { onChange, value } }) => (
-                      <TextInput
-                        mode="outlined"
-                        placeholderTextColor="#7f13ecab"
-                        outlineColor="#979797"
-                        activeOutlineColor="#979797"
-                        textColor="#7F13EC"
-                        theme={{ roundness: 100 }}
-                        onChangeText={onChange}
-                        value={value}
-                        activeUnderlineColor="#6200ee"
-                        placeholder="Bairro"
-                      />
-                    )}
-                  />
-                  {errors.neighborhood && (
-                    <Text style={styles.errorText}>
-                      {errors.neighborhood?.message}
-                    </Text>
-                  )}
-                </View>
-              </View>
-
-              <View style={styles.inputsContainer}>
-                <View>
-                  <Controller
-                    control={control}
-                    name="city"
-                    render={({ field: { onChange, value } }) => (
-                      <TextInput
-                        mode="outlined"
-                        placeholderTextColor="#7f13ecab"
-                        outlineColor="#979797"
-                        activeOutlineColor="#979797"
-                        textColor="#7F13EC"
-                        theme={{ roundness: 100 }}
-                        onChangeText={onChange}
-                        value={value}
-                        activeUnderlineColor="#6200ee"
-                        placeholder="Cidade"
-                      />
-                    )}
-                  />
-                  {errors.city && (
-                    <Text style={styles.errorText}>{errors.city?.message}</Text>
-                  )}
-                </View>
-              </View>
-
+            <View style={styles.sectionForm}>
               <View style={styles.inputsContainer}>
                 <View style={styles.cepStateContainer}>
-                  <View style={{ width: "30%" }}>
+                  <View style={{ flex: 1 }}>
                     <Controller
                       control={control}
-                      name="number"
-                      render={({ field: { onChange, value } }) => (
-                        <TextInput
-                          mode="outlined"
-                          placeholderTextColor="#7f13ecab"
-                          outlineColor="#979797"
-                          activeOutlineColor="#979797"
-                          textColor="#7F13EC"
-                          theme={{ roundness: 100 }}
-                          onChangeText={onChange}
+                      name="cep"
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <MaskInput
                           value={value}
-                          activeUnderlineColor="#6200ee"
-                          placeholder="Número"
+                          onChangeText={(masked, unmasked) => onChange(masked)}
+                          onBlur={() => getCepFromApi(value.replace(/\D/g, ""))}
+                          mask={[
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                            "-",
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                          ]}
+                          keyboardType="numeric"
+                          placeholder="00000-000"
+                          placeholderTextColor="#7f13ecab"
+                          style={{
+                            borderWidth: 1,
+                            borderColor: "#979797",
+                            borderRadius: 100,
+                            paddingVertical: 14,
+                            paddingHorizontal: 16,
+                            fontSize: 16,
+                            color: "#7F13EC",
+                            backgroundColor: "#fcfcfc",
+                          }}
                         />
                       )}
                     />
-                    {errors.number && (
+                    {errors.cep && (
                       <Text style={styles.errorText}>
-                        {errors.number?.message}
+                        {errors.cep?.message}
                       </Text>
                     )}
                   </View>
-                  <View style={{ width: "70%" }}>
+                  <View style={{ flex: 1 }}>
                     <Controller
                       control={control}
-                      name="complement"
+                      name="state"
+                      render={({ field: { value, onChange } }) => (
+                        <View
+                          style={{
+                            borderWidth: 1,
+                            borderColor: "#979797",
+                            borderRadius: 100,
+                            backgroundColor: "#FCFCFC",
+                          }}
+                        >
+                          <Picker
+                            placeholder={{
+                              label: "Estado",
+                              value: null,
+                              color: "#7F13EC",
+                            }}
+                            items={[
+                              { label: "AC", value: "AC" },
+                              { label: "AL", value: "AL" },
+                              { label: "AP", value: "AP" },
+                              { label: "AM", value: "AM" },
+                              { label: "BA", value: "BA" },
+                              { label: "CE", value: "CE" },
+                              { label: "DF", value: "DF" },
+                              { label: "ES", value: "ES" },
+                              { label: "GO", value: "GO" },
+                              { label: "MA", value: "MA" },
+                              { label: "MT", value: "MT" },
+                              { label: "MS", value: "MS" },
+                              { label: "MG", value: "MG" },
+                              { label: "PA", value: "PA" },
+                              { label: "PB", value: "PB" },
+                              { label: "PR", value: "PR" },
+                              { label: "PE", value: "PE" },
+                              { label: "PI", value: "PI" },
+                              { label: "RJ", value: "RJ" },
+                              { label: "RN", value: "RN" },
+                              { label: "RS", value: "RS" },
+                              { label: "RO", value: "RO" },
+                              { label: "RR", value: "RR" },
+                              { label: "SC", value: "SC" },
+                              { label: "SP", value: "SP" },
+                              { label: "SE", value: "SE" },
+                              { label: "TO", value: "TO" },
+                            ]}
+                            onValueChange={(value) => onChange(value)}
+                            value={value}
+                            style={{
+                              inputIOS: {
+                                fontSize: 16,
+                                color: "#7F13EC",
+                              },
+                              inputAndroid: {
+                                fontSize: 16,
+                                color: "#7F13EC",
+                              },
+                            }}
+                          />
+                        </View>
+                      )}
+                    />
+                    {errors.state && (
+                      <Text style={styles.errorText}>
+                        {errors.state.message}
+                      </Text>
+                    )}
+                  </View>
+                </View>
+
+                <View style={styles.inputsContainer}>
+                  <View>
+                    <Controller
+                      control={control}
+                      name="street"
                       render={({ field: { onChange, value } }) => (
                         <TextInput
                           mode="outlined"
@@ -386,15 +283,137 @@ export default function EditAddressUser() {
                           onChangeText={onChange}
                           value={value}
                           activeUnderlineColor="#6200ee"
-                          placeholder="Complemento (Ex: Apt, Casa, Bloco)"
+                          placeholder="Rua"
+                          style={{
+                            backgroundColor: "#FCFCFC",
+                          }}
                         />
                       )}
                     />
-                    {errors.complement && (
+                    {errors.street && (
                       <Text style={styles.errorText}>
-                        {errors.complement?.message}
+                        {errors.street?.message}
                       </Text>
                     )}
+                  </View>
+                </View>
+
+                <View style={styles.inputsContainer}>
+                  <View>
+                    <Controller
+                      control={control}
+                      name="neighborhood"
+                      render={({ field: { onChange, value } }) => (
+                        <TextInput
+                          mode="outlined"
+                          placeholderTextColor="#7f13ecab"
+                          outlineColor="#979797"
+                          activeOutlineColor="#979797"
+                          textColor="#7F13EC"
+                          theme={{ roundness: 100 }}
+                          onChangeText={onChange}
+                          value={value}
+                          activeUnderlineColor="#6200ee"
+                          placeholder="Bairro"
+                          style={{
+                            backgroundColor: "#FCFCFC",
+                          }}
+                        />
+                      )}
+                    />
+                    {errors.neighborhood && (
+                      <Text style={styles.errorText}>
+                        {errors.neighborhood?.message}
+                      </Text>
+                    )}
+                  </View>
+                </View>
+
+                <View style={styles.inputsContainer}>
+                  <View>
+                    <Controller
+                      control={control}
+                      name="city"
+                      render={({ field: { onChange, value } }) => (
+                        <TextInput
+                          mode="outlined"
+                          placeholderTextColor="#7f13ecab"
+                          outlineColor="#979797"
+                          activeOutlineColor="#979797"
+                          textColor="#7F13EC"
+                          theme={{ roundness: 100 }}
+                          onChangeText={onChange}
+                          value={value}
+                          activeUnderlineColor="#6200ee"
+                          placeholder="Cidade"
+                          style={{
+                            backgroundColor: "#FCFCFC",
+                          }}
+                        />
+                      )}
+                    />
+                    {errors.city && (
+                      <Text style={styles.errorText}>
+                        {errors.city?.message}
+                      </Text>
+                    )}
+                  </View>
+                </View>
+
+                <View style={styles.inputsContainer}>
+                  <View style={styles.cepStateContainer}>
+                    <View style={{ width: "30%" }}>
+                      <Controller
+                        control={control}
+                        name="number"
+                        render={({ field: { onChange, value } }) => (
+                          <TextInput
+                            mode="outlined"
+                            placeholderTextColor="#7f13ecab"
+                            outlineColor="#979797"
+                            activeOutlineColor="#979797"
+                            textColor="#7F13EC"
+                            theme={{ roundness: 100 }}
+                            style={{ backgroundColor: "#fcfcfc" }}
+                            onChangeText={onChange}
+                            value={value}
+                            activeUnderlineColor="#6200ee"
+                            placeholder="Número"
+                          />
+                        )}
+                      />
+                      {errors.number && (
+                        <Text style={styles.errorText}>
+                          {errors.number?.message}
+                        </Text>
+                      )}
+                    </View>
+                    <View style={{ width: "70%" }}>
+                      <Controller
+                        control={control}
+                        name="complement"
+                        render={({ field: { onChange, value } }) => (
+                          <TextInput
+                            mode="outlined"
+                            placeholderTextColor="#7f13ecab"
+                            outlineColor="#979797"
+                            activeOutlineColor="#979797"
+                            style={{ backgroundColor: "#fcfcfc" }}
+                            textColor="#7F13EC"
+                            theme={{ roundness: 100 }}
+                            onChangeText={onChange}
+                            value={value}
+                            activeUnderlineColor="#6200ee"
+                            placeholder="Complemento (Ex: Apt, Casa, Bloco)"
+                          />
+                        )}
+                      />
+                      {errors.complement && (
+                        <Text style={styles.errorText}>
+                          {errors.complement?.message}
+                        </Text>
+                      )}
+                    </View>
                   </View>
                 </View>
               </View>
@@ -517,5 +536,14 @@ const styles = StyleSheet.create({
   cepStateContainer: {
     flexDirection: "row",
     gap: 10,
+  },
+  sectionForm: {
+    backgroundColor: "#fcfcfc",
+    paddingHorizontal: 16,
+    paddingTop: 25,
+    paddingBottom: 30,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: "#E5E5E5",
   },
 });

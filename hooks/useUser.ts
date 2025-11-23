@@ -192,7 +192,6 @@ export const useUser = ({ id }: { id?: string } = {}) => {
         if (updateError) {
           throw new Error(translateError(updateError.code));
         }
-        Alert.alert("Endereço atualizado com sucesso!");
       } else {
         const { error: insertError } = await supabase.from("addresses").insert({
           id_user: userId,

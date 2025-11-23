@@ -25,13 +25,21 @@ export default function TutorProfile() {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisibleConfirmedPassword, setModalVisibleConfirmedPassword] =
     useState(false);
+  const [refresh, setRefresh] = useState(0);
 
   useFocusEffect(
     useCallback(() => {
-      fetchData();
+      const updateData = async () => {
+        await fetchData();
+        setRefresh((prev) => prev + 1);
+      };
+      updateData();
     }, [])
   );
 
+  if (!userData) {
+    return <Text>Carregando informações...</Text>;
+  }
   return (
     <SafeAreaView style={styles.safeArea} edges={[]}>
       <ScrollView
@@ -93,7 +101,7 @@ export default function TutorProfile() {
                 </View>
               </View>
 
-              <AddressUser />
+              <AddressUser refresh={refresh} />
 
               <View style={styles.cardContainer}>
                 <Text

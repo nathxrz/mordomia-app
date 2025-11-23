@@ -2,7 +2,6 @@ import { AuthContext } from "@/context/AuthProvider";
 import { useUser } from "@/hooks/useUser";
 
 import formatDate from "@/scripts/format-date";
-import { router } from "expo-router";
 import React, { useContext } from "react";
 import {
   Button,
@@ -10,11 +9,9 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Icon from "react-native-vector-icons/MaterialIcons";
 import AddressUser from "../AddressUser";
 import ConfirmedModal from "../modais/ConfirmedModal";
 import ConfirmedModalPassword from "../modais/ConfirmedModalPassword";
@@ -34,15 +31,6 @@ export default function AdminProfile() {
       >
         {userData ? (
           <>
-            <View>
-              <TouchableOpacity
-                onPress={() => {
-                  router.push("/edits/editprofile");
-                }}
-              >
-                <Icon name="edit" size={24} color="#000" />
-              </TouchableOpacity>
-            </View>
             <View>
               <Image
                 style={{ borderRadius: 150, width: 144, height: 144 }}

@@ -828,12 +828,12 @@ const styles = StyleSheet.create({
   sectionForm: {
     backgroundColor: "#fcfcfc",
     paddingHorizontal: 16,
-    paddingVertical: 30,
+    paddingTop: 25,
+    paddingBottom: 30,
     borderRadius: 15,
     borderWidth: 1,
     borderColor: "#E5E5E5",
   },
-
   inputsContainer: {
     display: "flex",
     gap: 18,

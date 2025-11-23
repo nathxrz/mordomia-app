@@ -104,6 +104,7 @@ export default function RegisterSkill() {
               <TextInput
                 label="Nome"
                 onChangeText={onChange}
+                style={{ backgroundColor: "#fcfcfc" }}
                 value={value}
                 placeholder={"Digite o nome da habilidade"}
               />
@@ -122,6 +123,7 @@ export default function RegisterSkill() {
               <TextInput
                 label="Descrição"
                 onChangeText={onChange}
+                style={{ backgroundColor: "#fcfcfc" }}
                 value={value || ""}
                 placeholder={"Digite a descrição da habilidade"}
               />

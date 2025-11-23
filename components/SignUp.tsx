@@ -184,6 +184,7 @@ export default function SignUp() {
                     onChangeText={onChange}
                     value={value}
                     placeholder="Nome completo"
+                    style={{ backgroundColor: "#fcfcfc" }}
                   />
                 )}
               />
@@ -207,6 +208,7 @@ export default function SignUp() {
                     onChangeText={onChange}
                     value={value}
                     placeholder="Data de nascimento (dd/mm/aaaa)"
+                    style={{ backgroundColor: "#fcfcfc" }}
                     right={
                       <TextInput.Icon
                         icon={() => (
@@ -258,6 +260,7 @@ export default function SignUp() {
                     outlineColor="#979797"
                     activeOutlineColor="#979797"
                     textColor="#7F13EC"
+                    style={{ backgroundColor: "#fcfcfc" }}
                     theme={{ roundness: 100 }}
                     onChangeText={onChange}
                     value={value}
@@ -309,6 +312,7 @@ export default function SignUp() {
                     activeOutlineColor="#979797"
                     textColor="#7F13EC"
                     theme={{ roundness: 100 }}
+                    style={{ backgroundColor: "#fcfcfc" }}
                     onChangeText={onChange}
                     value={value}
                     activeUnderlineColor="#6200ee"
@@ -333,6 +337,7 @@ export default function SignUp() {
                     activeOutlineColor="#979797"
                     textColor="#7F13EC"
                     theme={{ roundness: 100 }}
+                    style={{ backgroundColor: "#fcfcfc" }}
                     right={
                       <TextInput.Icon
                         icon={() =>
@@ -373,6 +378,7 @@ export default function SignUp() {
                     activeOutlineColor="#979797"
                     textColor="#7F13EC"
                     theme={{ roundness: 100 }}
+                    style={{ backgroundColor: "#fcfcfc" }}
                     right={
                       <TextInput.Icon
                         icon={() =>

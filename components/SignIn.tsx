@@ -66,6 +66,7 @@ export default function SignIn() {
                       activeOutlineColor="#979797"
                       textColor="#7F13EC"
                       theme={{ roundness: 100 }}
+                      style={{ backgroundColor: "#fcfcfc" }}
                       left={
                         <TextInput.Icon
                           icon={() => (
@@ -99,6 +100,7 @@ export default function SignIn() {
                       outlineColor="#979797"
                       theme={{ roundness: 100 }}
                       textColor="#7F13EC"
+                      style={{ backgroundColor: "#fcfcfc" }}
                       left={
                         <TextInput.Icon
                           icon={() =>

@@ -78,6 +78,7 @@ export default function ConfirmedModalPassword({
                     activeOutlineColor="#979797"
                     textColor="#7F13EC"
                     theme={{ roundness: 100 }}
+                    style={{ backgroundColor: "#fcfcfc" }}
                     right={
                       <TextInput.Icon
                         icon={() =>

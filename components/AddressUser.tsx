@@ -1,9 +1,8 @@
 import { useUser } from "@/hooks/useUser";
-import { router, useFocusEffect } from "expo-router";
-import { useCallback, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 
-export default function AddressUser() {
+export default function AddressUser({ refresh }: { refresh: number }) {
   const { getAddressUser } = useUser();
   const [address, setAddress] = useState<any>(null);
 
@@ -16,66 +15,46 @@ export default function AddressUser() {
     }
   }, [getAddressUser]);
 
-  useFocusEffect(() => {
+  useEffect(() => {
     fetchAddress();
-  });
+  }, [fetchAddress, refresh]);
 
   return (
-    <TouchableOpacity
-      onPress={() => {
-        router.push("./edits/editProfileAddress/");
-      }}
-    >
-      <View style={styles.cardContainer}>
-        <Text
-          style={{
-            fontFamily: "MaterialSymbolsOutlined",
-            fontSize: 25,
-            lineHeight: 25,
-            color: "#B434CC",
-            backgroundColor: "#FAE5FF",
-            padding: 14,
-            borderRadius: 13,
-          }}
-        >
-          location_on
-        </Text>
+    <View style={styles.cardContainer}>
+      <Text
+        style={{
+          fontFamily: "MaterialSymbolsOutlined",
+          fontSize: 25,
+          lineHeight: 25,
+          color: "#B434CC",
+          backgroundColor: "#FAE5FF",
+          padding: 14,
+          borderRadius: 13,
+        }}
+      >
+        location_on
+      </Text>
 
-        <View style={styles.cardTextContainer}>
-          {address ? (
-            <View>
-              {address?.cep ? (
-                <>
-                  <Text style={styles.titleCard}>
-                    {address?.city} - {address?.state}
-                  </Text>
-                  <Text style={styles.subtitleCard}>
-                    {address?.street}, {address?.number},{" "}
-                    {address?.neighborhood}. {address?.complement || ""}
-                  </Text>
-                </>
-              ) : null}
-            </View>
-          ) : (
-            <Text style={styles.subtitleCard}>Nenhum endereço cadastrado.</Text>
-          )}
-        </View>
-
-        {/* Ícone de seta */}
-        <Text
-          style={{
-            fontFamily: "MaterialSymbolsOutlined",
-            fontSize: 25,
-            lineHeight: 25,
-            color: "#000",
-            marginLeft: 10,
-            alignSelf: "center",
-          }}
-        >
-          keyboard_arrow_right
-        </Text>
+      <View style={styles.cardTextContainer}>
+        {address ? (
+          <View>
+            {address?.cep ? (
+              <>
+                <Text style={styles.titleCard}>
+                  {address?.city} - {address?.state}
+                </Text>
+                <Text style={styles.subtitleCard}>
+                  {address?.street}, {address?.number}, {address?.neighborhood}.{" "}
+                  {address?.complement || ""}
+                </Text>
+              </>
+            ) : null}
+          </View>
+        ) : (
+          <Text style={styles.subtitleCard}>Nenhum endereço cadastrado.</Text>
+        )}
       </View>
-    </TouchableOpacity>
+    </View>
   );
 }
 

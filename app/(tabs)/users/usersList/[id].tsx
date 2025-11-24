@@ -1,3 +1,4 @@
+import ConfirmedModal from "@/components/modais/ConfirmedModal";
 import { supabase } from "@/lib/supabase";
 import { formatPhone } from "@/scripts/format-phone";
 import translateError from "@/scripts/translate-error";
@@ -19,10 +20,10 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-async function fetchCatSitter(id: string) {
+async function fetchUser(id: string) {
   try {
     const { data: userData, error } = await supabase
-      .from("user_with_address_catsitter_and_skills")
+      .from("user_with_email_address_and_roles")
       .select("*")
       .eq("id", id);
 
@@ -32,24 +33,37 @@ async function fetchCatSitter(id: string) {
 
     return userData;
   } catch (error) {
-    Alert.alert("Erro ao buscar o cat sitter", String(error));
+    Alert.alert("Erro ao buscar o usuário", String(error));
   }
 }
 
-export default function CatSitterDetails() {
+async function toggleUserStatus(id: string, deleted_at: Date | null) {
+  try {
+    const deletedAt = deleted_at ? null : new Date();
+    const { error } = await supabase
+      .from("users")
+      .update({ deleted_at: deletedAt })
+      .eq("id", id);
+    if (error) {
+      throw new Error(translateError(error.code));
+    }
+  } catch (error) {
+    Alert.alert("Erro ao atualizar o status do usuário", String(error));
+  }
+}
+
+export default function UserDetails() {
   const { id } = useLocalSearchParams();
-  const [openAbout, setOpenAbout] = useState(false);
-  const [openSocial, setOpenSocial] = useState(false);
-  const [openSkills, setOpenSkills] = useState(false);
-  const [catSitterData, setCatSitterData] = useState<{
+  const [modalVisibleConfirmed, setModalVisibleConfirmed] = useState(false);
+  const [userData, setUserData] = useState<{
     id: string;
     name: string;
     avatar_url: string;
     phone: string;
     date_birth: Date;
-    biography: string;
-    portfolio_url: string;
     email: string;
+    created_at: Date;
+    deleted_at: Date | null;
     cep: string;
     street: string;
     number: string;
@@ -57,17 +71,31 @@ export default function CatSitterDetails() {
     city: string;
     state: string;
     complement: string;
-    skills: string;
+    roles: string;
   } | null>(null);
 
   useFocusEffect(
     useCallback(() => {
       if (!id) return;
-      fetchCatSitter(id as string).then((data) => {
-        if (data && data.length > 0) setCatSitterData(data[0]);
+      fetchUser(id as string).then((data) => {
+        if (data && data.length > 0) setUserData(data[0]);
       });
     }, [id])
   );
+
+  const rolesArray = userData?.roles.split(",").map((r) => r.trim()) || [];
+
+  const roleLabels = rolesArray.map((role) =>
+    role === "admin"
+      ? "Administrador"
+      : role === "catsitter"
+      ? "Cat Sitter"
+      : role === "tutor"
+      ? "Tutor"
+      : role
+  );
+
+  const displayRoles = roleLabels.join(" - ");
 
   return (
     <>
@@ -77,7 +105,7 @@ export default function CatSitterDetails() {
           headerShown: true,
           headerLeft: () => (
             <TouchableOpacity
-              onPress={() => router.back()}
+              onPress={() => router.push("/users/usersList")}
               style={{ marginLeft: 16 }}
             >
               <Text
@@ -89,25 +117,6 @@ export default function CatSitterDetails() {
                 }}
               >
                 arrow_back
-              </Text>
-            </TouchableOpacity>
-          ),
-          headerRight: () => (
-            <TouchableOpacity
-              onPress={() =>
-                Alert.alert("Chat", "Funcionalidade em desenvolvimento.")
-              }
-            >
-              <Text
-                style={{
-                  fontFamily: "MaterialSymbolsOutlined",
-                  fontSize: 30,
-                  lineHeight: 30,
-                  marginRight: 16,
-                  color: "#CF0790",
-                }}
-              >
-                chat
               </Text>
             </TouchableOpacity>
           ),
@@ -123,28 +132,33 @@ export default function CatSitterDetails() {
               <Image
                 style={styles.profileImage}
                 source={
-                  catSitterData?.avatar_url
-                    ? { uri: catSitterData?.avatar_url }
+                  userData?.avatar_url
+                    ? { uri: userData?.avatar_url }
                     : require("../../../../assets/images/avatar.png")
                 }
               />
               <View style={styles.profileInfo}>
-                <Text style={styles.profileName}>{catSitterData?.name}</Text>
-                <Text style={styles.profileEmail}>{catSitterData?.email}</Text>
-                <View style={styles.ratingContainer}>
-                  <Text
-                    style={{
-                      fontFamily: "MaterialSymbolsOutlined",
-                      fontSize: 14,
-                      lineHeight: 14,
-                      color: "#F08000",
-                      marginRight: 4,
-                    }}
-                  >
-                    star
-                  </Text>
-                  <Text style={styles.profileReviews}>4.9 (23 reviews)</Text>
-                </View>
+                <Text style={styles.profileName}>{userData?.name}</Text>
+                <Text>{displayRoles}</Text>
+                <Text style={styles.profileEmail}>{userData?.email}</Text>
+                {(userData?.roles.includes("cat_sitter") ||
+                  userData?.roles.includes("tutor")) && (
+                  <View style={styles.ratingContainer}>
+                    <Text
+                      style={{
+                        fontFamily: "MaterialSymbolsOutlined",
+                        fontSize: 14,
+                        lineHeight: 14,
+                        color: "#F08000",
+                        marginRight: 4,
+                      }}
+                    >
+                      star
+                    </Text>
+
+                    <Text style={styles.profileReviews}>4.9 (23 reviews)</Text>
+                  </View>
+                )}
               </View>
             </View>
 
@@ -164,12 +178,9 @@ export default function CatSitterDetails() {
                 >
                   phone
                 </Text>
-                <View style={styles.cardTextContainer}>
-                  <Text style={styles.titleCard}>Telefone</Text>
-                  <Text style={styles.subtitleCard}>
-                    {formatPhone(catSitterData?.phone)}
-                  </Text>
-                </View>
+                <Text style={styles.titleCard}>
+                  {formatPhone(userData?.phone)}
+                </Text>
               </View>
               <View style={styles.cardContainer}>
                 <Text
@@ -186,16 +197,16 @@ export default function CatSitterDetails() {
                   location_on
                 </Text>
                 <View>
-                  {catSitterData?.city || catSitterData?.state ? (
+                  {userData?.city || userData?.state ? (
                     <View>
                       <Text style={styles.titleCard}>
-                        {catSitterData.city} - {catSitterData.state}
+                        {userData.city} - {userData.state}
                       </Text>
                       <Text style={styles.subtitleCard}>
-                        {catSitterData?.street ||
-                        catSitterData?.number ||
-                        catSitterData?.neighborhood
-                          ? `${catSitterData?.street}, ${catSitterData?.number}, ${catSitterData?.neighborhood}.`
+                        {userData?.street ||
+                        userData?.number ||
+                        userData?.neighborhood
+                          ? `${userData?.street}, ${userData?.number}, ${userData?.neighborhood}.`
                           : "Nenhum detalhe cadastrado."}
                       </Text>
                     </View>
@@ -221,115 +232,96 @@ export default function CatSitterDetails() {
                     borderRadius: 13,
                   }}
                 >
-                  schedule
+                  cake
                 </Text>
                 <View>
-                  <Text style={styles.titleCard}>Disponibilidade</Text>
-                  <Text style={styles.subtitleCard}>R$45/visita</Text>
+                  <Text style={styles.titleCard}>Data de nascimento</Text>
+                  <Text style={styles.subtitleCard}>
+                    {userData?.date_birth
+                      ? new Intl.DateTimeFormat("pt-BR", {
+                          dateStyle: "short",
+                        }).format(new Date(userData.date_birth))
+                      : "Data não informada"}
+                  </Text>
                 </View>
               </View>
             </View>
 
             <View style={styles.aboutContainer}>
-              <Text style={styles.titleSection}>Portfólio e Skills</Text>
               <View style={styles.cardExpansiveContainer}>
-                <TouchableOpacity
-                  style={styles.headerExpandable}
-                  onPress={() => setOpenAbout(!openAbout)}
-                >
-                  <Text style={styles.titleAboutSection}>Sobre o cuidador</Text>
+                <View style={styles.metaContainer}>
+                  <Text style={styles.metaText}>Criado em: </Text>
+                  <Text style={styles.metaValue}>
+                    {new Intl.DateTimeFormat("pt-BR").format(
+                      new Date(userData?.created_at || new Date())
+                    )}
+                  </Text>
+                </View>
+
+                <View style={styles.metaContainer}>
                   <Text
-                    style={{
-                      fontFamily: "MaterialSymbolsOutlined",
-                      fontSize: 30,
-                      lineHeight: 30,
-                      color: "#000",
-                    }}
+                    style={[
+                      styles.metaText,
+                      userData?.deleted_at
+                        ? styles.statusInactive
+                        : styles.statusActive,
+                    ]}
                   >
-                    {openAbout ? "keyboard_arrow_up" : "keyboard_arrow_down"}
+                    {userData?.deleted_at ? "Desativado em:" : "Ativo"}
                   </Text>
-                </TouchableOpacity>
 
-                {openAbout && (
-                  <Text style={styles.description}>
-                    {catSitterData?.biography}
-                  </Text>
-                )}
-              </View>
-              <View style={styles.cardExpansiveContainer}>
-                <TouchableOpacity
-                  style={styles.headerExpandable}
-                  onPress={() => setOpenSocial(!openSocial)}
-                >
-                  <Text style={styles.titleAboutSection}>Redes sociais</Text>
-                  <Text
-                    style={{
-                      fontFamily: "MaterialSymbolsOutlined",
-                      fontSize: 30,
-                      lineHeight: 30,
-                      color: "#000",
-                    }}
-                  >
-                    {openSocial ? "keyboard_arrow_up" : "keyboard_arrow_down"}
-                  </Text>
-                </TouchableOpacity>
-
-                {openSocial && (
-                  <Text style={[styles.description, styles.url]}>
-                    {catSitterData?.portfolio_url || "Portfólio não informado."}
-                  </Text>
-                )}
-              </View>
-
-              <View style={styles.cardExpansiveContainer}>
-                <TouchableOpacity
-                  style={styles.headerExpandable}
-                  onPress={() => setOpenSkills(!openSkills)}
-                >
-                  <Text style={styles.titleAboutSection}>Skills</Text>
-                  <Text
-                    style={{
-                      fontFamily: "MaterialSymbolsOutlined",
-                      fontSize: 30,
-                      lineHeight: 30,
-                      color: "#000",
-                    }}
-                  >
-                    {openSkills ? "keyboard_arrow_up" : "keyboard_arrow_down"}
-                  </Text>
-                </TouchableOpacity>
-
-                {openSkills && (
-                  <View style={styles.skillsContainer}>
-                    {/* <Text numberOfLines={1} ellipsizeMode="tail"> */}
-                    {/* {skills.map((s) => s.short_name).join(" • ")} */}
-                    <Text style={styles.skillsText}>Emergências</Text>
-                    <Text style={styles.skillsText}>Idosos</Text>
-                    <Text style={styles.skillsText}>Medicação</Text>
-                    <Text style={styles.skillsText}>Idosos</Text>
-                    <Text style={styles.skillsText}>Idosos</Text>
-                    <Text style={styles.skillsText}>Emergências</Text>
-                    <Text style={styles.skillsText}>Idosos</Text>
-                    <Text style={styles.skillsText}>Medicação</Text>
-                  </View>
-                )}
+                  {userData?.deleted_at && (
+                    <Text style={[styles.metaValue, styles.statusInactive]}>
+                      {new Intl.DateTimeFormat("pt-BR").format(
+                        new Date(userData.deleted_at)
+                      )}
+                    </Text>
+                  )}
+                </View>
               </View>
             </View>
-
-            <View>
-              <TouchableOpacity
-                style={styles.button_submit}
-                onPress={() =>
-                  Alert.alert(
-                    "Agendamento",
-                    "Funcionalidade em desenvolvimento."
-                  )
-                }
+            <TouchableOpacity
+              style={[
+                styles.button_submit,
+                userData?.deleted_at
+                  ? styles.button_submit_active
+                  : styles.button_submit_desactive,
+              ]}
+              onPress={() => setModalVisibleConfirmed(true)}
+            >
+              <Text
+                style={[
+                  styles.buttonText,
+                  userData?.deleted_at
+                    ? styles.button_submit_active
+                    : styles.button_submit_desactive,
+                ]}
               >
-                <Text style={styles.buttonText}>Agendar</Text>
-              </TouchableOpacity>
-            </View>
+                {userData?.deleted_at ? "Ativar usuário" : "Desativar usuário"}
+              </Text>
+            </TouchableOpacity>
           </View>
+          <ConfirmedModal
+            modalVisible={modalVisibleConfirmed}
+            onConfirm={() => {
+              toggleUserStatus(id as string, userData?.deleted_at || null);
+              setUserData((prev) =>
+                prev
+                  ? {
+                      ...prev,
+                      deleted_at: prev.deleted_at ? null : new Date(),
+                    }
+                  : prev
+              );
+              setModalVisibleConfirmed(false);
+            }}
+            onCancel={() => setModalVisibleConfirmed(false)}
+            message={
+              userData?.deleted_at
+                ? "Você deseja ativar o usuário?"
+                : "Você deseja desativar o usuário?"
+            }
+          />
         </ScrollView>
       </SafeAreaView>
     </>
@@ -400,9 +392,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E5E5E5",
   },
-  cardTextContainer: {
-    gap: 2,
-  },
   titleCard: {
     fontFamily: "Roboto",
     fontSize: 16,
@@ -419,14 +408,37 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   cardExpansiveContainer: {
-    position: "relative",
     backgroundColor: "#FCFCFC",
     borderRadius: 22,
     borderWidth: 1,
     borderColor: "#E5E5E5",
-    paddingHorizontal: 14,
-    paddingVertical: 20,
-    gap: 30,
+    padding: 16,
+    gap: 8,
+  },
+  metaContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+  },
+  metaText: {
+    fontFamily: "Roboto",
+    fontSize: 16,
+    color: "#000",
+    marginVertical: 2,
+    fontWeight: "bold",
+  },
+  metaValue: {
+    fontSize: 16,
+
+    color: "#605A6D",
+  },
+  statusActive: {
+    fontWeight: "700",
+    color: "#008000",
+  },
+  statusInactive: {
+    fontWeight: "700",
+    color: "#EE0101",
   },
   titleAboutSection: {
     fontFamily: "Roboto",
@@ -446,16 +458,24 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   button_submit: {
-    alignSelf: "flex-end",
-    marginVertical: 30,
-    backgroundColor: "#7F13EC",
-    paddingVertical: 10,
+    alignSelf: "center",
+    backgroundColor: "#fcfcfc",
+    paddingVertical: 20,
     paddingHorizontal: 40,
     borderRadius: 100,
-    boxShadow: "0px 4px 4px #00000025",
+    borderWidth: 1,
+    marginBottom: 30,
+  },
+
+  button_submit_active: {
+    color: "#008000",
+    borderColor: "#008000",
+  },
+  button_submit_desactive: {
+    color: "#EE0101",
+    borderColor: "#EE0101",
   },
   buttonText: {
-    color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "normal",
     textAlign: "center",
@@ -480,8 +500,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#FAE5FF",
     paddingVertical: 5,
     paddingHorizontal: 10,
-  },
-  url: {
-    color: "#7F13EC",
   },
 });

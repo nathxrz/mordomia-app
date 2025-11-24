@@ -7,7 +7,7 @@ import {
   Alert,
   FlatList,
   Image,
-  ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -70,63 +70,65 @@ export default function UsersList() {
     created_at: Date;
     deleted_at: Date | null;
   }) => {
-    return (
-      <ScrollView
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-      >
-        <View
-          style={{
-            marginBottom: 20,
-            borderColor: "#ccc",
-            borderWidth: 1,
-            padding: 10,
-            borderRadius: 8,
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              router.push(`/users/${id}`);
-            }}
-          >
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <View style={{ flex: 1 }}>
-                <Image
-                  source={
-                    avatar_url
-                      ? { uri: avatar_url }
-                      : require("../../assets/images/avatar.png")
-                  }
-                  style={{ width: 100, height: 100 }}
-                />
-                <Text style={{ fontWeight: "bold", fontSize: 16 }}>{name}</Text>
-                <Text style={{ fontStyle: "italic", color: "#666" }}>
-                  {roles}
-                </Text>
+    const rolesArray = roles.split(",").map((r) => r.trim());
 
-                <View>
-                  <Text style={{ marginVertical: 5, color: "#666" }}>
-                    Criado em:{" "}
-                    {new Intl.DateTimeFormat("pt-BR").format(
-                      new Date(created_at)
-                    )}
-                  </Text>
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      color: deleted_at ? "red" : "green",
-                    }}
-                  >
-                    {deleted_at ? "Desativado" : "Ativo"}
-                  </Text>
-                </View>
-              </View>
+    const roleLabels = rolesArray.map((role) =>
+      role === "admin"
+        ? "Administrador"
+        : role === "catsitter"
+        ? "Cat Sitter"
+        : role === "tutor"
+        ? "Tutor"
+        : role
+    );
+
+    const displayRoles = roleLabels.join(" - ");
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          router.push(`/(tabs)/users/usersList/${id}`);
+        }}
+      >
+        <View style={styles.cardContainer}>
+          <Image
+            source={
+              avatar_url
+                ? { uri: avatar_url }
+                : require("../../assets/images/avatar.png")
+            }
+            style={styles.profileImage}
+          />
+          <View style={styles.cardContent}>
+            <View style={styles.userInfoTitle}>
+              <Text style={styles.cardTitle}>{name}</Text>
+              <Text
+                style={[
+                  styles.statusText,
+                  { color: deleted_at ? "#EE0101" : "#008000" },
+                ]}
+              >
+                {deleted_at ? "Desativado" : "Ativo"}
+              </Text>
             </View>
-          </TouchableOpacity>
+            <View style={styles.metaContainer}>
+              <Text style={styles.metaText}>
+                Criado em:{" "}
+                {new Intl.DateTimeFormat("pt-BR").format(new Date(created_at))}
+              </Text>
+
+              {deleted_at && (
+                <Text style={styles.metaText}>
+                  Desativado em:{" "}
+                  {new Intl.DateTimeFormat("pt-BR").format(
+                    new Date(deleted_at)
+                  )}
+                </Text>
+              )}
+            </View>
+            <Text style={styles.rolesText}>{displayRoles}</Text>
+          </View>
         </View>
-      </ScrollView>
+      </TouchableOpacity>
     );
   };
 
@@ -153,5 +155,67 @@ export default function UsersList() {
     );
   }
 
-  return <View style={{ padding: 20 }}>{renderComponent()}</View>;
+  return renderComponent();
 }
+
+const styles = StyleSheet.create({
+  cardContainer: {
+    flexDirection: "row",
+    backgroundColor: "#FCFCFC",
+    borderRadius: 22,
+    borderWidth: 1,
+    borderColor: "#E5E5E5",
+    marginBottom: 12,
+  },
+  cardContent: {
+    padding: 16,
+  },
+  userInfoTitle: {
+    marginBottom: 12,
+  },
+  profileImage: {
+    height: "100%",
+    width: 134,
+    borderTopLeftRadius: 22,
+    borderBottomLeftRadius: 22,
+    borderWidth: 1,
+    borderColor: "#E5E5E5",
+  },
+  cardTitle: {
+    fontFamily: "Roboto",
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#000",
+  },
+  rolesText: {
+    fontFamily: "Roboto",
+    fontSize: 14,
+    fontStyle: "italic",
+    color: "#B83FCF",
+    marginTop: 8,
+  },
+  metaContainer: {
+    gap: 5,
+  },
+  metaText: {
+    fontFamily: "Roboto",
+    fontSize: 13,
+    color: "#605A6D",
+  },
+  statusText: {
+    fontFamily: "Roboto",
+    fontSize: 14,
+    fontWeight: "700",
+  },
+  buttonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  infoText: {
+    color: "#7F13EC",
+    fontFamily: "Roboto",
+    fontSize: 14,
+    fontWeight: "700",
+  },
+});

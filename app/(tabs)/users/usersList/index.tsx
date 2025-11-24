@@ -1,16 +1,15 @@
+import UsersList from "@/components/users/UsersList";
 import React, { useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import { TextInput } from "react-native-paper";
 
-import SkillsList from "@/components/skills/SkillsList";
-import { router } from "expo-router";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-export default function SkillsPage() {
+export default function UsersPage() {
   const [textSearch, setTextSearch] = useState("");
   return (
     <SafeAreaView style={styles.safeArea} edges={[]}>
@@ -25,7 +24,7 @@ export default function SkillsPage() {
               textColor="#4A4459"
               theme={{ roundness: 100 }}
               style={{ backgroundColor: "#fcfcfc" }}
-              placeholder="Pesquisar skill"
+              placeholder="Pesquisar usuário"
               value={textSearch}
               onChangeText={setTextSearch}
               left={
@@ -41,34 +40,7 @@ export default function SkillsPage() {
         </KeyboardAwareScrollView>
 
         <View style={styles.listItems}>
-          <SkillsList />
-
-          <TouchableOpacity
-            onPress={() => {
-              router.push("/(tabs)/skills/registerSkill");
-            }}
-            style={{
-              position: "absolute",
-              bottom: 20,
-              right: 0,
-              backgroundColor: "#7F13EC",
-              padding: 20,
-              borderRadius: 17,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: "MaterialSymbolsOutlined",
-                fontSize: 30,
-                lineHeight: 30,
-                color: "#fff",
-              }}
-            >
-              add
-            </Text>
-          </TouchableOpacity>
+          <UsersList />
         </View>
       </View>
     </SafeAreaView>

@@ -85,7 +85,7 @@ export default function TabsLayout() {
       />
 
       <Tabs.Screen
-        name="users/index"
+        name="users/usersList/index"
         options={{
           title: "Usuários",
           tabBarLabel: () => null,
@@ -296,7 +296,36 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="cats/editCat"
         options={{
-          title: "Editar informações",
+          title: "Editar Felino",
+          href: null,
+        }}
+      />
+
+      <Tabs.Screen
+        name="users/usersList/[id]"
+        options={{
+          title: "Detalhes do Usuário",
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="skills/registerSkill"
+        options={{
+          title: "Adicionar Habilidade",
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="skills/[id]"
+        options={{
+          title: "Detalhes da Habilidade",
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="skills/editSkill"
+        options={{
+          title: "Editar Habilidade",
           href: null,
         }}
       />

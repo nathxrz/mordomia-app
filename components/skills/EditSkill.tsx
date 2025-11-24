@@ -1,15 +1,15 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as ImagePicker from "expo-image-picker";
-import { router } from "expo-router";
+import { router, Stack } from "expo-router";
 import React, { useContext, useEffect } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 import { Controller, useForm } from "react-hook-form";
 
 import { AuthContext } from "@/context/AuthProvider";
 import { useSkill } from "@/hooks/useSkill";
 import { useUser } from "@/hooks/useUser";
-import { Button, Text, TextInput } from "react-native-paper";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Text, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as yup from "yup";
 
@@ -36,24 +36,6 @@ export default function EditSkill({ skillId }: { skillId: string }) {
   const { user } = useUser();
   const { skill, updateSkill } = useSkill(skillId as string);
 
-  async function pickImageAndSet(onChange: (uri: string) => void) {
-    try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ["images"],
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 1,
-      });
-
-      if (!result.canceled && result.assets.length > 0) {
-        const uri = result.assets[0].uri;
-        onChange(uri);
-      }
-    } catch (error) {
-      console.error("Erro ao selecionar imagem:", error);
-    }
-  }
-
   const {
     control,
     handleSubmit,
@@ -78,99 +60,206 @@ export default function EditSkill({ skillId }: { skillId: string }) {
   }, [skill, reset]);
 
   return (
-    <SafeAreaView>
-      <ScrollView
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-      >
-        <Text>Atualização de Habilidade</Text>
+    <>
+      <Stack.Screen
+        options={{
+          title: "Editar informações",
+          headerShown: true,
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => router.push(`/(tabs)/skills/${skillId}`)}
+              style={{ marginLeft: 16 }}
+            >
+              <Text
+                style={{
+                  fontFamily: "MaterialSymbolsOutlined",
+                  fontSize: 30,
+                  lineHeight: 30,
+                  color: "#000",
+                }}
+              >
+                arrow_back
+              </Text>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <SafeAreaView edges={[]} style={styles.safeArea}>
+        <KeyboardAwareScrollView
+          contentContainerStyle={{ paddingBottom: 60 }}
+          enableOnAndroid={true}
+        >
+          <View style={styles.container}>
+            <View style={styles.sectionForm}>
+              <View style={styles.inputsContainer}>
+                <View>
+                  <Text style={styles.inputTitle}>Nome</Text>
+                  <Controller
+                    control={control}
+                    name="name"
+                    render={({ field: { onChange, value } }) => (
+                      <TextInput
+                        mode="outlined"
+                        placeholderTextColor="#7f13ecab"
+                        outlineColor="#979797"
+                        activeOutlineColor="#979797"
+                        textColor="#7F13EC"
+                        theme={{ roundness: 100 }}
+                        onChangeText={onChange}
+                        value={value}
+                        style={{ backgroundColor: "#FCFCFC" }}
+                        activeUnderlineColor="#6200ee"
+                        placeholder="Digite o nome da habilidade"
+                      />
+                    )}
+                  />
+                  {errors.name && (
+                    <Text style={styles.errorText}>{errors.name?.message}</Text>
+                  )}
+                </View>
 
-        <View>
-          <Controller
-            control={control}
-            name="name"
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                label="Nome"
-                onChangeText={onChange}
-                style={{ backgroundColor: "#fcfcfc" }}
-                value={value}
-                placeholder={"Digite o nome da habilidade"}
-              />
-            )}
-          />
-          {errors.name && (
-            <Text style={styles.errorText}>{errors.name?.message}</Text>
-          )}
-        </View>
+                <View>
+                  <Text style={styles.inputTitle}>Descrição (opcional)</Text>
+                  <Controller
+                    control={control}
+                    name="description"
+                    render={({ field: { value, onChange } }) => (
+                      <TextInput
+                        mode="outlined"
+                        multiline
+                        numberOfLines={4}
+                        placeholderTextColor="#7f13ecab"
+                        outlineColor="#979797"
+                        activeOutlineColor="#979797"
+                        textColor="#7F13EC"
+                        theme={{ roundness: 15 }}
+                        onChangeText={onChange}
+                        value={value || ""}
+                        style={{
+                          backgroundColor: "#FCFCFC",
+                          paddingVertical: 12,
+                        }}
+                        placeholder="Digite uma descrição para a habilidade"
+                      />
+                    )}
+                  />
+                  {errors.description && (
+                    <Text style={styles.errorText}>
+                      {errors.description?.message}
+                    </Text>
+                  )}
+                </View>
+              </View>
+            </View>
 
-        <View>
-          <Controller
-            control={control}
-            name="description"
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                label="Descrição"
-                onChangeText={onChange}
-                style={{ backgroundColor: "#fcfcfc" }}
-                value={value || ""}
-                placeholder={"Digite a descrição da habilidade"}
-              />
-            )}
-          />
-          {errors.description && (
-            <Text style={styles.errorText}>{errors.description?.message}</Text>
-          )}
-        </View>
+            <View>
+              <TouchableOpacity
+                style={styles.button_submit}
+                disabled={loading}
+                onPress={handleSubmit(async (data) => {
+                  if (!user) throw new Error("Usuário não autenticado");
 
-        <View>
-          <Button
-            mode="contained"
-            disabled={loading}
-            style={styles.mt20}
-            onPress={handleSubmit(async (data) => {
-              if (!user) throw new Error("Usuário não autenticado");
-
-              await updateSkill({
-                id: skillId,
-                name: data.name,
-                description: data.description || "",
-                id_admin: user.id,
-              });
-            })}
-          >
-            Salvar alterações
-          </Button>
-
-          <Button
-            onPress={() => {
-              router.back();
-            }}
-          >
-            Cancelar
-          </Button>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+                  await updateSkill({
+                    id: skillId,
+                    name: data.name,
+                    description: data.description || "",
+                    id_admin: user.id,
+                  });
+                  router.push(`/(tabs)/skills/${skillId}`);
+                })}
+              >
+                <Text style={styles.buttonText}>
+                  {loading ? "Salvando" : "Salvar informações"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </KeyboardAwareScrollView>
+      </SafeAreaView>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    backgroundColor: "#F7F6F8",
+    flex: 1,
+  },
   container: {
-    marginTop: 40,
-    padding: 12,
+    flex: 1,
+    paddingTop: 32,
+    paddingHorizontal: 16,
+    gap: 16,
   },
-  verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    alignSelf: "stretch",
+  avatarContainer: {
+    alignItems: "center",
+    gap: 20,
+    marginBottom: 10,
   },
-  mt20: {
-    marginTop: 20,
+  profileImage: {
+    width: 144,
+    height: 144,
+    borderRadius: 100,
+    borderWidth: 1,
+    borderColor: "#E5E5E5",
+  },
+  selectPhotoText: {
+    color: "#B83FCF",
+    fontSize: 16,
+  },
+  sectionForm: {
+    backgroundColor: "#fcfcfc",
+    paddingHorizontal: 16,
+    paddingVertical: 30,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: "#E5E5E5",
+  },
+
+  inputsContainer: {
+    display: "flex",
+    gap: 18,
+  },
+
+  inputTitle: {
+    fontFamily: "Roboto",
+    fontSize: 16,
+    color: "#1D1127",
+    lineHeight: 20,
+    marginBottom: 8,
+  },
+  switchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  button_submit: {
+    alignSelf: "flex-end",
+    marginTop: 30,
+    backgroundColor: "#7F13EC",
+    paddingVertical: 10,
+    paddingHorizontal: 40,
+    borderRadius: 100,
+    boxShadow: "0px 4px 4px #00000025",
+  },
+
+  buttonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "normal",
+    textAlign: "center",
   },
   errorText: {
     color: "#EE0101",
     fontSize: 13,
     marginTop: 4,
+  },
+  labelInfoBasics: {
+    fontFamily: "Inter",
+    fontSize: 18,
+    fontWeight: "700",
+    lineHeight: 24,
+    marginBottom: 20,
+    color: "#1D1127",
   },
 });

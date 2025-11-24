@@ -21,7 +21,6 @@ export default function TutorHome() {
               activeOutlineColor="#979797"
               textColor="#4A4459"
               theme={{ roundness: 100 }}
-              style={{ backgroundColor: "#fcfcfc" }}
               placeholder="Buscar cuidador de gatos"
               value={textSearch}
               onChangeText={setTextSearch}

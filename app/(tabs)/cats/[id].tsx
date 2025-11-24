@@ -100,9 +100,8 @@ export default function CatDetails() {
             <ConfirmedModal
               modalVisible={modalVisible}
               onConfirm={() => {
-                deleteCat();
                 setModalVisible(false);
-                router.push("/(tabs)/cats");
+                deleteCat();
               }}
               onCancel={() => setModalVisible(false)}
               message="Tem certeza que deseja excluir este felino?"
@@ -126,7 +125,6 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     gap: 8,
   },
-
   button_submit: {
     width: 260,
     alignSelf: "center",
@@ -136,7 +134,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     borderRadius: 100,
   },
-
   buttonText: {
     color: "#5910A2",
     fontSize: 16,

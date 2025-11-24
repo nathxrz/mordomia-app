@@ -31,20 +31,44 @@ async function fetchCats(userTutor: string) {
 }
 
 export default function CatList() {
-  const tutor = useTutor();
+  const { userTutor, loading, error } = useTutor();
   const [cats, setCats] = React.useState<
     { id: string; name: string; avatar_url: string }[]
   >([]);
 
   useFocusEffect(
     useCallback(() => {
-      if (!tutor?.id) return;
+      if (!userTutor?.id || loading) return;
 
-      fetchCats(tutor.id).then((data) => {
+      fetchCats(userTutor.id).then((data) => {
         if (data) setCats(data);
       });
-    }, [tutor?.id])
+    }, [userTutor?.id, loading])
   );
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Carregando informações do tutor...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text style={{ color: "red" }}>Erro: {error}</Text>
+      </View>
+    );
+  }
+
+  if (!userTutor) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Tutor não encontrado</Text>
+      </View>
+    );
+  }
 
   const CatItem = ({
     id,
@@ -99,14 +123,11 @@ const styles = StyleSheet.create({
     borderColor: "#E5E5E5",
     backgroundColor: "#fcfcfc",
     borderRadius: 22,
-
     paddingVertical: 13,
     paddingHorizontal: 20,
-
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
-
     marginBottom: 10,
   },
   catItemImage: {

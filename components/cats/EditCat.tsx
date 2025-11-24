@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as ImagePicker from "expo-image-picker";
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   Alert,
   Image,
@@ -12,7 +12,6 @@ import {
 
 import { Controller, useForm } from "react-hook-form";
 
-import { AuthContext } from "@/context/AuthProvider";
 import { useCat } from "@/hooks/useCat";
 import { router, Stack } from "expo-router";
 import { Text, TextInput } from "react-native-paper";
@@ -70,10 +69,15 @@ async function pickImageAndSet(onChange: (uri: string) => void) {
 }
 
 export default function EditCat({ catId }: { catId: string }) {
-  const { cat, updateCat, updateCatExtraInfo, getCatExtraInfo } = useCat(
-    catId as string
-  );
-  const { loading } = useContext(AuthContext);
+  // Validação inicial do catId
+  if (!catId) {
+    Alert.alert("Erro", "ID do gato não fornecido");
+    router.back();
+    return null;
+  }
+
+  const { cat, updateCat, updateCatExtraInfo, getCatExtraInfo, loading } =
+    useCat(catId as string);
 
   const {
     control,
@@ -838,7 +842,6 @@ const styles = StyleSheet.create({
     display: "flex",
     gap: 18,
   },
-
   inputTitle: {
     fontFamily: "Roboto",
     fontSize: 16,
@@ -860,7 +863,6 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     boxShadow: "0px 4px 4px #00000025",
   },
-
   buttonText: {
     color: "#FFFFFF",
     fontSize: 16,

@@ -150,7 +150,6 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   cardExpansiveContainer: {
-    position: "relative",
     backgroundColor: "#FCFCFC",
     borderRadius: 22,
     borderWidth: 1,
@@ -173,7 +172,6 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto",
     fontSize: 16,
     color: "#4A4459",
-    marginBottom: 30,
   },
   bold: { fontWeight: "700" },
 });

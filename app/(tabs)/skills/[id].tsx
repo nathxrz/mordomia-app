@@ -142,41 +142,10 @@ const styles = StyleSheet.create({
   userInfoTitle: {
     marginBottom: 12,
   },
-  profileImage: {
-    height: "100%",
-    width: 134,
-    borderTopLeftRadius: 22,
-    borderBottomLeftRadius: 22,
-    borderWidth: 1,
-    borderColor: "#E5E5E5",
-  },
   cardTitle: {
     fontFamily: "Roboto",
     fontSize: 18,
     fontWeight: "700",
     color: "#000",
-  },
-  rolesText: {
-    fontFamily: "Roboto",
-    fontSize: 14,
-    fontStyle: "italic",
-    color: "#B83FCF",
-    marginTop: 8,
-  },
-  statusText: {
-    fontFamily: "Roboto",
-    fontSize: 14,
-    fontWeight: "700",
-  },
-  buttonsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  infoText: {
-    color: "#7F13EC",
-    fontFamily: "Roboto",
-    fontSize: 14,
-    fontWeight: "700",
   },
 });

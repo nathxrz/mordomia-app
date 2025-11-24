@@ -137,6 +137,7 @@ export const useUser = ({ id }: { id?: string } = {}) => {
   }
 
   const getAddressUser = useCallback(async () => {
+    if (!userId) return;
     try {
       setLoading(true);
       if (!userId) throw new Error("Nenhum usuário na sessão!");

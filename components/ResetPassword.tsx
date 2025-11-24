@@ -111,19 +111,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: -100,
   },
-
   textLabel: {
     fontFamily: "Inter",
     fontSize: 16,
     lineHeight: 24,
     marginBottom: 10,
   },
-
   textInput: {
     backgroundColor: "#fff",
     fontSize: 16,
   },
-
   button_submit: {
     alignSelf: "flex-end",
     marginTop: 50,
@@ -133,7 +130,6 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     boxShadow: "0px 4px 4px #00000025",
   },
-
   buttonText: {
     color: "#FFFFFF",
     fontSize: 16,

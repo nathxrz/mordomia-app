@@ -207,15 +207,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "700",
   },
-  buttonsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  infoText: {
-    color: "#7F13EC",
-    fontFamily: "Roboto",
-    fontSize: 14,
-    fontWeight: "700",
-  },
 });

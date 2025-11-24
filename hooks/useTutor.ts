@@ -6,22 +6,43 @@ import { useUser } from "./useUser";
 export const useTutor = () => {
   const { user } = useUser();
   const [userTutor, setUserTutor] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!user?.id) return;
+    if (!user?.id) {
+      setUserTutor(null);
+      return;
+    }
 
     const fetchData = async () => {
-      const { data: tutor, error } = await supabase
-        .from("tutors")
-        .select("*")
-        .eq("id_user", user?.id)
-        .maybeSingle();
+      try {
+        setLoading(true);
+        setError(null);
 
-      if (error) throw translateError(error.code);
-      setUserTutor(tutor);
+        const { data: tutor, error } = await supabase
+          .from("tutors")
+          .select("*")
+          .eq("id_user", user?.id)
+          .maybeSingle();
+
+        if (error) {
+          console.error("Erro ao buscar tutor:", error);
+          setError(translateError(error.code));
+          return;
+        }
+
+        setUserTutor(tutor);
+      } catch (err) {
+        console.error("Erro no useTutor:", err);
+        setError("Erro ao carregar informações do tutor");
+      } finally {
+        setLoading(false);
+      }
     };
+
     fetchData();
   }, [user?.id]);
 
-  return userTutor;
+  return { userTutor, loading, error };
 };

@@ -137,6 +137,7 @@ export default function EditProfileUser() {
   });
 
   const fetchAddress = useCallback(async () => {
+    if (!getAddressUser) return;
     const address = await getAddressUser();
     if (address) {
       setValue("cep", address.cep);
@@ -848,23 +849,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E5E5E5",
   },
-
   inputsContainer: {
     display: "flex",
     gap: 18,
-  },
-
-  inputTitle: {
-    fontFamily: "Roboto",
-    fontSize: 16,
-    color: "#1D1127",
-    lineHeight: 20,
-    marginBottom: 8,
-  },
-  switchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
   },
   button_submit: {
     alignSelf: "flex-end",
@@ -875,7 +862,6 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     boxShadow: "0px 4px 4px #00000025",
   },
-
   buttonText: {
     color: "#FFFFFF",
     fontSize: 16,

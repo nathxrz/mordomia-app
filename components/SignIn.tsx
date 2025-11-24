@@ -176,9 +176,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 16,
   },
-
   titleSection: {
-    fontFamily: "Inter",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",

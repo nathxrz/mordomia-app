@@ -57,14 +57,20 @@ export default function CatSitterDetails() {
     city: string;
     state: string;
     complement: string;
-    skills: string;
+    skills: string[];
   } | null>(null);
 
   useFocusEffect(
     useCallback(() => {
       if (!id) return;
       fetchCatSitter(id as string).then((data) => {
-        if (data && data.length > 0) setCatSitterData(data[0]);
+        if (data && data.length > 0)
+          setCatSitterData({
+            ...data[0],
+            skills: data[0].skills
+              ? data[0].skills.split(",").map((s: string) => s.trim())
+              : [],
+          });
       });
     }, [id])
   );
@@ -299,20 +305,22 @@ export default function CatSitterDetails() {
                   </Text>
                 </TouchableOpacity>
 
-                {openSkills && (
-                  <View style={styles.skillsContainer}>
-                    {/* <Text numberOfLines={1} ellipsizeMode="tail"> */}
-                    {/* {skills.map((s) => s.short_name).join(" • ")} */}
-                    <Text style={styles.skillsText}>Emergências</Text>
-                    <Text style={styles.skillsText}>Idosos</Text>
-                    <Text style={styles.skillsText}>Medicação</Text>
-                    <Text style={styles.skillsText}>Idosos</Text>
-                    <Text style={styles.skillsText}>Idosos</Text>
-                    <Text style={styles.skillsText}>Emergências</Text>
-                    <Text style={styles.skillsText}>Idosos</Text>
-                    <Text style={styles.skillsText}>Medicação</Text>
-                  </View>
-                )}
+                {openSkills &&
+                  (catSitterData?.skills?.length ? (
+                    <View style={styles.skillsContainer}>
+                      {catSitterData.skills.map(
+                        (skill: string, index: number) => (
+                          <Text key={index} style={styles.skillsText}>
+                            {skill}
+                          </Text>
+                        )
+                      )}
+                    </View>
+                  ) : (
+                    <Text style={[styles.description]}>
+                      Nenhuma skill cadastrada.
+                    </Text>
+                  ))}
               </View>
             </View>
 

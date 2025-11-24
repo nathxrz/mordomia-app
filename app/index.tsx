@@ -1,7 +1,6 @@
 import { AuthContext } from "@/context/AuthProvider";
 import { Redirect } from "expo-router";
 import { useContext } from "react";
-import { View } from "react-native";
 
 export default function App() {
   const { session } = useContext(AuthContext);
@@ -14,5 +13,5 @@ export default function App() {
     }
   }
 
-  return <View>{handleRedirect()}</View>;
+  return handleRedirect();
 }

@@ -7,6 +7,7 @@ export default function AddressUser({ refresh }: { refresh: number }) {
   const [address, setAddress] = useState<any>(null);
 
   const fetchAddress = useCallback(async () => {
+    if (!getAddressUser) return;
     const address = await getAddressUser();
     if (address) {
       setAddress(address);

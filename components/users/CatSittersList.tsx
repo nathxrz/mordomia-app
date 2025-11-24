@@ -17,104 +17,88 @@ async function fetchCatSitters() {
   try {
     const { data: catSitters, error } = await supabase
       .from("users")
-      .select("*, cat_sitters!inner(id)")
+      .select(
+        `
+        id,
+        name,
+        avatar_url,
+        cat_sitters!inner(id),
+        skills!left(id, short_name)
+      `
+      )
       .order("name", { ascending: true });
 
-    if (error) {
-      throw new Error(translateError(error.code));
-    }
+    if (error) throw new Error(translateError(error.code));
 
-    return catSitters;
+    return catSitters || [];
   } catch (error) {
     Alert.alert("Erro ao buscar os usuários", String(error));
-    return false;
+    return [];
   }
 }
 
 export default function CatSittersList() {
   const { user } = useUser();
-
-  const [users, setUsers] = useState<
-    {
-      id: string;
-      name: string;
-      // skills: string;
-      avatar_url: string;
-    }[]
-  >([]);
+  const [users, setUsers] = useState<any[]>([]);
 
   useFocusEffect(
     useCallback(() => {
       if (!user?.id) return;
 
-      fetchCatSitters().then((data) => {
-        if (data) setUsers(data);
-      });
+      fetchCatSitters().then((data) => setUsers(data));
     }, [user?.id])
   );
 
-  const UserItem = ({
-    id,
-    name,
-    // skills,
-    avatar_url,
-  }: {
-    id: string;
-    name: string;
-    // skills: string;
-    avatar_url: string;
-  }) => {
+  const UserItem = ({ id, name, avatar_url, skills }: any) => {
     return (
       <TouchableOpacity
-        onPress={() => {
-          router.push(`/(tabs)/users/catsitters/${id}`);
-        }}
+        onPress={() => router.push(`/(tabs)/users/catsitters/${id}`)}
       >
         <View style={styles.cardContainer}>
           <View style={styles.cardContent}>
             <Text style={styles.cardTitle}>{name}</Text>
-            <View>
-              <View style={styles.subtitleContainer}>
-                <View style={styles.ratingContainer}>
-                  <Text
-                    style={{
-                      fontFamily: "MaterialSymbolsOutlined",
-                      fontSize: 16,
-                      lineHeight: 16,
-                      color: "#F08000",
-                      marginRight: 4,
-                    }}
-                  >
-                    star
-                  </Text>
-                  <Text style={styles.ratingValue}>4.9</Text>
-                </View>
-                <Text style={styles.priceText}>R$45/visita</Text>
-                <Text style={styles.distanceText}>1.2km</Text>
+
+            <View style={styles.subtitleContainer}>
+              <View style={styles.ratingContainer}>
+                <Text
+                  style={{
+                    fontFamily: "MaterialSymbolsOutlined",
+                    fontSize: 16,
+                    lineHeight: 16,
+                    color: "#F08000",
+                    marginRight: 4,
+                  }}
+                >
+                  star
+                </Text>
+                <Text style={styles.ratingValue}>4.9</Text>
               </View>
+              <Text style={styles.priceText}>R$45/visita</Text>
+              <Text style={styles.distanceText}>1.2km</Text>
             </View>
+
             <View style={styles.skillsContainer}>
-              {/* <Text numberOfLines={1} ellipsizeMode="tail"> */}
-              {/* {skills.map((s) => s.short_name).join(" • ")} */}
-              <Text style={styles.skillsText}>Emergências</Text>
-              <Text style={styles.skillsText}>Idosos</Text>
-              <Text style={styles.skillsText}>Medicação</Text>
+              {skills && skills.length > 0 ? (
+                skills.map((skill: any) => (
+                  <Text key={skill.id} style={styles.skillsText}>
+                    {skill.short_name}
+                  </Text>
+                ))
+              ) : (
+                <Text style={styles.skillsText}>Sem habilidades</Text>
+              )}
             </View>
+
             <View style={styles.buttonsContainer}>
               <TouchableOpacity
-                onPress={() => {
-                  router.push(`/users/catsitters/${id}`);
-                }}
+                onPress={() => router.push(`/users/catsitters/${id}`)}
               >
                 <Text style={styles.infoText}>Ver perfil</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => {
-                  Alert.alert(
-                    "Favoritar",
-                    "Funcionalidade em desenvolvimento."
-                  );
-                }}
+                onPress={() =>
+                  Alert.alert("Favoritar", "Funcionalidade em desenvolvimento.")
+                }
               >
                 <Text
                   style={{
@@ -130,6 +114,7 @@ export default function CatSittersList() {
               </TouchableOpacity>
             </View>
           </View>
+
           <Image
             style={styles.profileImage}
             source={
@@ -143,28 +128,22 @@ export default function CatSittersList() {
     );
   };
 
-  function renderComponent() {
-    if (users.length === 0) {
-      return <Text>Nenhum cat sitter encontrado.</Text>;
-    }
-
-    return (
-      <FlatList
-        data={users}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <UserItem
-            id={item.id}
-            name={item.name}
-            // skills={item.skills}
-            avatar_url={item.avatar_url}
-          />
-        )}
-      />
-    );
-  }
-
-  return renderComponent();
+  return users.length === 0 ? (
+    <Text>Nenhum cat sitter encontrado.</Text>
+  ) : (
+    <FlatList
+      data={users}
+      keyExtractor={(item) => item.id}
+      renderItem={({ item }) => (
+        <UserItem
+          id={item.id}
+          name={item.name}
+          avatar_url={item.avatar_url}
+          skills={item.skills || []}
+        />
+      )}
+    />
+  );
 }
 
 const styles = StyleSheet.create({
@@ -174,11 +153,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E5E5E5",
     marginBottom: 18,
-    display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    // height: 160,
-    flex: 0,
   },
   cardContent: {
     flex: 1,
@@ -220,6 +196,7 @@ const styles = StyleSheet.create({
     gap: 8,
     marginTop: 8,
     overflow: "hidden",
+    flexWrap: "wrap",
   },
   skillsText: {
     fontFamily: "Roboto",

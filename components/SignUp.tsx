@@ -452,8 +452,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   typeContainer: {
-    gap: 24,
-    fontSize: 16,
     marginBottom: 30,
   },
   labelType: {
@@ -461,11 +459,11 @@ const styles = StyleSheet.create({
     fontFamily: "Inter",
     fontWeight: "bold",
     lineHeight: 24,
+    marginBottom: 12,
   },
   inputRadioContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    gap: 16,
   },
   radioButton: {
     flex: 1,
@@ -475,6 +473,7 @@ const styles = StyleSheet.create({
     borderColor: "#E5E5E5",
     backgroundColor: "#FFFFFF",
     alignItems: "center",
+    marginRight: 8, // substitui gap
   },
   textButtonRadio: {
     color: "#4A4459",
@@ -490,8 +489,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   inputsContainer: {
-    display: "flex",
-    gap: 10,
+    marginBottom: 10,
   },
   labelCredentials: {
     fontFamily: "Inter",
@@ -508,9 +506,12 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 40,
     borderRadius: 100,
-    boxShadow: "0px 4px 4px #00000025",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 4,
   },
-
   buttonText: {
     color: "#FFFFFF",
     fontSize: 16,

@@ -205,47 +205,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     gap: 16,
   },
-  avatarContainer: {
-    alignItems: "center",
-    gap: 20,
-    marginBottom: 10,
-  },
-  profileImage: {
-    width: 144,
-    height: 144,
-    borderRadius: 100,
-    borderWidth: 1,
-    borderColor: "#E5E5E5",
-  },
-  selectPhotoText: {
-    color: "#B83FCF",
-    fontSize: 16,
-  },
   sectionForm: {
-    backgroundColor: "#fcfcfc",
+    backgroundColor: "#FCFCFC",
     paddingHorizontal: 16,
     paddingVertical: 30,
     borderRadius: 15,
     borderWidth: 1,
     borderColor: "#E5E5E5",
   },
-
   inputsContainer: {
-    display: "flex",
     gap: 18,
   },
-
   inputTitle: {
     fontFamily: "Roboto",
     fontSize: 16,
     color: "#1D1127",
     lineHeight: 20,
     marginBottom: 8,
-  },
-  switchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
   },
   button_submit: {
     alignSelf: "flex-end",
@@ -256,24 +232,14 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     boxShadow: "0px 4px 4px #00000025",
   },
-
   buttonText: {
     color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: "normal",
     textAlign: "center",
   },
   errorText: {
     color: "#EE0101",
     fontSize: 13,
     marginTop: 4,
-  },
-  labelInfoBasics: {
-    fontFamily: "Inter",
-    fontSize: 18,
-    fontWeight: "700",
-    lineHeight: 24,
-    marginBottom: 20,
-    color: "#1D1127",
   },
 });

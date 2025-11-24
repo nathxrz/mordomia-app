@@ -429,7 +429,6 @@ const styles = StyleSheet.create({
   },
   metaValue: {
     fontSize: 16,
-
     color: "#605A6D",
   },
   statusActive: {
@@ -440,23 +439,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: "#EE0101",
   },
-  titleAboutSection: {
-    fontFamily: "Roboto",
-    fontSize: 16,
-    color: "#000000",
-    fontWeight: "700",
-  },
-  description: {
-    fontFamily: "Roboto",
-    fontSize: 16,
-    color: "#4A4459",
-  },
-  arrowIconAbout: {
-    position: "absolute",
-    right: 21,
-    top: 20,
-    alignSelf: "center",
-  },
   button_submit: {
     alignSelf: "center",
     backgroundColor: "#fcfcfc",
@@ -466,7 +448,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 30,
   },
-
   button_submit_active: {
     color: "#008000",
     borderColor: "#008000",
@@ -479,26 +460,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "normal",
     textAlign: "center",
-  },
-  headerExpandable: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  skillsContainer: {
-    flexDirection: "row",
-    gap: 8,
-    marginTop: 8,
-    flexWrap: "wrap",
-  },
-  skillsText: {
-    fontFamily: "Roboto",
-    fontSize: 12,
-    textAlign: "center",
-    borderRadius: 100,
-    color: "#A40BC0",
-    backgroundColor: "#FAE5FF",
-    paddingVertical: 5,
-    paddingHorizontal: 10,
   },
 });

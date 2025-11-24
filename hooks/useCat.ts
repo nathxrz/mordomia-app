@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import translateError from "@/scripts/translate-error";
+import { router } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { Alert } from "react-native";
 
@@ -40,7 +41,7 @@ export const useCat = (catId: string) => {
       const { error } = await supabase.from("cats").delete().eq("id", catId);
       if (error) throw new Error(translateError(error.code));
 
-      return true;
+      router.push("/(tabs)/cats");
     } catch (error) {
       Alert.alert("Erro ao excluir pet", String(error));
       return false;
@@ -124,7 +125,16 @@ export const useCat = (catId: string) => {
         setLoading(true);
         if (!catId) throw new Error("ID do gato não fornecido.");
 
-        const existing = await getCatExtraInfo();
+        // Buscar informações existentes diretamente aqui para evitar dependência circular
+        const { data: existing, error: fetchError } = await supabase
+          .from("care_profiles")
+          .select("*")
+          .eq("id_cat", catId)
+          .maybeSingle();
+
+        if (fetchError) {
+          console.error("Erro ao buscar care_profiles:", fetchError);
+        }
 
         const payload = {
           feeling,
@@ -157,13 +167,14 @@ export const useCat = (catId: string) => {
 
         return true;
       } catch (error) {
+        console.error("Erro no updateCatExtraInfo:", error);
         Alert.alert("Erro ao atualizar informações extras", String(error));
         return false;
       } finally {
         setLoading(false);
       }
     },
-    [catId, getCatExtraInfo]
+    [catId]
   );
 
   return {

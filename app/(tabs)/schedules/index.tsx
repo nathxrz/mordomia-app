@@ -32,7 +32,7 @@ export default function Schedules() {
         <MaterialCommunityIcons
           name="hammer-wrench"
           size={46}
-          color="#6C63FF" // roxo base (altere se tiver paleta específica)
+          color="#6C63FF"
         />
 
         <Text

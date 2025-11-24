@@ -73,18 +73,6 @@ export default function CatDetails({ catId }: { catId: string }) {
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    backgroundColor: "#F7F6F8",
-    flex: 1,
-  },
-  container: {
-    position: "relative",
-    flex: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 20,
-    gap: 30,
-  },
-
   profileHeader: {
     alignItems: "center",
     gap: 20,
@@ -108,41 +96,12 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     lineHeight: 20,
   },
-
   profileAgeStage: {
     width: "100%",
     fontFamily: "Roboto",
     fontSize: 16,
     color: "#B83FCF",
     textTransform: "capitalize",
-  },
-
-  titleSection: {
-    fontFamily: "Roboto",
-    fontSize: 18,
-    fontWeight: "700",
-  },
-  cardContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-    backgroundColor: "#FCFCFC",
-    padding: 14,
-    borderRadius: 22,
-    borderWidth: 1,
-    borderColor: "#E5E5E5",
-  },
-  titleCard: {
-    fontFamily: "Roboto",
-    fontSize: 16,
-    color: "#000000",
-    fontWeight: "700",
-    lineHeight: 20,
-  },
-  subtitleCard: {
-    fontFamily: "Roboto",
-    fontSize: 14,
-    color: "#B83FCF",
   },
   aboutContainer: {
     gap: 10,
@@ -167,12 +126,6 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto",
     fontSize: 16,
     color: "#4A4459",
-  },
-  arrowIconAbout: {
-    position: "absolute",
-    right: 21,
-    top: 20,
-    alignSelf: "center",
   },
   headerExpandable: {
     flexDirection: "row",

@@ -69,7 +69,6 @@ async function pickImageAndSet(onChange: (uri: string) => void) {
 }
 
 export default function EditCat({ catId }: { catId: string }) {
-  // Validação inicial do catId
   if (!catId) {
     Alert.alert("Erro", "ID do gato não fornecido");
     router.back();

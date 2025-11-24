@@ -92,7 +92,6 @@ export const useCat = (catId: string) => {
     [catId]
   );
 
-  // BUSCA INFO EXTRA
   const getCatExtraInfo = useCallback(async () => {
     try {
       const { data, error } = await supabase
@@ -125,7 +124,6 @@ export const useCat = (catId: string) => {
         setLoading(true);
         if (!catId) throw new Error("ID do gato não fornecido.");
 
-        // Buscar informações existentes diretamente aqui para evitar dependência circular
         const { data: existing, error: fetchError } = await supabase
           .from("care_profiles")
           .select("*")

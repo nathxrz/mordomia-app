@@ -33,7 +33,6 @@ export default function TabsLayout() {
         },
       }}
     >
-      {/* Abas comuns */}
       <Tabs.Screen
         name="home/index"
         options={{
@@ -200,7 +199,6 @@ export default function TabsLayout() {
         }}
       />
 
-      {/* Aba comum */}
       <Tabs.Screen
         name="profile/index"
         options={{

@@ -78,7 +78,7 @@ export const useUser = ({ id }: { id?: string } = {}) => {
         if (user.tutors?.length > 0) user.roles.push("tutor");
         if (user.admins?.length > 0) user.roles.push("admin");
 
-        setUser(user); // <------ ESSENCIAL
+        setUser(user);
       }
     } catch (err) {
       console.error("Erro ao buscar usuário:", err);
@@ -121,7 +121,6 @@ export const useUser = ({ id }: { id?: string } = {}) => {
         throw new Error(translateError(error.code));
       }
 
-      // 🔥 Atualiza o estado global
       setUser((prev: any) => ({ ...prev, ...data }));
 
       Alert.alert("Perfil atualizado com sucesso!");

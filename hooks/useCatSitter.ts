@@ -10,7 +10,6 @@ export const useCatSitter = ({ id }: { id?: string } = {}) => {
   const [userCatSitter, setUserCatSitter] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Definindo fetchData fora do useEffect para poder exportar
   const fetchData = async () => {
     if (!userId) return;
     setLoading(true);
@@ -31,7 +30,6 @@ export const useCatSitter = ({ id }: { id?: string } = {}) => {
     }
   };
 
-  // ✅ Chama fetchData automaticamente ao montar ou mudar userId
   useEffect(() => {
     fetchData();
   }, [userId]);
@@ -56,7 +54,6 @@ export const useCatSitter = ({ id }: { id?: string } = {}) => {
         throw new Error(translateError(error.code));
       }
 
-      // 🔹 Atualiza o estado local após salvar
       await fetchData();
     } catch (error) {
       if (error instanceof Error) {
@@ -71,6 +68,6 @@ export const useCatSitter = ({ id }: { id?: string } = {}) => {
     userCatSitter,
     loading,
     updatePortfolio,
-    fetchData, // ✅ Agora é exportável
+    fetchData,
   };
 };

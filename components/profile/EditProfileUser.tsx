@@ -150,7 +150,6 @@ export default function EditProfileUser() {
     }
   }, [getAddressUser, setValue]);
 
-  // Carregar dados do endereço apenas quando a tela for focada
   useFocusEffect(
     useCallback(() => {
       if (!user) return;
@@ -158,7 +157,6 @@ export default function EditProfileUser() {
     }, [user])
   );
 
-  // Resetar o formulário sempre que user ou userCatSitter mudar
   useEffect(() => {
     if (!user) return;
 
@@ -178,10 +176,9 @@ export default function EditProfileUser() {
       complement: "",
     });
 
-    fetchAddress(); // depois que resetar, preenche endereço
+    fetchAddress();
   }, [user, userCatSitter, reset, fetchAddress]);
 
-  // Controle único para botão físico de voltar
   useFocusEffect(
     useCallback(() => {
       const onBackPress = () => {
@@ -194,7 +191,7 @@ export default function EditProfileUser() {
         onBackPress
       );
 
-      return () => subscription.remove(); // <-- correção definitiva
+      return () => subscription.remove();
     }, [])
   );
 

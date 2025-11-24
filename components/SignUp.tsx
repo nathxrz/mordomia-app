@@ -122,7 +122,6 @@ export default function SignUp() {
           <View style={styles.typeContainer}>
             <Text style={styles.labelType}>Quem é você?</Text>
             <View style={styles.inputRadioContainer}>
-              {/* Botão Tutor */}
               <TouchableOpacity
                 style={[
                   styles.radioButton,
@@ -144,7 +143,6 @@ export default function SignUp() {
                 </Text>
               </TouchableOpacity>
 
-              {/* Botão Cat sitter */}
               <TouchableOpacity
                 style={[
                   styles.radioButton,
@@ -473,7 +471,7 @@ const styles = StyleSheet.create({
     borderColor: "#E5E5E5",
     backgroundColor: "#FFFFFF",
     alignItems: "center",
-    marginRight: 8, // substitui gap
+    marginRight: 8,
   },
   textButtonRadio: {
     color: "#4A4459",

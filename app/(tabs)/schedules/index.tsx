@@ -9,7 +9,7 @@ export default function Schedules() {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#F5F7FA", // fundo neutro
+        backgroundColor: "#F5F7FA",
         padding: 20,
       }}
     >

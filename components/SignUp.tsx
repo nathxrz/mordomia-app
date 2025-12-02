@@ -166,138 +166,141 @@ export default function SignUp() {
             </View>
           </View>
 
-          <View style={styles.inputsContainer}>
-            <View>
-              <Controller
-                control={control}
-                name="name"
-                render={({ field: { onChange, value } }) => (
-                  <TextInput
-                    mode="outlined"
-                    placeholderTextColor="#7f13ecab"
-                    outlineColor="#979797"
-                    activeOutlineColor="#979797"
-                    textColor="#7F13EC"
-                    theme={{ roundness: 100 }}
-                    onChangeText={onChange}
-                    value={value}
-                    placeholder="Nome completo"
-                    style={{ backgroundColor: "#fcfcfc" }}
-                  />
+          <View style={styles.sectionForm}>
+            <Text style={styles.labelInfoBasics}>Informações básicas</Text>
+            <View style={styles.inputsContainer}>
+              <View>
+                <Controller
+                  control={control}
+                  name="name"
+                  render={({ field: { onChange, value } }) => (
+                    <TextInput
+                      mode="outlined"
+                      placeholderTextColor="#7f13ecab"
+                      outlineColor="#979797"
+                      activeOutlineColor="#979797"
+                      textColor="#7F13EC"
+                      theme={{ roundness: 100 }}
+                      onChangeText={onChange}
+                      value={value}
+                      placeholder="Nome completo"
+                      style={{ backgroundColor: "#fcfcfc" }}
+                    />
+                  )}
+                />
+                {errors.name && (
+                  <Text style={styles.errorText}>{errors.name?.message}</Text>
                 )}
-              />
-              {errors.name && (
-                <Text style={styles.errorText}>{errors.name?.message}</Text>
-              )}
-            </View>
+              </View>
 
-            <View>
-              <Controller
-                control={control}
-                name="birthDate"
-                render={({ field: { onChange, value } }) => (
-                  <TextInput
-                    mode="outlined"
-                    placeholderTextColor="#7f13ecab"
-                    outlineColor="#979797"
-                    activeOutlineColor="#979797"
-                    textColor="#7F13EC"
-                    theme={{ roundness: 100 }}
-                    onChangeText={onChange}
-                    value={value}
-                    placeholder="Data de nascimento (dd/mm/aaaa)"
-                    style={{ backgroundColor: "#fcfcfc" }}
-                    right={
-                      <TextInput.Icon
-                        icon={() => (
-                          <Icon
-                            name="calendar-month"
-                            size={20}
-                            color="#B434CC"
-                          />
-                        )}
-                      />
-                    }
-                    render={(props) => (
-                      <MaskInput
-                        {...props}
-                        value={value}
-                        onChangeText={(masked) => onChange(masked)}
-                        mask={[
-                          /\d/,
-                          /\d/,
-                          "/",
-                          /\d/,
-                          /\d/,
-                          "/",
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                        ]}
-                      />
-                    )}
-                  />
+              <View>
+                <Controller
+                  control={control}
+                  name="birthDate"
+                  render={({ field: { onChange, value } }) => (
+                    <TextInput
+                      mode="outlined"
+                      placeholderTextColor="#7f13ecab"
+                      outlineColor="#979797"
+                      activeOutlineColor="#979797"
+                      textColor="#7F13EC"
+                      theme={{ roundness: 100 }}
+                      onChangeText={onChange}
+                      value={value}
+                      placeholder="Data de nascimento (dd/mm/aaaa)"
+                      style={{ backgroundColor: "#fcfcfc" }}
+                      right={
+                        <TextInput.Icon
+                          icon={() => (
+                            <Icon
+                              name="calendar-month"
+                              size={20}
+                              color="#B434CC"
+                            />
+                          )}
+                        />
+                      }
+                      render={(props) => (
+                        <MaskInput
+                          {...props}
+                          value={value}
+                          onChangeText={(masked) => onChange(masked)}
+                          mask={[
+                            /\d/,
+                            /\d/,
+                            "/",
+                            /\d/,
+                            /\d/,
+                            "/",
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                          ]}
+                        />
+                      )}
+                    />
+                  )}
+                />
+                {errors.birthDate && (
+                  <Text style={styles.errorText}>
+                    {errors.birthDate?.message}
+                  </Text>
                 )}
-              />
-              {errors.birthDate && (
-                <Text style={styles.errorText}>
-                  {errors.birthDate?.message}
-                </Text>
-              )}
-            </View>
+              </View>
 
-            <View>
-              <Controller
-                control={control}
-                name="phone"
-                render={({ field: { onChange, value } }) => (
-                  <TextInput
-                    mode="outlined"
-                    placeholderTextColor="#7f13ecab"
-                    outlineColor="#979797"
-                    activeOutlineColor="#979797"
-                    textColor="#7F13EC"
-                    style={{ backgroundColor: "#fcfcfc" }}
-                    theme={{ roundness: 100 }}
-                    onChangeText={onChange}
-                    value={value}
-                    placeholder="Telefone"
-                    render={(props) => (
-                      <MaskInput
-                        {...props}
-                        value={value}
-                        onChangeText={(masked) => onChange(masked)}
-                        mask={[
-                          "(",
-                          /\d/,
-                          /\d/,
-                          ")",
-                          " ",
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          "-",
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                        ]}
-                      />
-                    )}
-                  />
+              <View>
+                <Controller
+                  control={control}
+                  name="phone"
+                  render={({ field: { onChange, value } }) => (
+                    <TextInput
+                      mode="outlined"
+                      placeholderTextColor="#7f13ecab"
+                      outlineColor="#979797"
+                      activeOutlineColor="#979797"
+                      textColor="#7F13EC"
+                      style={{ backgroundColor: "#fcfcfc" }}
+                      theme={{ roundness: 100 }}
+                      onChangeText={onChange}
+                      value={value}
+                      placeholder="Telefone"
+                      render={(props) => (
+                        <MaskInput
+                          {...props}
+                          value={value}
+                          onChangeText={(masked) => onChange(masked)}
+                          mask={[
+                            "(",
+                            /\d/,
+                            /\d/,
+                            ")",
+                            " ",
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                            "-",
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                          ]}
+                        />
+                      )}
+                    />
+                  )}
+                />
+                {errors.phone && (
+                  <Text style={styles.errorText}>{errors.phone?.message}</Text>
                 )}
-              />
-              {errors.phone && (
-                <Text style={styles.errorText}>{errors.phone?.message}</Text>
-              )}
+              </View>
             </View>
           </View>
 
           <View style={styles.inputsContainer}>
-            <Text style={styles.labelCredentials}>Credenciais</Text>
+            <Text style={styles.labelInfoBasics}>Credenciais</Text>
             <View>
               <Controller
                 control={control}
@@ -441,13 +444,14 @@ export default function SignUp() {
 
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: "#FCFCFC",
+    backgroundColor: "#F7F6F8",
     flex: 1,
   },
   container: {
     flex: 1,
-    paddingVertical: 32,
+    paddingTop: 32,
     paddingHorizontal: 16,
+    gap: 16,
   },
   typeContainer: {
     marginBottom: 30,
@@ -458,10 +462,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     lineHeight: 24,
     marginBottom: 12,
-  },
-  inputRadioContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
   },
   radioButton: {
     flex: 1,
@@ -486,29 +486,31 @@ const styles = StyleSheet.create({
     color: "#000000",
     fontWeight: "700",
   },
-  inputsContainer: {
-    marginBottom: 10,
+  inputRadioContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
-  labelCredentials: {
-    fontFamily: "Inter",
-    fontSize: 18,
-    fontWeight: "700",
-    lineHeight: 24,
-    marginTop: 30,
-    color: "#1D1127",
+  sectionForm: {
+    backgroundColor: "#fcfcfc",
+    paddingHorizontal: 16,
+    paddingTop: 25,
+    paddingBottom: 30,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: "#E5E5E5",
+  },
+  inputsContainer: {
+    display: "flex",
+    gap: 18,
   },
   button_submit: {
     alignSelf: "flex-end",
-    marginTop: 50,
+    marginTop: 30,
     backgroundColor: "#7F13EC",
     paddingVertical: 10,
     paddingHorizontal: 40,
     borderRadius: 100,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 4,
+    boxShadow: "0px 4px 4px #00000025",
   },
   buttonText: {
     color: "#FFFFFF",
@@ -520,5 +522,17 @@ const styles = StyleSheet.create({
     color: "#EE0101",
     fontSize: 13,
     marginTop: 4,
+  },
+  labelInfoBasics: {
+    fontFamily: "Inter",
+    fontSize: 18,
+    fontWeight: "700",
+    lineHeight: 24,
+    marginBottom: 20,
+    color: "#1D1127",
+  },
+  cepStateContainer: {
+    flexDirection: "row",
+    gap: 10,
   },
 });

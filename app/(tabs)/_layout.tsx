@@ -327,6 +327,13 @@ export default function TabsLayout() {
           href: null,
         }}
       />
+      <Tabs.Screen
+        name="schedules/formSchedule"
+        options={{
+          title: "Novo Agendamento",
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }

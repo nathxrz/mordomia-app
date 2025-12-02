@@ -424,6 +424,7 @@ export default function EditProfileUser() {
             </View>
 
             <View style={styles.sectionForm}>
+              <Text style={styles.labelInfoBasics}>Endereço</Text>
               <View style={styles.inputsContainer}>
                 <View style={styles.cepStateContainer}>
                   <View style={{ flex: 1 }}>

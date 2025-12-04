@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-import { router } from "expo-router";
 import { TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -42,7 +41,8 @@ export default function TutorHome() {
       </View>
       <TouchableOpacity
         onPress={() => {
-          router.push("/(tabs)/schedules/formSchedule");
+          // router.push("/(tabs)/schedules/formSchedule");
+          Alert.alert("Agendamento", "Funcionalidade em desenvolvimento.");
         }}
         style={{
           position: "absolute",

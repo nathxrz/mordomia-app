@@ -48,9 +48,14 @@ export default function AuthProvider({
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
+    supabase.auth
+      .getSession()
+      .then(({ data: { session } }) => {
+        setSession(session);
+      })
+      .catch((error) => {
+        console.error("Erro ao obter sessão:", error);
+      });
 
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
